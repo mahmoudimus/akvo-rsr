@@ -730,7 +730,7 @@ class Project(models.Model):
             #return (self.support_partners()|self.funding_partners()|self.field_partners()).distinct()
 
     def __unicode__(self):
-        return self.name
+        return u'Project %d: %s' % (self.id, self.name)
         
     def project_type(self):
         pt = ""
