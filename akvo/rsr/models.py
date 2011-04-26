@@ -217,6 +217,8 @@ class Organisation(models.Model):
     contact_person              = models.CharField(_('contact person'), blank=True, max_length=30, help_text=_('Name of external contact person for your organisation.'))
     contact_email               = models.CharField(_('contact email'), blank=True, max_length=50, help_text=_('Email to which inquiries about your organisation should be sent.'))
     description                 = models.TextField(_('description'), blank=True, help_text=_('Describe your organisation.') )
+    
+    iati_id                     = models.CharField(_('IATI identifier'), blank=True, max_length=50, help_text=_('(50 characters).'))                     
 
     locations                   = generic.GenericRelation(Location)
 

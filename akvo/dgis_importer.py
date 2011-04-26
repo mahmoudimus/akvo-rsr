@@ -135,7 +135,7 @@ SECTIONS = [
             next_line='activity description'
         ),
         'object_info': dict(
-            model=Project,
+            model=None,
             map={
                 'Description:': 'current_image_caption',
                 'URL:': 'current_image',
@@ -225,6 +225,60 @@ project_info = dict(
     }
 )
 
+class RSR_Mapper():
+    """data structure that keeps track of all we need to know to create an RSR model
+    object from it and set all foreign keys etc we need
+    """
+    def __init__(self, model=None, fields=None, parent=None):
+        self.model  = model
+        self.fields = fields or {}
+        self.parent = parent
+        self.obj    = None
+
+    def create_organisation(self):
+        org_type_mapping = {
+            '10': Organisation.ORG_TYPE_GOV,
+            '15': Organisation.ORG_TYPE_GOV,
+            '21': Organisation.ORG_TYPE_NGO,
+            '22': Organisation.ORG_TYPE_NGO,
+            '23': Organisation.ORG_TYPE_NGO,
+            '30': Organisation.ORG_TYPE_NGO,
+            '40': Organisation.ORG_TYPE_COM,
+            '60': Organisation.ORG_TYPE_COM,
+            '70': Organisation.ORG_TYPE_COM,
+            '80': Organisation.ORG_TYPE_KNO,
+        }
+        for k, v in self.fields.iteritems():
+            if k == 'organisation_type':
+                self.fields[k] = org_type_mapping[v]
+        name = self.fields.pop('name')
+        organisation_partnership = self.fields.pop('organisation_partnership')
+        
+        self.obj, created = self.model.objects.get_or_create(name=name, defaults=self.fields)
+        #print new_obj, created
+
+    def create_project(self):
+        fields_not_yet_implemented = [
+            'original_id', # NYI - Not Yet Implemented
+            'default_language', # NYI
+            'default_currency', # NYI
+            'planned_start_date', # NYI
+            'planned_end_date', # NYI
+            'sector_code', # NYI
+            'iati_activity_id', # NYI
+            'other_iati_org_id', # NYI
+            'other_original_id', # NYI
+            'target_group', # NYI
+        ]
+        
+        for nyi_field in fields_not_yet_implemented:
+            self.fields.pop(nyi_field)
+        name = self.fields.pop('name')
+        budgetitem_set = self.fields.pop('budgetitem_set')
+                
+        self.obj, created = self.model.objects.get_or_create(name=name, defaults=self.fields)
+        print self.obj, created
+        
 class CSV_List():
     def __init__(self, data=None, section=None):
         self.data = data or []
@@ -248,18 +302,18 @@ class CSV_List():
         """creates a dics for each set of data that is to be iported as an RSR object
         """
         max_len = max([len(item) for item in self.section]) - 1 # first item is DGIS "field name"
-        mappings = [{'_model': csv_to_oject_map.get('model')} for i in range(max_len)]
+        mappings = [RSR_Mapper(model=csv_to_oject_map.get('model')) for i in range(max_len)]
         for line in self.section:
-            field = csv_to_oject_map['map'].get(line[0], None)
-            if field:
+            rsr_field = csv_to_oject_map['map'].get(line[0], None)
+            if rsr_field:
                 for i in range(max_len):
                     try:
-                        mappings[i][field] = line[i+1]
+                        mappings[i].fields[rsr_field] = line[i+1]
                     except:
                         if len(line) > 1:
-                            mappings[i][field] = line[len(line)-1]
+                            mappings[i].fields[rsr_field] = line[len(line)-1]
                         else:
-                            mappings[i][field] = ''
+                            mappings[i].fields[rsr_field] = ''
         return mappings
 
 class DGIS_Importer():
@@ -268,39 +322,13 @@ class DGIS_Importer():
         self.list = CSV_List()
         self.mappings = []
     
-    def create_organisation(self, mapping):
-        org_type_mapping = {
-            '10': Organisation.ORG_TYPE_GOV,
-            '15': Organisation.ORG_TYPE_GOV,
-            '21': Organisation.ORG_TYPE_NGO,
-            '22': Organisation.ORG_TYPE_NGO,
-            '23': Organisation.ORG_TYPE_NGO,
-            '30': Organisation.ORG_TYPE_NGO,
-            '40': Organisation.ORG_TYPE_COM,
-            '60': Organisation.ORG_TYPE_COM,
-            '70': Organisation.ORG_TYPE_COM,
-            '80': Organisation.ORG_TYPE_KNO,
-        }
-        obj = mapping.pop('_model', False)
-        for k, v in mapping.iteritems():
-            if k == 'organisation_type':
-                mapping[k] = org_type_mapping[v]
-        import pdb
-        pdb.set_trace()
-        name = mapping.pop('name')
-        organisation_partnership = mapping.pop('organisation_partnership')
-        iati_id = mapping.pop('iati_id')
-        
-        new_obj, created = obj.objects.get_or_create(name=name, defaults=mapping)
-        print new_obj, created
 
     def create_objects(self):
         for mapping in self.mappings:
-            model = mapping.get('_model', '')
-            if model:
-                method = getattr(self, "create_%s" % model.__name__.lower(), False)
+            if mapping.model:
+                method = getattr(mapping, "create_%s" % mapping.model.__name__.lower(), False)
                 if method:
-                    method(mapping)
+                    method()
 
         #new_fa, created = FocusArea.objects.get_or_create(name=focus_area['name'], defaults={'slug': focus_area['slug']})
 
@@ -314,12 +342,19 @@ class DGIS_Importer():
                 if len(row) > 0:
                     self.list.data.append(row)
             
+            for item in self.list.data:
+                print item
+
             # using SECTIONS, grab a bunch of rows delimited by first_line and next_line
             # that comprise data for one RSR object
             for section in SECTIONS:                
                 self.list.get_rows(**section['section'])
                 #create a dict with RSR field names (sorta) mapping the grabbed data
-                self.mappings.extend(self.list.create_mappings(section['object_info']))                
+                self.mappings.extend(self.list.create_mappings(section['object_info']))
+
+                #print self.mappings
+                #print
+
             # what's left is "raw" project data
             self.list.section = self.list.data
             self.mappings.extend(self.list.create_mappings(project_info))
