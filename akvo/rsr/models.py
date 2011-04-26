@@ -1934,7 +1934,6 @@ class Link(models.Model):
         verbose_name_plural = _('links')
     
 
-
 class FundingPartner(models.Model):
     funding_organisation    = models.ForeignKey(Organisation, related_name='funding_partners', limit_choices_to = {'funding_partner__exact': True})
     funding_amount          = models.DecimalField(_('funding amount'), max_digits=10, decimal_places=2)

@@ -237,25 +237,44 @@ class RSR_Mapper():
 
     def create_organisation(self):
         org_type_mapping = {
-            '10': Organisation.ORG_TYPE_GOV,
-            '15': Organisation.ORG_TYPE_GOV,
-            '21': Organisation.ORG_TYPE_NGO,
-            '22': Organisation.ORG_TYPE_NGO,
-            '23': Organisation.ORG_TYPE_NGO,
-            '30': Organisation.ORG_TYPE_NGO,
-            '40': Organisation.ORG_TYPE_COM,
-            '60': Organisation.ORG_TYPE_COM,
-            '70': Organisation.ORG_TYPE_COM,
-            '80': Organisation.ORG_TYPE_KNO,
+            # DAC : Akvo
+            '10': Organisation.ORG_TYPE_GOV, # Government : Governmental
+            '15': Organisation.ORG_TYPE_GOV, # Other Public Sector : Governmental
+            '21': Organisation.ORG_TYPE_NGO, # International NGO : NGO
+            '22': Organisation.ORG_TYPE_NGO, # National NGO : NGO
+            '23': Organisation.ORG_TYPE_NGO, # Regional NGO : NGO
+            '30': Organisation.ORG_TYPE_NGO, # Public Private Partnership : NGO
+            '40': Organisation.ORG_TYPE_GOV, # Multilateral : Governmental
+            '60': Organisation.ORG_TYPE_NGO, # Foundation : NGO
+            '70': Organisation.ORG_TYPE_COM, # Private Sector : Commercial
+            '80': Organisation.ORG_TYPE_KNO, # Academic, Training and Research : Knowledge institution
         }
+        # lookups
         for k, v in self.fields.iteritems():
             if k == 'organisation_type':
                 self.fields[k] = org_type_mapping[v]
         name = self.fields.pop('name')
-        organisation_partnership = self.fields.pop('organisation_partnership')
+        self.relations = {'partner_type': self.fields.pop('organisation_partnership')}
         
         self.obj, created = self.model.objects.get_or_create(name=name, defaults=self.fields)
-        #print new_obj, created
+        return self.obj, created
+
+    def link_organisation(self, project):
+        if self.relations:
+            partner_type = self.relations['partner_type']
+            if partner_type == 'Funding':
+                obj, created = FundingPartner.objects.get_or_create(project=project, funding_organisation=self.obj, defaults={'funding_amount': 0 })
+                self.obj.funding_partner = True
+                self.obj.save()
+            elif partner_type == 'Extending':
+                obj, created = SupportPartner.objects.get_or_create(project=project, support_organisation=self.obj)
+                self.obj.support_partner = True
+                self.obj.save()
+            elif partner_type == 'Implementing':
+                obj, created = FieldPartner.objects.get_or_create(project=project, field_organisation=self.obj)
+                self.obj.field_partner = True
+                self.obj.save()
+            print obj, created
 
     def create_project(self):
         fields_not_yet_implemented = [
@@ -270,14 +289,30 @@ class RSR_Mapper():
             'other_original_id', # NYI
             'target_group', # NYI
         ]
+        status_mapping = {
+            # DAC : Akvo
+            '1': 'H', # Pipeline/identification : Needs funding
+            '2': 'A', #	Implementation : Active
+            '3': 'C', #	Completion : Complete
+            '4': 'C', # Post-completion : Complete
+            '5': 'L', #	Cancelled : Cancelled
+            # Akvo status None has no DAC counterpart
+            # Akvo status Archived has no DAC counterpart
+        }
         
+        # remove fields we're not supporting yet
         for nyi_field in fields_not_yet_implemented:
             self.fields.pop(nyi_field)
+        # lookups
+        for k, v in self.fields.iteritems():
+            if k == 'status':
+                self.fields[k] = status_mapping[v]
+        
         name = self.fields.pop('name')
         budgetitem_set = self.fields.pop('budgetitem_set')
                 
         self.obj, created = self.model.objects.get_or_create(name=name, defaults=self.fields)
-        print self.obj, created
+        return self.obj, created
         
 class CSV_List():
     def __init__(self, data=None, section=None):
@@ -321,6 +356,7 @@ class DGIS_Importer():
         self.filename = filename
         self.list = CSV_List()
         self.mappings = []
+        self.project = None
     
 
     def create_objects(self):
@@ -328,11 +364,17 @@ class DGIS_Importer():
             if mapping.model:
                 method = getattr(mapping, "create_%s" % mapping.model.__name__.lower(), False)
                 if method:
-                    method()
-
-        #new_fa, created = FocusArea.objects.get_or_create(name=focus_area['name'], defaults={'slug': focus_area['slug']})
-
-    
+                    obj, created = method()
+                    # remember the current Project when we find it
+                    if obj.__class__.__name__ == 'Project':
+                        self.project = obj
+        for mapping in self.mappings:
+            if mapping.model:
+                method = getattr(mapping, "link_%s" % mapping.model.__name__.lower(), False)
+                if method:
+                    method(self.project)
+                        
+                        
     def parse_dgis_sheet(self):
         with open(self.filename, 'r') as file:
             csv_data = csv.reader(file)
