@@ -16,7 +16,7 @@
     },
     load: function() {
       var map = new google.maps.Map(this.canvas, this.options);
-      {% for loc in object.locations %}
+      {% for loc in object.locations.all %}
         var lat_{{loc.id}} = {{loc.latitude}};
         var long_{{loc.id}} = {{loc.longitude}};
         var position_{{loc.id}} = new google.maps.LatLng(
