@@ -12,6 +12,7 @@ setup_environ(settings)
 
 from os.path import basename, splitext
 import csv
+import datetime
 
 from akvo.rsr.models import *
 
@@ -281,13 +282,13 @@ class RSR_Mapper():
             'original_id', # NYI - Not Yet Implemented
             'default_language', # NYI
             'default_currency', # NYI
-            'planned_start_date', # NYI
-            'planned_end_date', # NYI
+            #'planned_start_date', # NYI
+            #'planned_end_date', # NYI
             'sector_code', # NYI
             'iati_activity_id', # NYI
             'other_iati_org_id', # NYI
             'other_original_id', # NYI
-            'target_group', # NYI
+            #'target_group', # NYI
         ]
         status_mapping = {
             # DAC : Akvo
@@ -307,6 +308,9 @@ class RSR_Mapper():
         for k, v in self.fields.iteritems():
             if k == 'status':
                 self.fields[k] = status_mapping[v]
+            if k in ['planned_start_date', 'planned_end_date']:
+                self.fields[k] = datetime.strptime(self.fields[k], '%d/%b/%y').date()
+
         
         name = self.fields.pop('name')
         budgetitem_set = self.fields.pop('budgetitem_set')
@@ -357,7 +361,6 @@ class DGIS_Importer():
         self.list = CSV_List()
         self.mappings = []
         self.project = None
-    
 
     def create_objects(self):
         for mapping in self.mappings:
@@ -373,17 +376,17 @@ class DGIS_Importer():
                 method = getattr(mapping, "link_%s" % mapping.model.__name__.lower(), False)
                 if method:
                     method(self.project)
-                        
-                        
+
     def parse_dgis_sheet(self):
         with open(self.filename, 'r') as file:
             csv_data = csv.reader(file)
             # create a list of each non-empty row in the csv,
             # each element in the list is one item from the csv
             for row in csv_data:
+                row = [item for item in row if item] #remove empty "cells"
                 if len(row) > 0:
                     self.list.data.append(row)
-            
+
             for item in self.list.data:
                 print item
 
@@ -419,5 +422,5 @@ if __name__ == '__main__':
     #        print extracted
     #    except IndexError:
     #        pass
-    imp = DGIS_Importer()
+    imp = DGIS_Importer('16635-Table 1.csv')
     imp.parse_dgis_sheet()
