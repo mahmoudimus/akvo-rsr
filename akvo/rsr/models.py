@@ -1280,6 +1280,9 @@ else: #akvo-rsr
         date_complete       = models.DateField(_('Date complete'), null=True, blank=True)
 
         # IATI fields
+        iati_activity_id    = models.CharField(_('IATI identifier'), max_length=50, blank=True) # iati-identifier/text()
+        iati_org_id         = models.CharField(_('IATI organisation ID'), max_length=50, blank=True) # other-identifier@owner-ref
+        original_id         = models.CharField(_('original project ID'), max_length=50, blank=True) # other-identifier/text()
         planned_start_date  = models.DateField(_('planned start date'), null=True, blank=True)
         planned_end_date    = models.DateField(_('planned end date'), null=True, blank=True)
         actual_start_date   = models.DateField(_('actual start date'), null=True, blank=True)

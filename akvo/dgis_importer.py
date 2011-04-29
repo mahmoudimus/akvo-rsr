@@ -10,7 +10,7 @@ from django.core.management import setup_environ
 import settings
 setup_environ(settings)
 
-from os.path import basename, splitext
+#from os.path import basename, splitext
 import csv
 import datetime
 
@@ -175,7 +175,7 @@ SECTIONS = [
             next_line='extra project information'
         ),
         'object_info': dict(
-            model=Link,
+            model=None, #no implementation yet
             map={
                 'Type:': 'activity_type',
                 'Identifier:': 'activity_id',
@@ -192,15 +192,15 @@ project_info = dict(
         'Standard language:': 'default_language', # NYI
         'Standard currency:': 'default_currency', # NYI
         'Title:': 'name',
-        'Expected Start date:': 'planned_start_date', # NYI
-        'Expected End date:': 'planned_end_date', # NYI
+        'Expected Start date:': 'planned_start_date',
+        'Expected End date:': 'planned_end_date',
         'Status code:': 'status',
         'Status text:': '', # Not used
         'Sector code:': 'sector_code', # NYI
         'Sector code text:': '', # Not used
         'IATI Identifier:': 'iati_activity_id', # NYI
-        'Organisation ID:': 'other_iati_org_id', # NYI
-        'Other Identifier:': 'other_original_id', # NYI
+        'Organisation ID:': 'iati_org_id', # NYI
+        'Other Identifier:': 'original_id', # NYI
         'Collaboration type code': '', # Not used
         'Collaboration type text': '', # Not used
         'Flow type code': '', # Not used
@@ -212,7 +212,7 @@ project_info = dict(
         'Name': '', # Not used - Akvo is reporting org
         'Summary:': 'project_plan_summary',
         'Objectives:': 'goals_overview',
-        'Target group:': 'target_group', # NYI
+        'Target group:': 'target_group',
         'Output 1:': 'goal_1',
         'Output 2:': 'goal_2',
         'Output 3:': 'goal_3',
@@ -236,6 +236,14 @@ class RSR_Mapper():
         self.parent = parent
         self.obj    = None
 
+    def __unicode__(self):
+        return self.model.__name__ if self.model else "Model-less mapper"
+
+    #def create_location(self):
+    #    print "Location, loaction, location!"
+    #    print
+    #    return None, None
+    
     def create_organisation(self):
         org_type_mapping = {
             # DAC : Akvo
@@ -279,16 +287,9 @@ class RSR_Mapper():
 
     def create_project(self):
         fields_not_yet_implemented = [
-            'original_id', # NYI - Not Yet Implemented
             'default_language', # NYI
             'default_currency', # NYI
-            #'planned_start_date', # NYI
-            #'planned_end_date', # NYI
             'sector_code', # NYI
-            'iati_activity_id', # NYI
-            'other_iati_org_id', # NYI
-            'other_original_id', # NYI
-            #'target_group', # NYI
         ]
         status_mapping = {
             # DAC : Akvo
@@ -317,7 +318,19 @@ class RSR_Mapper():
                 
         self.obj, created = self.model.objects.get_or_create(name=name, defaults=self.fields)
         return self.obj, created
-        
+
+    def link_link(self, project):
+        self.fields.update({'kind': 'E', 'project': project})
+        self.obj, created = self.model.objects.get_or_create(**self.fields)
+        print "Link:", self.obj, created
+        return self.obj, created
+
+
+    #kind    = models.CharField(_('kind'), max_length=1, choices=LINK_KINDS)
+    #url     = models.URLField(_(u'URL'))
+    #caption = models.CharField(_('caption'), max_length=50)
+    #project = models.ForeignKey(Project, related_name='links')
+
 class CSV_List():
     def __init__(self, data=None, section=None):
         self.data = data or []
@@ -364,6 +377,7 @@ class DGIS_Importer():
 
     def create_objects(self):
         for mapping in self.mappings:
+            print unicode(mapping)
             if mapping.model:
                 method = getattr(mapping, "create_%s" % mapping.model.__name__.lower(), False)
                 if method:
@@ -378,7 +392,7 @@ class DGIS_Importer():
                     method(self.project)
 
     def parse_dgis_sheet(self):
-        with open(self.filename, 'r') as file:
+        with open(self.filename, 'rtU') as file:
             csv_data = csv.reader(file)
             # create a list of each non-empty row in the csv,
             # each element in the list is one item from the csv
