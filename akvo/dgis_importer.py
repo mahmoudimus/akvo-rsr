@@ -110,6 +110,7 @@ SECTIONS = [
         'object_info': dict(
             model=Location,
             map={
+                'Country code:': 'country__code',
                 'Country name:': 'country',
                 'City/village:': 'city',
                 'Latitude:': 'latitude',
@@ -239,11 +240,6 @@ class RSR_Mapper():
     def __unicode__(self):
         return self.model.__name__ if self.model else "Model-less mapper"
 
-    #def create_location(self):
-    #    print "Location, loaction, location!"
-    #    print
-    #    return None, None
-    
     def create_organisation(self):
         org_type_mapping = {
             # DAC : Akvo
@@ -285,6 +281,28 @@ class RSR_Mapper():
                 self.obj.save()
             print obj, created
 
+    def link_location(self, project):
+        print "Location:", self.fields
+        self.fields.pop('country__code') # NYI
+        content_type = ContentType.objects.get_for_model(project)
+        self.fields.update({'content_type': content_type, 'object_id': project.id, 'primary': project.prime_location})
+        project.prime_location = False #only first location is primary
+        for k, v in self.fields.iteritems():
+            if k == 'country':
+                country, new = Country.objects.get_or_create(country_name=self.fields[k], defaults={'continent': 4})
+                self.fields[k] = country
+                if new:
+                    print "Created new country: %s, ID: %d. Please assign a continent the this proud new nation" % (unicode(country), country.id)
+        location = self.model.objects.create(**self.fields)
+        print location
+        return location
+
+            #latitude=latitude, longitude=longitude,
+            #city=p.city, state=p.state, country=p.country,
+            #content_type=content_type, object_id=p.id,
+            #address_1=p.location_1, address_2=p.location_2,
+            #postcode=p.postcode, primary=True        
+    
     def create_project(self):
         fields_not_yet_implemented = [
             'default_language', # NYI
@@ -315,21 +333,17 @@ class RSR_Mapper():
         
         name = self.fields.pop('name')
         budgetitem_set = self.fields.pop('budgetitem_set')
-                
+                        
         self.obj, created = self.model.objects.get_or_create(name=name, defaults=self.fields)
+        self.obj.prime_location = True #used in link_location to make first loc primary
         return self.obj, created
 
     def link_link(self, project):
-        self.fields.update({'kind': 'E', 'project': project})
+        self.fields.update({'kind': 'E', 'project': project}) #assume external link
         self.obj, created = self.model.objects.get_or_create(**self.fields)
         print "Link:", self.obj, created
         return self.obj, created
 
-
-    #kind    = models.CharField(_('kind'), max_length=1, choices=LINK_KINDS)
-    #url     = models.URLField(_(u'URL'))
-    #caption = models.CharField(_('caption'), max_length=50)
-    #project = models.ForeignKey(Project, related_name='links')
 
 class CSV_List():
     def __init__(self, data=None, section=None):
