@@ -217,6 +217,8 @@ class Organisation(models.Model):
     contact_person              = models.CharField(_('contact person'), blank=True, max_length=30, help_text=_('Name of external contact person for your organisation.'))
     contact_email               = models.CharField(_('contact email'), blank=True, max_length=50, help_text=_('Email to which inquiries about your organisation should be sent.'))
     description                 = models.TextField(_('description'), blank=True, help_text=_('Describe your organisation.') )
+    
+    iati_id                     = models.CharField(_('IATI identifier'), blank=True, max_length=50, help_text=_('(50 characters).'))                     
 
     locations                   = generic.GenericRelation(Location)
 
@@ -1264,23 +1266,6 @@ else: #akvo-rsr
         goal_3                      = models.CharField(_('goal 3'), blank=True, max_length=60)
         goal_4                      = models.CharField(_('goal 4'), blank=True, max_length=60)
         goal_5                      = models.CharField(_('goal 5'), blank=True, max_length=60)
-        #Project target benchmarks
-        #water_systems               = models.IntegerField(_('water systems'), default=0)
-        #sanitation_systems          = models.IntegerField(_('sanitation systems'), default=0)
-        #hygiene_facilities          = models.IntegerField(_('hygiene facilities'), default=0)
-        #improved_water              = models.IntegerField(_('water: # people affected'), default=0)
-        #improved_water_years        = models.IntegerField(_('for # years'), default=0)
-        #improved_sanitation         = models.IntegerField(_('sanitation: # people affected'), default=0)
-        #improved_sanitation_years   = models.IntegerField(_('for # years'), default=0)
-        #trainees                    = models.IntegerField(_('# people trained'), default=0)
-        #mdg_count_water             = models.IntegerField(default=0)
-        #mdg_count_sanitation        = models.IntegerField(default=0)
-    
-        #location_1                  = models.CharField(_('location 1'), blank=True, max_length=50, help_text=_('Street address (50 characters).'))
-        #location_2                  = models.CharField(_('location 2'), blank=True, max_length=50, help_text=_('Street address 2 (50 characters).'))
-        #postcode                    = models.CharField(_('post code'), blank=True, max_length=10, help_text=_('Postcode, zip code, etc. (10 characters).'))
-        #longitude                   = models.CharField(_('longitude'), blank=True, max_length=20, help_text=_(u'East/west measurement(λ) in degrees/minutes/seconds, for example 23° 27′ 30" E.'))
-        #latitude                    = models.CharField(_('latitude'), blank=True, max_length=20, help_text=_(u'North/south measurement(ϕ) in degrees/minutes/seconds, for example 23° 26′ 21″ N.'))
         current_status_detail       = models.TextField(_('Current status detail'), blank=True, max_length=600, help_text=_('Description of current phase of project. (600 characters).'))
         project_plan_detail         = models.TextField(_('Project plan detail'), blank=True, help_text=_('Detailed information about the project and plans for implementing: the what, how, who and when. (unlimited).'))
         sustainability              = models.TextField(_('sustainability'), help_text=_('Describe plans for sustaining/maintaining results after implementation is complete (unlimited).'))
@@ -1293,7 +1278,17 @@ else: #akvo-rsr
         currency            = models.CharField(_('currency'), choices=CURRENCY_CHOICES, max_length=3, default='EUR')
         date_request_posted = models.DateField(_('Date request posted'), default=date.today)
         date_complete       = models.DateField(_('Date complete'), null=True, blank=True)
-    
+
+        # IATI fields
+        iati_activity_id    = models.CharField(_('IATI identifier'), max_length=50, blank=True) # iati-identifier/text()
+        iati_org_id         = models.CharField(_('IATI organisation ID'), max_length=50, blank=True) # other-identifier@owner-ref
+        original_id         = models.CharField(_('original project ID'), max_length=50, blank=True) # other-identifier/text()
+        planned_start_date  = models.DateField(_('planned start date'), null=True, blank=True)
+        planned_end_date    = models.DateField(_('planned end date'), null=True, blank=True)
+        actual_start_date   = models.DateField(_('actual start date'), null=True, blank=True)
+        actual_end_date     = models.DateField(_('actual end date'), null=True, blank=True)
+        target_group        = models.TextField(_('target group'), blank=True, max_length=600, help_text=_('Description of the project target group. (600 characters).'))
+        
         locations           = generic.GenericRelation(Location)
     
         #Custom manager
@@ -1875,7 +1870,15 @@ else: #akvo-rsr
         project             = models.ForeignKey(Project)
         item                = models.CharField(max_length=20, choices=ITEM_CHOICES, verbose_name=_('Item'))
         amount              = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Amount'))
-        
+
+        def __unicode__(self):
+            return "Budgetitem for project %d: %s %d" % (
+                self.project.id,
+                self.project.get_currency_display(),
+                self.amount,
+                #self.get_item_display()
+            )
+
         class Meta:
             verbose_name=_('Budget item')
             verbose_name_plural=_('Budget items')
@@ -1931,7 +1934,6 @@ class Link(models.Model):
         verbose_name        = _('link')
         verbose_name_plural = _('links')
     
-
 
 class FundingPartner(models.Model):
     funding_organisation    = models.ForeignKey(Organisation, related_name='funding_partners', limit_choices_to = {'funding_partner__exact': True})

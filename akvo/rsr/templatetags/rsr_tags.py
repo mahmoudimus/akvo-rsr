@@ -250,7 +250,7 @@ class WidthRatioTruncNode(WidthRatioNode):
             value = float(value)
             maxvalue = float(maxvalue)
             ratio = (value / maxvalue) * max_width
-        except (ValueError, ZeroDivisionError):
+        except (TypeError, ValueError, ZeroDivisionError):
             return ''
         return str(int(ratio))
 
