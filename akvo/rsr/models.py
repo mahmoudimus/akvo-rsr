@@ -1870,7 +1870,15 @@ else: #akvo-rsr
         project             = models.ForeignKey(Project)
         item                = models.CharField(max_length=20, choices=ITEM_CHOICES, verbose_name=_('Item'))
         amount              = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Amount'))
-        
+
+        def __unicode__(self):
+            return "Budgetitem for project %d: %s %d" % (
+                self.project.id,
+                self.project.get_currency_display(),
+                self.amount,
+                #self.get_item_display()
+            )
+
         class Meta:
             verbose_name=_('Budget item')
             verbose_name_plural=_('Budget items')
