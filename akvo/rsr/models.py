@@ -1872,11 +1872,11 @@ else: #akvo-rsr
         amount              = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Amount'))
 
         def __unicode__(self):
-            return "Budgetitem for project %d: %s %d" % (
+            return "Budgetitem for project %d: %s %s %s" % (
                 self.project.id,
                 self.project.get_currency_display(),
-                self.amount,
-                #self.get_item_display()
+                str(self.amount),
+                self.get_item_display()
             )
 
         class Meta:

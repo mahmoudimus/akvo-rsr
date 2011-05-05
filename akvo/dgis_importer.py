@@ -246,6 +246,23 @@ project_info = dict(
     }
 )
 
+def truncate(model, data):
+    """ truncate text data to match length of char fields
+    """
+    defaults = data.pop('defaults', None)
+    for f in model._meta.fields:
+        if f.max_length:
+            try:
+                data[f.name] = data[f.name][:f.max_length]
+            except:
+                try:
+                    defaults[f.name] = defaults[f.name][:f.max_length]
+                except:
+                    pass
+    if defaults:
+        data['defaults'] = defaults
+    return data
+        
 class RSR_Mapper():
     """data structure that keeps track of all we need to know to create an RSR model
     object from it and set all foreign keys etc we need
@@ -282,7 +299,9 @@ class RSR_Mapper():
                 self.fields[k] = org_type_mapping[v]
         name = self.fields.pop('name')
         self.relations = {'partner_type': self.fields.pop('organisation_partnership')}
-        self.obj, created = get_model('rsr',self.model).objects.get_or_create(name=name, defaults=self.fields)
+        model = get_model('rsr',self.model)
+        params = truncate(model, dict(name=name, defaults=self.fields))
+        self.obj, created = model.objects.get_or_create(**params)
         return self.obj, created
 
     def link_organisation(self, project):
@@ -309,7 +328,7 @@ class RSR_Mapper():
                 org = Organisation.objects.get(name=self.fields['funding_organisation'])
             except:
                 try:
-                    org = Organisation.objects.get(name='Ministry of Foreign Affairs (DGIS)')
+                    org = Organisation.objects.get(name='DGIS')
                 except:
                     print "Could not find FundingPartner org for %s" % project.__unicode__()
             if org:
@@ -332,7 +351,10 @@ class RSR_Mapper():
                 self.fields[k] = country
                 if new:
                     print "Created new country: %s, ID: %d. Please assign a continent the this proud new nation" % (country.country_name, country.id)
-        location, created = get_model('rsr',self.model).objects.get_or_create(**self.fields)
+
+        model = get_model('rsr',self.model)
+        params = truncate(model, self.fields)
+        location, created = model.objects.get_or_create(**params)
         return location, created
 
     # not used for now. have to fix naming of images and really needs multiple images refactoring in models
@@ -399,8 +421,11 @@ class RSR_Mapper():
 
         
         name = self.fields.pop('name')
-                        
-        self.obj, created = get_model('rsr', self.model).objects.get_or_create(name=name, defaults=self.fields)
+
+        model = get_model('rsr',self.model)
+        params = truncate(model, dict(name=name, defaults=self.fields))
+        self.obj, created = model.objects.get_or_create(**params)
+
         self.obj.prime_location = True #used in link_location to make first loc primary
         ps = get_model('rsr', 'publishingstatus').objects.get(project=self.obj)
         ps.status = 'published'
@@ -409,7 +434,9 @@ class RSR_Mapper():
 
     def link_link(self, project):
         self.fields.update({'kind': 'E', 'project': project}) #assume external link
-        self.obj, created = get_model('rsr', self.model).objects.get_or_create(**self.fields)
+        model = get_model('rsr',self.model)
+        params = truncate(model, self.fields)
+        self.obj, created = model.objects.get_or_create(**params)
         return self.obj, created
 
 
