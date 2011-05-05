@@ -63,6 +63,38 @@ def foo():
     """
     pass
 
+# "translation" table of organisation names
+
+ORGANISATION_NAMES = dict([
+    # (DGIS name, Akvo name)
+    (u"Ministry of Foreign Affairs (DGIS)", u"DGIS"),
+    (u"Directie Milieu, Water, Klimaat en Energie", u"DME"),
+    (u"Eenheid Fragiliteit en Vredesopbouw", u"EFV"),
+    (u"Paramaribo Ambassade", u"Dutch Embassy Paramaribo"),
+    (u"WETTERSKIP FRYSLAN", u"Wetterskip Fryslân"),
+    (u"Hanoi Ambassade", u"Dutch Embassy Hanoi"),
+    (u"Vitens-Evides International", u"Vitens"),
+    (u"VITENS INTERNATIONAL", u"Vitens"),
+    (u"Direção Nacional Águas", u"DNA"),
+    (u"Dhaka Ambassade", u"Dutch Embassy Dhaka"),
+    (u"Jakarta Ambassade", u"Dutch Embassy Jakarta"),
+    (u"MINISTRY OF PLANNING AND INVESTMENT", u"MPI"),
+    (u"Sana’a Ambassade", u"Dutch Embassy Sana'a"),
+    (u"WHO  (WORLD HEALTH ORGANIZATION)", u"WHO"),
+    (u"GENERAL AUTHORITY FOR RURAL WATER SUPPLY PROJECTS", u"GARWSP"),
+    (u"Islamabad Ambassade", u"Dutch Embassy Islamabad"),
+    (u"ASIAN DEVELOPMENT BANK - ADB", u"ADB"),
+    (u"Caïro Ambassade", u"Dutch Embassy Cairo"),
+    (u"FAYOUM GOVERNORATE", u"Fayoum"),
+    (u"Khartoem Ambassade", u"Dutch Embassy Khartoum"),
+    (u"MINISTRY OF PLANNING AND INTERNATIONAL COOPERATION (MOPIC)", u"MPIC"),
+    (u"Dakar Ambassade", u"Dutch Embassy Dakar"),
+    (u"MINISTRY OF FINANCE SENEGAL", u"MEF"),
+    (u"Maputo Ambassade", u"Dutch Embassy Maputo"),
+    (u"WATERNET", u"WaterNet Trust"),
+    (u"Beijing Ambassade", u"Dutch Embassy Beijing"),
+    ]
+)
 
 SECTIONS = [
     {
@@ -298,6 +330,7 @@ class RSR_Mapper():
             if k == 'organisation_type':
                 self.fields[k] = org_type_mapping[v]
         name = self.fields.pop('name')
+        name = ORGANISATION_NAMES.get(name, name)
         self.relations = {'partner_type': self.fields.pop('organisation_partnership')}
         model = get_model('rsr',self.model)
         params = truncate(model, dict(name=name, defaults=self.fields))
