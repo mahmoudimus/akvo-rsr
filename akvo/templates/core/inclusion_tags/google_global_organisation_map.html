@@ -28,9 +28,11 @@
                 icon: {
                     image: '{{ marker_icon }}',
                 {% if map_type == 'static' %}
-                    iconsize: [10, 17]
+                    iconsize: [10, 17],
+                    shadowsize: [10, 17]
                 {% else %}
-                    iconsize: [20, 34]
+                    iconsize: [20, 34],
+                    shadowsize: [20, 34]
                 {% endif %}
                 },
                 {% if map_type != 'static' %}
