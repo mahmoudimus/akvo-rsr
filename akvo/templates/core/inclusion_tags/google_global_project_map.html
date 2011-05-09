@@ -22,7 +22,8 @@
                               '<img src="{% thumbnail project.current_image 100x100 autocrop sharpen %}" alt="" /></a>' +
                               '<p class="small grey" style="margin:0;">{% trans 'Location' %}:' +
                               '{{ project.primary_location.country.get_continent_display }}, ' +
-                              '{{ project.primary_location.country }}, {{ project.primary_location.city }}</p>' +
+                              '{{ project.primary_location.country }}, ' +
+                              '{{ project.primary_location.city }}</p>' +
                               '</div>',
                     {% endif %}
                     latitude: {{ location.latitude }},
