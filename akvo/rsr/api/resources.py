@@ -337,8 +337,6 @@ class IATIActivityResource(ModelResource):
             print field_name, field_object
             # A touch leaky but it makes URI resolution work.
             if isinstance(field_object, fields.RelatedField):
-                import pdb
-                pdb.set_trace()
                 field_object.api_name = self._meta.api_name
                 field_object.resource_name = self._meta.resource_name
                 bundle.data[field_name] = field_object.dehydrate(bundle)
@@ -392,8 +390,6 @@ class SupportPartnerResource(ModelResource):
     support_organisation = fields.ToOneField(OrganisationResource, 'support_organisation', full=True)
 
     def dehydrate_support_organisation(self, bundle):
-        import pdb
-        pdb.set_trace()
         data = {'name': bundle.data['support_organisation'].data['name'], 'role': 'Extending'}
         return Bundle(data=data)
         
