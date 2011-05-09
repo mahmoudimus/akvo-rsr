@@ -1,7 +1,6 @@
 {% load i18n %}
 
 <script type="text/javascript">
-    var jQ = jQuery.noConflict();
     var markers = [ {% for location in object.locations.valid %}
         {
             icon: {
