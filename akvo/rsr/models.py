@@ -51,7 +51,7 @@ from permissions.utils import get_roles, add_local_role
 
 from akvo.settings import MEDIA_ROOT
 
-from gateway.models import GatewayNumber, Gateway, MoSms
+from akvo.gateway.models import GatewayNumber, Gateway, MoSms
 
 from utils import (
     GROUP_RSR_EDITORS, RSR_LIMITED_CHANGE, GROUP_RSR_PARTNER_ADMINS,
@@ -1271,11 +1271,11 @@ else: #akvo-rsr
                                     )
         current_image_caption       = models.CharField(_('photo caption'), blank=True, max_length=50, help_text=_('Enter a caption for your project picture (50 characters).'))
         goals_overview              = models.TextField(_('overview'), max_length=500, help_text=_('Describe what the project hopes to accomplish (500 characters).'))
-        goal_1                      = models.CharField(_('goal 1'), blank=True, max_length=60, help_text=_('(60 characters)'))
-        goal_2                      = models.CharField(_('goal 2'), blank=True, max_length=60)
-        goal_3                      = models.CharField(_('goal 3'), blank=True, max_length=60)
-        goal_4                      = models.CharField(_('goal 4'), blank=True, max_length=60)
-        goal_5                      = models.CharField(_('goal 5'), blank=True, max_length=60)
+        goal_1                      = models.CharField(_('goal 1'), blank=True, max_length=200, help_text=_('(60 characters)'))
+        goal_2                      = models.CharField(_('goal 2'), blank=True, max_length=200)
+        goal_3                      = models.CharField(_('goal 3'), blank=True, max_length=200)
+        goal_4                      = models.CharField(_('goal 4'), blank=True, max_length=200)
+        goal_5                      = models.CharField(_('goal 5'), blank=True, max_length=200)
         current_status_detail       = models.TextField(_('Current status detail'), blank=True, max_length=600, help_text=_('Description of current phase of project. (600 characters).'))
         project_plan_detail         = models.TextField(_('Project plan detail'), blank=True, help_text=_('Detailed information about the project and plans for implementing: the what, how, who and when. (unlimited).'))
         sustainability              = models.TextField(_('sustainability'), help_text=_('Describe plans for sustaining/maintaining results after implementation is complete (unlimited).'))
@@ -1880,11 +1880,11 @@ else: #akvo-rsr
         amount              = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_('Amount'))
 
         def __unicode__(self):
-            return "Budgetitem for project %d: %s %d" % (
+            return "Budgetitem for project %d: %s %s %s" % (
                 self.project.id,
                 self.project.get_currency_display(),
-                self.amount,
-                #self.get_item_display()
+                str(self.amount),
+                self.get_item_display()
             )
 
         class Meta:

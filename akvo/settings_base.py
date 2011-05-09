@@ -71,7 +71,8 @@ INSTALLED_APPS = (
     'django_markup',
     'notification',
     'permissions',
-    'workflows',    
+    'workflows',
+    'tastypie',
 )
 
 #INTERNAL_IPS = (
@@ -209,6 +210,7 @@ LOGGING = {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(os.path.dirname(__file__), 'akvo.log').replace('\\','/'),
+            #'filename': '/var/log/apache2/iati-test/akvo_rsr.log',
             'maxBytes': 1024*1024,
             'backupCount': 4,
             'formatter': 'verbose',
@@ -222,6 +224,7 @@ LOGGING = {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(os.path.dirname(__file__), 'akvo.log').replace('\\','/'),
+            #'filename': '/var/log/apache2/iati-test/akvo_rsr.log',
             'maxBytes': 1024*1024,
             'backupCount': 4,
             'formatter': 'verbose_request',
