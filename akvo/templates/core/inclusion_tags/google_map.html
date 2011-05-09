@@ -1,35 +1,32 @@
 {% load i18n %}
-<div id="map_canvas" style="width:{{width}}px;height:{{height}}px;"></div>
+
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script type="text/javascript" src="{{ media_url}}core/js/jquery.gmap.min.js"></script>
+
 <script type="text/javascript">
-  var googleMap = {
-    canvas: document.getElementById('map_canvas'),
-    options: {
-      zoom: {{zoom}},
-      center: new google.maps.LatLng(
-        {{object.primary_location.latitude}},
-        {{object.primary_location.longitude}}
-      ),
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      scrollwheel: false,
-      streetViewControl: false
-    },
-    load: function() {
-      var map = new google.maps.Map(this.canvas, this.options);
-      {% for loc in object.locations.all %}
-        var lat_{{loc.id}} = {{loc.latitude}};
-        var long_{{loc.id}} = {{loc.longitude}};
-        var position_{{loc.id}} = new google.maps.LatLng(
-          lat_{{loc.id}}, long_{{loc.id}}
-        );
-        var marker_{{loc.id}} = new google.maps.Marker({
-          icon: '{{marker_icon}}',
-          map: map,
-          position: position_{{loc.id}},
-          clickable: false
+    var jQ = jQuery.noConflict();
+    var markers = [ {% for location in object.locations.all %}
+        {
+            icon: {
+                image: '{{ marker_icon }}'
+            },
+            latitude: {{ location.latitude }},
+            longitude: {{ location.longitude }},
+            popup: false
+        },
+    {% endfor %} ];
+    var zoom = {{ zoom }};
+    // Load the map
+    jQ(document).ready(function() {
+        jQ('#map_canvas').gMap({
+            latitude: 0,
+            longitude: 0,
+            markers: markers,
+            scrollwheel: false,
+            zoom: zoom
         });
-      {% endfor %}
-    }
-};
-window.onload = function (){googleMap.load()};
+    });
 </script>
+
+<div id="map_canvas" style="width:{{width}}px;height:{{height}}px;"></div>
