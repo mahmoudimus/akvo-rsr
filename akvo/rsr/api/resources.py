@@ -158,7 +158,7 @@ class IATISerializer(Serializer):
         
         """
         if isinstance(data, Bundle):
-            element = E(name or 'iati-activites')
+            element = E(name or 'iati-activities')
             element.append(self.to_etree(data.data['tasty_data'], options, depth=depth+1))
             return element
         elif isinstance(data, EDNA):
