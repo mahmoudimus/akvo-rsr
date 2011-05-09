@@ -15,8 +15,12 @@ register = template.Library()
 
 PROJECT_MARKER_ICON = getattr(settings,
     'GOOGLE_MAPS_PROJECT_MARKER_ICON', '')
+PROJECT_MARKER_ICON_SMALL = getattr(settings,
+    'GOOGLE_MAPS_PROJECT_MARKER_ICON_SMALL', '')
 ORGANISATION_MARKER_ICON = getattr(settings,
     'GOOGLE_MAPS_ORGANISATION_MARKER_ICON', '')
+ORGANISATION_MARKER_ICON_SMALL = getattr(settings,
+    'GOOGLE_MAPS_ORGANISATION_MARKER_ICON_SMALL', '')
 
 
 @register.inclusion_tag('inclusion_tags/google_map.html')
@@ -47,7 +51,10 @@ def google_global_project_map(map_type, zoom):
 @register.inclusion_tag('inclusion_tags/google_global_organisation_map.html')
 def google_global_organisation_map(map_type, zoom):
     organisations = Organisation.objects.all()
-    marker_icon = ORGANISATION_MARKER_ICON
+    if map_type == 'static':
+        marker_icon = ORGANISATION_MARKER_ICON_SMALL
+    else:
+        marker_icon = ORGANISATION_MARKER_ICON
     template_context = dict(map_type=map_type,
         marker_icon=marker_icon,
         organisations=organisations,
@@ -58,7 +65,10 @@ def google_global_organisation_map(map_type, zoom):
 @register.inclusion_tag('inclusion_tags/google_global_project_map.html')
 def google_organisation_projects_map(org, map_type, zoom):
     projects = org.active_projects()
-    marker_icon = PROJECT_MARKER_ICON
+    if map_type == 'static':
+        marker_icon = PROJECT_MARKER_ICON_SMALL
+    else:
+        marker_icon = PROJECT_MARKER_ICON
     template_context = dict(map_type=map_type,
                             marker_icon=marker_icon,
                             projects=projects,
