@@ -121,9 +121,13 @@ class LongitudeField(models.FloatField):
         self.validators = [MinValueValidator(-180), MaxValueValidator(180)]
 
 class LocationManager(models.Manager):
-    def get_query_set(self):
-        qs = super(LocationManager, self).get_query_set()
-        return qs.exclude(latitude=0, longitude=0)
+    '''Return only valid locations.
+
+    Usage: Loction.objects.valid()
+
+    '''
+    def valid(self):
+        return self.get_query_set().exclude(latitude=0, longitude=0)
     
 class Location(models.Model):
     latitude = LatitudeField(_('latitude'), default=0,
@@ -144,13 +148,19 @@ class Location(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     primary = models.BooleanField(_('primary location'), default=True)
-    admin_objects = models.Manager()
     objects = LocationManager()
 
     def __unicode__(self):
         return u'%s, %s (%s)' % (self.city, self.state, self.country)
 
     def save(self, *args, **kwargs):
+        '''Set primary to False if there is already a Location object
+        for the given model instance with primary set to True.
+        
+        TODO: This ideally needs to be moved to the form so that errors
+              can be flagged up during form validation.
+
+        '''
         if self.primary:
             qs = Location.objects.filter(content_type=self.content_type,
                                          object_id=self.object_id,
@@ -247,14 +257,6 @@ class Organisation(models.Model):
 
     
     class QuerySet(QuerySet):
-        def has_primary_location(self):
-            content_type = ContentType.objects.get_for_model(Organisation)
-            locations = Location.objects.filter(content_type=content_type,
-                primary=True)
-            locations = locations.exclude(latitude=0, longitude=0)
-            project_ids = [location.object_id for location in locations]
-            return self.filter(id__in=project_ids)
-
         def fieldpartners(self):
             return self.filter(field_partner__exact=True)
     
@@ -699,25 +701,12 @@ if settings.PVW_RSR: #pvw-rsr
                 location = locations[0]
             return location
 
-        @property
-        def median_location(self, location=None):
-            if self.has_multiple_locations():
-                locations = self.valid_locations()
-                # get middle point
-            return location
-
 
         class QuerySet(QuerySet):
             def valid_locations(self):
                 content_type = ContentType.objects.get_for_model(Project)
-                locations = Location.objects.filter(content_type=content_type)
-                locations = locations.exclude(latitude=0, longitude=0)
+                locations = Location.objects.valid().filter(content_type=content_type)
                 return locations
-
-            def has_primary_location(self):
-                locations = self.valid_locations()
-                project_ids = (location.object_id for location in locations)
-                return self.filter(id__in=project_ids)
 
             def has_multiple_locations(self):
                 locations = self.valid_locations()
@@ -1363,15 +1352,9 @@ else: #akvo-rsr
         class QuerySet(QuerySet):
             def valid_locations(self):
                 content_type = ContentType.objects.get_for_model(Project)
-                locations = Location.objects.filter(content_type=content_type)
-                locations = locations.exclude(latitude=0, longitude=0)
+                locations = Location.objects.valid().filter(content_type=content_type)
                 return locations
 
-            def has_primary_location(self):
-                locations = self.valid_locations()
-                project_ids = (location.object_id for location in locations)
-                return self.filter(id__in=project_ids)
-    
             def published(self):
                 return self.filter(publishingstatus__status='published')
         

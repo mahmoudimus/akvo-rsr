@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
     var jQ = jQuery.noConflict();
-    var markers = [ {% for location in object.locations.all %}
+    var markers = [ {% for location in object.locations.valid %}
         {
             icon: {
                 image: '{{ marker_icon }}'
