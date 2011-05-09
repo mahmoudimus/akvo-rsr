@@ -14,9 +14,9 @@ register = template.Library()
 
 
 PROJECT_MARKER_ICON = getattr(settings,
-                              'GOOGLE_MAPS_PROJECT_MARKER_ICON', '')
+    'GOOGLE_MAPS_PROJECT_MARKER_ICON', '')
 ORGANISATION_MARKER_ICON = getattr(settings,
-                                   'GOOGLE_MAPS_ORGANISATION_MARKER_ICON', '')
+    'GOOGLE_MAPS_ORGANISATION_MARKER_ICON', '')
 
 
 @register.inclusion_tag('inclusion_tags/google_map.html')
@@ -27,8 +27,8 @@ def google_map(object, width, height, zoom, marker_icon=''):
         marker_icon = PROJECT_MARKER_ICON
     elif is_organisation:
         marker_icon = ORGANISATION_MARKER_ICON
-    jquery_gmap = '%score/js/jquery.gmap.min.js' % settings.MEDIA_URL
-    template_context = dict(jquery_gmap=jquery_gmap, object=object,
+    media_url = settings.MEDIA_URL
+    template_context = dict(media_url=media_url, object=object,
                             width=width, height=height,
                             zoom=zoom, marker_icon=marker_icon)
     return template_context
