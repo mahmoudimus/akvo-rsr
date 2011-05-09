@@ -21,6 +21,18 @@ admin.autodiscover()
 # djangoembed
 oembed.autodiscover()
 
+# tastypie (api)
+from tastypie.api import Api
+from akvo.rsr.api.resources import ProjectResource, OrganisationResource, CategoryResource, LinkResource, FundingPartnerResource, IATIActivityResource
+
+v1_api = Api(api_name='v1')
+v1_api.register(ProjectResource())
+v1_api.register(OrganisationResource())
+v1_api.register(CategoryResource())
+v1_api.register(LinkResource())
+v1_api.register(FundingPartnerResource())
+v1_api.register(IATIActivityResource())
+
 feeds = {
     'updates': ProjectUpdates,
     'all-updates': AllProjectUpdates,
@@ -169,7 +181,11 @@ urlpatterns += patterns('',
     #(r'^rsr/momms/$', 'akvo.rsr.views.mms_update', ),
 
     #django-piston
-    (r'^rsr/api/', include('akvo.api.urls')),
+    #(r'^rsr/api/', include('akvo.api.urls')),
+
+    #tastypie
+    (r'^rsr/api/', include(v1_api.urls)),
+    
 )    
         
 
