@@ -120,6 +120,11 @@ class LongitudeField(models.FloatField):
         super(LongitudeField, self).__init__(*args, **kwargs)
         self.validators = [MinValueValidator(-180), MaxValueValidator(180)]
 
+class LocationManager(models.Manager):
+    def get_query_set(self):
+        qs = super(LocationManager, self).get_query_set()
+        return qs.exclude(latitude=0, longitude=0)
+    
 class Location(models.Model):
     latitude = LatitudeField(_('latitude'), default=0,
         help_text='Go to <a href="http://itouchmap.com/latlong.html"'
@@ -139,6 +144,8 @@ class Location(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
     primary = models.BooleanField(_('primary location'), default=True)
+    admin_objects = models.Manager()
+    objects = LocationManager()
 
     def __unicode__(self):
         return u'%s, %s (%s)' % (self.city, self.state, self.country)
@@ -146,7 +153,8 @@ class Location(models.Model):
     def save(self, *args, **kwargs):
         if self.primary:
             qs = Location.objects.filter(content_type=self.content_type,
-                    object_id=self.object_id, primary=True)
+                                         object_id=self.object_id,
+                                         primary=True)
             if self.pk:
                 qs = qs.exclude(pk=self.pk)
                 if qs.count() != 0:
@@ -232,13 +240,8 @@ class Organisation(models.Model):
 
     @property
     def primary_location(self):
-        '''Returns an organisations's primary location'''
-        qs = self.locations.filter(primary=True)
-        qs = qs.exclude(latitude=0, longitude=0)
-        if qs:
-            location = qs[0]
-            return location
-        return
+        location = self.locations.get(primary=True)
+        return location
 
     
     class QuerySet(QuerySet):
@@ -689,23 +692,35 @@ if settings.PVW_RSR: #pvw-rsr
 
         @property
         def primary_location(self):
-            qs = self.locations.filter(primary=True)
-            qs = qs.exclude(latitude=0, longitude=0)
-            if qs:
-                location = qs[0]
-                return location
-            return
+            location = self.locations.get(primary=True)
+            return location
+
+        @property
+        def median_location(self, location=None):
+            if self.has_multiple_locations():
+                locations = self.valid_locations()
+                # get middle point
+            return location
 
 
         class QuerySet(QuerySet):
-            def has_primary_location(self):
+            def valid_locations(self):
                 content_type = ContentType.objects.get_for_model(Project)
-                locations = Location.objects.filter(content_type=content_type,
-                    primary=True)
+                locations = Location.objects.filter(content_type=content_type)
                 locations = locations.exclude(latitude=0, longitude=0)
-                project_ids = [location.object_id for location in locations]
+                return locations
+
+            def has_primary_location(self):
+                locations = self.valid_locations()
+                project_ids = (location.object_id for location in locations)
                 return self.filter(id__in=project_ids)
 
+            def has_multiple_locations(self):
+                locations = self.valid_locations()
+                if locations.count() > 1:
+                    return True
+                return False
+                                            
             def published(self):
                 return self.filter(publishingstatus__status='published')
         
@@ -1108,13 +1123,8 @@ if settings.PVW_RSR: #pvw-rsr
                 
         @property
         def primary_location(self):
-            "Returns a project's primary location"
-            qs = self.locations.filter(primary=True)
-            qs = qs.exclude(latitude=0, longitude=0)
-            if qs:
-                location = qs[0]
-                return location
-            return
+            location = self.locations.get(primary=True)
+            return location
     
         def has_valid_legacy_coordinates(self): # TO BE DEPRECATED
             try:
@@ -1329,31 +1339,29 @@ else: #akvo-rsr
             return counter.count or 0
                 
         @property
-        def primary_location(self, location=None):
-            '''Returns a project's primary location'''
-            qs = self.locations.filter(primary=True)
-            qs = qs.exclude(latitude=0, longitude=0)
-            if qs:
-                location = qs[0]
-                return location
-            return
+        def primary_location(self):
+            location = self.locations.get(primary=True)
+            return location
     
-        def has_valid_legacy_coordinates(self): # TO BE DEPRECATED
-            try:
-                latitude = float(self.latitude)
-                longitude = float(self.longitude)
-                return True
-            except:
-                return False
+        #def has_valid_legacy_coordinates(self): # TO BE DEPRECATED
+        #    try:
+        #        latitude = float(self.latitude)
+        #        longitude = float(self.longitude)
+        #        return True
+        #    except:
+        #        return False
     
     
         class QuerySet(QuerySet):
-            def has_primary_location(self):
+            def valid_locations(self):
                 content_type = ContentType.objects.get_for_model(Project)
-                locations = Location.objects.filter(content_type=content_type,
-                    primary=True)
+                locations = Location.objects.filter(content_type=content_type)
                 locations = locations.exclude(latitude=0, longitude=0)
-                project_ids = [location.object_id for location in locations]
+                return locations
+
+            def has_primary_location(self):
+                locations = self.valid_locations()
+                project_ids = (location.object_id for location in locations)
                 return self.filter(id__in=project_ids)
     
             def published(self):
