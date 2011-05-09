@@ -18,7 +18,10 @@ import inspect
 from lxml import etree
 from lxml.builder import ElementMaker #, E
 
-from akvo.rsr.models import Project, Category, Link, FundingPartner, SupportPartner, Organisation
+from akvo.rsr.models import (
+    Project, Category, Link, FundingPartner, SupportPartner, FieldPartner,
+    Organisation, Location
+)
 
 #.GenericRelation(Location)
 
@@ -71,8 +74,6 @@ class IATISerializer(Serializer):
     }
     
     #def to_xml(self, data, options=None):
-    #    #import pdb
-    #    #pdb.set_trace()
     #    options = options or {}
     #    XML_NS      = "http://www.w3.org/XML/1998/namespace"
     #    AKVO_NS     = "http://www.akvo.org/rsr/api"
@@ -82,13 +83,9 @@ class IATISerializer(Serializer):
     #    }
     #    #akvo namspaced element
     #    tree = self.to_etree(data, options)
-    #    import pdb
-    #    pdb.set_trace()
     #    
     #    A = ElementMaker(nsmap=NS_MAP, namespace=AKVO_NS)
     #
-    #    import pdb
-    #    pdb.set_trace()
     #    if isinstance(data, dict):
     #        return self.to_xml(data['objects'], options)
     #    if isinstance(data, (tuple, list)):
@@ -183,6 +180,12 @@ class CategoryResource(ModelResource):
         resource_name = 'category'
 
 
+class LocationResource(ModelResource):
+    class Meta:
+        queryset = Location.objects.all()
+        resource_name = 'locations'
+
+
 class ProjectResource(ModelResource):
     categories = fields.ToManyField(CategoryResource, 'categories')
     links = fields.ToManyField('akvo.rsr.api.resources.LinkResource', 'links')
@@ -237,9 +240,12 @@ class IATIActivityResource(ModelResource):
     )
         
     """
-    categories = fields.ToManyField(CategoryResource, 'categories')
-    links = fields.ToManyField('akvo.rsr.api.resources.LinkResource', 'links')
+    categories      = fields.ToManyField(CategoryResource, 'categories')
+    locations       = fields.ToManyField(LocationResource, 'locations', full=True)
+    links           = fields.ToManyField('akvo.rsr.api.resources.LinkResource', 'links', full=True)
     fundingpartners = fields.ToManyField('akvo.rsr.api.resources.FundingPartnerResource', 'fundingpartner_set', full=True)
+    supportpartners = fields.ToManyField('akvo.rsr.api.resources.SupportPartnerResource', 'supportpartner_set', full=True)
+    fieldpartners   = fields.ToManyField('akvo.rsr.api.resources.FieldPartnerResource', 'fieldpartner_set', full=True)
     
 
     class Meta:
@@ -297,6 +303,26 @@ class IATIActivityResource(ModelResource):
     def dehydrate_original_id(self, bundle):
         self.bundler(bundle, 'other-identifier', {'owner-ref': 'NL-1', 'owner-name': 'DGIS'}, 'iati-activity')
 
+    def dehydrate_locations(self, bundle):
+        data = bundle.data
+        for item in data['locations']:
+            shrub = EDNA('location',[ # a very small tree
+                EDNA('coordinates', None, {'longitude': str(item.data['longitude']), 'latitude': str(item.data['longitude'])})
+            ])
+            if isinstance(data['tasty_data'],  EDNA):
+                data['tasty_data'].data.append(shrub)
+            else:
+                data['tasty_data'].data = [shrub]
+        data.pop('locations')
+
+    def dehydrate_links(self, bundle):
+        def dehydrate_link(*args):
+            self.bundler(*args)
+
+        for item in bundle.data['links']:
+            bundle.data['link'] = item.data['url'].data['url']
+            dehydrate_link(bundle, 'activity-website', {}, 'iati-activity')
+
     def dehydrate_fundingpartners(self, bundle):
         def dehydrate_fundingpartner(*args):
             self.bundler(*args)
@@ -312,6 +338,14 @@ class IATIActivityResource(ModelResource):
         for item in bundle.data['supportpartners']:
             bundle.data['supportpartner'] = item.data['support_organisation'].data['name']
             dehydrate_supportpartner(bundle, 'participating-org', {'role': item.data['support_organisation'].data['role']}, 'iati-activity')
+
+    def dehydrate_fieldpartners(self, bundle):
+        def dehydrate_fieldpartner(*args):
+            self.bundler(*args)
+
+        for item in bundle.data['fieldpartners']:
+            bundle.data['fieldpartner'] = item.data['field_organisation'].data['name']
+            dehydrate_fieldpartner(bundle, 'participating-org', {'role': item.data['field_organisation'].data['role']}, 'iati-activity')
 
     def full_dehydrate(self, obj):
         """
@@ -334,7 +368,6 @@ class IATIActivityResource(ModelResource):
         }
         # Dehydrate each field.
         for field_name, field_object in self.fields.items():
-            print field_name, field_object
             # A touch leaky but it makes URI resolution work.
             if isinstance(field_object, fields.RelatedField):
                 field_object.api_name = self._meta.api_name
@@ -354,14 +387,16 @@ class IATIActivityResource(ModelResource):
                     method(bundle)
         
         bundle = self.dehydrate(bundle)
-        #import pdb
-        #pdb.set_trace()
         return bundle
 
 
 class LinkResource(ModelResource):
-    project = fields.ToOneField(ProjectResource, 'project')
+    #project = fields.ToOneField(ProjectResource, 'project')
     
+    def dehydrate_url(self, bundle):
+        data = {'url': bundle.data['url']}
+        return Bundle(data=data)
+        
     class Meta:
         queryset = Link.objects.all()
         resource_name = 'links'
@@ -396,3 +431,16 @@ class SupportPartnerResource(ModelResource):
     class Meta:
         queryset = SupportPartner.objects.all()
         resource_name = 'supportpartners'
+
+        
+class FieldPartnerResource(ModelResource):
+    project = fields.ToOneField(ProjectResource, 'project')
+    field_organisation = fields.ToOneField(OrganisationResource, 'field_organisation', full=True)
+
+    def dehydrate_field_organisation(self, bundle):
+        data = {'name': bundle.data['field_organisation'].data['name'], 'role': 'Implementing'}
+        return Bundle(data=data)
+        
+    class Meta:
+        queryset = FieldPartner.objects.all()
+        resource_name = 'fieldpartners'
