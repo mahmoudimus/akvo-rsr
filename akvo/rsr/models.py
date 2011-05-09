@@ -696,24 +696,13 @@ if settings.PVW_RSR: #pvw-rsr
 
         @property
         def primary_location(self, location=None):
-            locations = self.locations.filter(primary=True)
+            locations = self.locations.valid().filter(primary=True)
             if locations:
                 location = locations[0]
             return location
 
 
         class QuerySet(QuerySet):
-            def valid_locations(self):
-                content_type = ContentType.objects.get_for_model(Project)
-                locations = Location.objects.valid().filter(content_type=content_type)
-                return locations
-
-            def has_multiple_locations(self):
-                locations = self.valid_locations()
-                if locations.count() > 1:
-                    return True
-                return False
-                                            
             def published(self):
                 return self.filter(publishingstatus__status='published')
         
@@ -1335,11 +1324,11 @@ else: #akvo-rsr
                 
         @property
         def primary_location(self, location=None):
-            locations = self.locations.filter(primary=True)
+            locations = self.locations.valid().filter(primary=True)
             if locations:
                 location = locations[0]
             return location
-    
+
         #def has_valid_legacy_coordinates(self): # TO BE DEPRECATED
         #    try:
         #        latitude = float(self.latitude)
@@ -1350,11 +1339,6 @@ else: #akvo-rsr
     
     
         class QuerySet(QuerySet):
-            def valid_locations(self):
-                content_type = ContentType.objects.get_for_model(Project)
-                locations = Location.objects.valid().filter(content_type=content_type)
-                return locations
-
             def published(self):
                 return self.filter(publishingstatus__status='published')
         
