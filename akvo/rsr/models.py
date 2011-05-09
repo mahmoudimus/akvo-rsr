@@ -239,8 +239,10 @@ class Organisation(models.Model):
         return '/rsr/organisation/%d/' % self.id
 
     @property
-    def primary_location(self):
-        location = self.locations.get(primary=True)
+    def primary_location(self, location=None):
+        locations = self.locations.filter(primary=True)
+        if locations:
+            location = locations[0]
         return location
 
     
@@ -691,8 +693,10 @@ if settings.PVW_RSR: #pvw-rsr
             return counter.count or 0
 
         @property
-        def primary_location(self):
-            location = self.locations.get(primary=True)
+        def primary_location(self, location=None):
+            locations = self.locations.filter(primary=True)
+            if locations:
+                location = locations[0]
             return location
 
         @property
@@ -1122,8 +1126,10 @@ if settings.PVW_RSR: #pvw-rsr
             return counter.count or 0
                 
         @property
-        def primary_location(self):
-            location = self.locations.get(primary=True)
+        def primary_location(self, location=None):
+            locations = self.locations.filter(primary=True)
+            if locations:
+                location = locations[0]
             return location
     
         def has_valid_legacy_coordinates(self): # TO BE DEPRECATED
@@ -1339,8 +1345,10 @@ else: #akvo-rsr
             return counter.count or 0
                 
         @property
-        def primary_location(self):
-            location = self.locations.get(primary=True)
+        def primary_location(self, location=None):
+            locations = self.locations.filter(primary=True)
+            if locations:
+                location = locations[0]
             return location
     
         #def has_valid_legacy_coordinates(self): # TO BE DEPRECATED
