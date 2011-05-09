@@ -1,12 +1,8 @@
 {% load i18n %}
 
 <script type="text/javascript">
-<<<<<<< HEAD
     var jQ = jQuery.noConflict();
     var markers = [ {% for location in object.locations.valid %}
-=======
-    var markers = [ {% for location in object.locations.all %}
->>>>>>> 5c27193f782cc0b2991d5cd6a25af5a7b62141a1
         {
             icon: {
                 image: '{{ marker_icon }}'
