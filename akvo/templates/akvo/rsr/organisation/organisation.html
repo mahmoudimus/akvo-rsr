@@ -49,7 +49,8 @@
 				</p>
         
         {% if o.primary_location %}
-          {% google_map o 180 135 6 %}
+          {% google_map o 6 %}
+          <div id="map_canvas" style="width:180px;height:135px;"></div>
         {% else %}
           <p class="small" style="color: red;">{% trans 'No map available' %}</p>
         {% endif %}
@@ -261,3 +262,12 @@
 </div>
 
 {% endblock maincontent %}
+
+{% block jq_ready %}
+    jQ('#map_canvas').gMap({
+        markers: markers,
+        scrollwheel: false,
+        streetViewControl: false,
+        zoom: zoom
+    });
+{% endblock jq_ready %}

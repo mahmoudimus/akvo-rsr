@@ -22,5 +22,17 @@
     <h1>
         {% trans 'Map of all projects' %}
     </h1>
-    {% google_global_project_map 'dynamic' 975 600 2 %}
+    {% google_global_project_map 'dynamic' 2 %}
+    <div id="map_canvas" style="width: 975px; height: 600px;"></div>
+{% endblock %}
+
+{% block jq_ready %}
+    jQ('#map_canvas').gMap({
+        latitude: 0,
+        longitude: 0,
+        markers: markers,
+        scrollwheel: false,
+        streetViewControl: false,
+        zoom: zoom
+    });
 {% endblock %}

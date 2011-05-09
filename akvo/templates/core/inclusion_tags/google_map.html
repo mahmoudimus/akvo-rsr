@@ -1,6 +1,7 @@
 {% load i18n %}
 
 <script type="text/javascript">
+    // Grab variable definitions from the template
     var markers = [ {% for location in object.locations.valid %}
         {
             icon: {
@@ -12,5 +13,5 @@
         },
     {% endfor %} ];
     var zoom = {{ zoom }};
+    // Now load the map in the template!
 </script>
-<div id="map_canvas" style="width:{{width}}px;height:{{height}}px;"></div>

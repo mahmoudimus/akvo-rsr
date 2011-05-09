@@ -20,7 +20,7 @@ ORGANISATION_MARKER_ICON = getattr(settings,
 
 
 @register.inclusion_tag('inclusion_tags/google_map.html')
-def google_map(object, width, height, zoom, marker_icon=''):
+def google_map(object, zoom, marker_icon=''):
     is_project = isinstance(object, Project)
     is_organisation = isinstance(object, Organisation)
     if is_project:
@@ -29,45 +29,38 @@ def google_map(object, width, height, zoom, marker_icon=''):
         marker_icon = ORGANISATION_MARKER_ICON
     media_url = settings.MEDIA_URL
     template_context = dict(media_url=media_url, object=object,
-                            width=width, height=height,
                             zoom=zoom, marker_icon=marker_icon)
     return template_context
 
 
 @register.inclusion_tag('inclusion_tags/google_global_project_map.html')
-def google_global_project_map(map_type, width, height, zoom):
+def google_global_project_map(map_type, zoom):
     projects = Project.objects.published()
     marker_icon = PROJECT_MARKER_ICON
     template_context = dict(map_type=map_type,
         marker_icon=marker_icon,
         projects=projects,
-        width=width,
-        height=height,
         zoom=zoom)
     return template_context
 
 
 @register.inclusion_tag('inclusion_tags/google_global_organisation_map.html')
-def google_global_organisation_map(map_type, width, height, zoom):
+def google_global_organisation_map(map_type, zoom):
     organisations = Organisation.objects.all()
     marker_icon = ORGANISATION_MARKER_ICON
     template_context = dict(map_type=map_type,
         marker_icon=marker_icon,
         organisations=organisations,
-        width=width,
-        height=height,
         zoom=zoom)
     return template_context
 
 
 @register.inclusion_tag('inclusion_tags/google_global_project_map.html')
-def google_organisation_projects_map(org, map_type, width, height, zoom):
+def google_organisation_projects_map(org, map_type, zoom):
     projects = org.active_projects()
     marker_icon = PROJECT_MARKER_ICON
     template_context = dict(map_type=map_type,
                             marker_icon=marker_icon,
                             projects=projects,
-                            width=width,
-                            height=height,
                             zoom=zoom)
     return template_context

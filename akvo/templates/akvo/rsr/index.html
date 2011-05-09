@@ -141,7 +141,8 @@
       		</div>
 			<div class="span-6 first last">
 				<a href="{% url global_project_map %}">
-					{% google_global_project_map 'static' 315 190 1 %}
+					{% google_global_project_map 'static' 1 %}
+                    <div id="map_canvas" style="width:315px;height:190px;"></div>
 	      		</a>
 			</div>
       		<div style="padding: .5em .5em .7em .5em;">
@@ -182,4 +183,17 @@
   $("#accordion").accordion();
   $("#accordion").accordion({ fillSpace: true });
   $("#accordion").accordion( "resize" )
+  $('#map_canvas').gMap({
+    disableDefaultUI: true,
+    latitude: 0,
+    longitude: 0,
+    mapTypeControl: false,
+    markers: markers,
+    panControl: false,
+    scaleControl: false,
+    scrollwheel: false,
+    streetViewControl: false,
+    zoom: zoom,
+    zoomControl: false
+  });
 {% endblock jq_ready %}

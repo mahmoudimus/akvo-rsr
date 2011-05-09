@@ -52,8 +52,9 @@
 					{% endif %}
 				</p>
 				{# Google Map #}
-	            {% if p.primary_location %}
-	                {% google_map p 260 180 3 %}
+	            {% if p.locations.valid %}
+	                {% google_map p 2 %}
+                    <div id="map_canvas" style="width:260px;height:180px;"></div>
 	            {% else %}
 	                <p style="color: red;">{% trans 'No map available' %}</p>
 	            {% endif %}
@@ -186,10 +187,6 @@
 {% block js %}
 	{{ block.super }}
 	
-	{# Load Google maps requirements #}
-	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}core/js/jquery.gmap.min.js"></script>
-	
 	{# Load Galleris requirements #}
 	<script src="{{MEDIA_URL}}core/galleria/galleria_1.2.2.js"></script>
 	<script>
@@ -218,11 +215,9 @@
 	jQ('#project_tabs').tabs();
 	
 	{{block.super}}
-	
-	{# Google map #}
-	jQ('#map_canvas').gMap({
-        latitude: 0,
-        longitude: 0,
+
+    {# Google map #}
+    jQ('#map_canvas').gMap({
         markers: markers,
         scrollwheel: false,
         streetViewControl: false,
