@@ -28,8 +28,8 @@ For additional details on the GNU license please see < http://www.gnu.org/licens
 	<base target="_top" />
 </head>
 <body>
-	{% google_organisation_projects_map org zoom %}
-    <div id="map_canvas" style="width:400px;height:400px;"></div>
+	{% google_organisation_projects_map org state zoom %}
+    <div id="map_canvas" style="width:{{width}}px;height:{{height}}px;"></div>
 	<div id="footer">
 		<div style="float:left; padding-top:3px; display:none;">
 			<span style="color:#{{textcolor}}; font-size:10px; font-weight:normal; margin-left:10px;">
