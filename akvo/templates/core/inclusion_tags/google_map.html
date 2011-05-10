@@ -5,6 +5,8 @@
     var markers = [ {% for location in object.locations.valid %}
         {
             icon: {
+                iconsize: [20, 34],
+                iconanchor: [10, 34],
                 image: '{{ marker_icon }}',
                 shadow: ''
             },

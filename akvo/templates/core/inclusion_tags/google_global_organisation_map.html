@@ -28,8 +28,10 @@
                 icon: {
                     image: '{{ marker_icon }}',
                 {% if map_type == 'static' %}
+                    iconanchor: [5, 17],
                     iconsize: [10, 17],
                 {% else %}
+                    iconanchor: [10, 34],
                     iconsize: [20, 34],
                 {% endif %}
                 shadow: ''
