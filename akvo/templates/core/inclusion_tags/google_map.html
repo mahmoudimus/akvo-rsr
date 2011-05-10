@@ -5,7 +5,8 @@
     var markers = [ {% for location in object.locations.valid %}
         {
             icon: {
-                image: '{{ marker_icon }}'
+                image: '{{ marker_icon }}',
+                shadow: ''
             },
             latitude: {{ location.latitude }},
             longitude: {{ location.longitude }},
