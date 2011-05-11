@@ -281,6 +281,8 @@ class IATIActivityResource(ModelResource):
         self.bundler(bundle, 'iati-identifier', {'ref': id}, 'iati-activity')
         bundle.data['id'] = "http://%s%s" % (Site.objects.get_current(), reverse('project_main', args=[id]))
         self.bundler(bundle, 'activity-website', {}, 'iati-activity')
+        bundle.data['id'] = bundle.obj.budget_total()
+        self.bundler(bundle, '{%s}total-budget' % AKVO_NS, {}, 'iati-activity')
         
     def dehydrate_project_plan_summary(self, bundle):
         self.bundler(bundle, 'description', {'type': 'General'}, 'iati-activity')
