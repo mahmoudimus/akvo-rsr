@@ -80,7 +80,7 @@
 							<span>{% trans 'Register' %}</span>
 						</a>
 					{% else %}
-						<a href="{% url 'myakvo' %}">
+						<a href="{% url 'myakvo' %}" class="{% if site_section = 'myakvo' %}active{% endif %}">
 							<span>{% trans 'My Akvo' %}</span>
 						</a>
 					{% endif %}

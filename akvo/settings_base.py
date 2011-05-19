@@ -140,6 +140,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     "akvo.rsr.context_processors.extra_context",
+    "akvo.rsr.context_processors.site_section_massage",
 )
 
 #TEMPLATE_DEBUG = DEBUG

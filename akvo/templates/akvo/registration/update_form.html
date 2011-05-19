@@ -1,95 +1,50 @@
 {% extends "rsr/myakvo/myakvo_base.html" %}
-{% comment %}
-{% extends "rsr/base_sheet.html" %}
-{% endcomment %}
-{% load i18n %}
+{% load i18n rsr_tags %}
 {% load url from future %}
 
 
-{% block title %}{% trans 'Update your Akvo RSR account information' %}{% endblock title %}
+{% block title %}{% trans 'User information' %}{% endblock title %}
 
 {% block breadcrum_items %}
 {{block.super}}
-  <li id="last_breadcrum_item">{% trans 'Update your Akvo RSR account information' %}</li>
+  <li id="last_breadcrum_item">{% trans 'User information' %}</li>
 {% endblock breadcrum_items %}
 
 
 {% block content %}
-  <h2>User information</h2>
-{% endblock content %}
-
-
-{% comment %}
-
-
-{% block breadcrum_items %}
-{{block.super}}
-<li id="last_breadcrum_item">{% trans 'Update your Akvo RSR account information' %}</li>
-{% endblock breadcrum_items %}
-
-{% block pre_content %}
-  {% include "rsr/myakvo/navigation.html" %}
-{% endblock pre_content %}
-
-{% block content %}
-  
-	<form method="post" action="" name="account_change_form">
+  <h2>{% trans "User information" %}</h2>
+  <p class="grey tiny">
+    {% trans "Your user name and organisation are fixed. If you need special assistence, please contact" %}
+    <a href="mailto:admin@akvo.org">admin@akvo.org</a>.
+  </p>
+  <p class="tiny">
+    {% trans "Your user name" %}: <b>{{request.user}}</b>
+  </p>
+  <p class="tiny">
+    {% trans "Your organisation" %}: <b>{{request.user.get_profile.organisation_name}}</b>
+  </p>
+  <p class="tiny">
+    {% url 'password_change' as password_change_url%}
+    {% blocktrans  %}
+        You can also <a href="{{password_change_url}}">change your password</a>.
+    {% endblocktrans %}
+  </p>
+  <hr />
+  <h3>{% trans "Edit your real name" %}</h3>
+  <p class="grey tiny">
+    {% trans "Your real name will be displayed when you make updates or comments on the site." %}
+  </p>
+  <form method="post" action="" name="account_change_form">
     {% csrf_token %}
-		{% if form.errors %}
-	    <div class="error" style="margin-right: 70px;">
-			<p class="c1">{% trans 'A problem occurred' %}</p>
-	        <p>{{ form.non_field_errors }}</p>
-	        <p>{% trans 'Please review messages below.' %}</p>
-	    </div>
-	 	{% endif %}
-		<div style="width:500px;">
-			<h1>{% trans 'Update your Akvo RSR account information' %}</h1>
-		
-			<p>
-				{% trans 'Your user name is' %}: {{request.user}}<br />
-				{% trans 'Your organisation is' %}: {{request.user.get_profile.organisation_name}}
-			</p>
-			{% url 'password_change' as password_change_url%}
-	        <p>
-				{% blocktrans  %}
-					You can also <a href="{{password_change_url}}">change your password</a>.				
-				{% endblocktrans %}
-			</p>		
-		</div>
-		<div class="clear"></div>
-		<hr />
-		
-		{% if form.first_name.errors or form.last_name.errors %}
-        <div class="error">
-            <p class="c1">{% trans 'A problem occurred' %}</p>
-            {% if form.first_name.errors %}
-            <p>{{ form.first_name.errors|join:", " }}</p>
-            {% endif %}
-            {% if form.last_name.errors %}
-            <p>{{ form.last_name.errors|join:", " }}</p>
-            {% endif %}
-        </div>
-        {% endif %}
-			<h3>{% trans 'Change your name:' %}</h3>
-			{{ form.first_name }}
-            <p class="small grey">{% trans 'Your first (given) name' %}.</p>
-            
-            {{ form.last_name }}
-            <p class="small grey">{% trans 'Your last (family) name' %}.</p>
-			
-			<p class="small grey">{% trans 'Your first and last name will be displayed when you post comments or updates to Akvo.' %}</p>
-		<div class="clear"></div>
-		<hr />
-		
-		<div style="text-align:center; padding-bottom:20px;">
-			<div style="float:left;">
-				<a href="{% url 'index' %}" class="small">{% trans 'Cancel' %}</a>
-			</div>
-			<a class="aqua awesome" href="javascript:document.account_change_form.submit();">
-				{% trans 'Change' %}
-			</a>
-		</div>
-	</form>	
+    {% if form.non_field_erros %}
+      {% form_text_field  '' form.non_field.errors '' %}
+    {% endif %}
+    {% form_text_field form.first_name form.first_name.errors 'First (given) name' %}
+    {% form_text_field form.last_name form.last_name.errors 'Last (family) name' %}
+    <div class="text_center">
+      <a class="aqua awesome" href="javascript:document.account_change_form.submit();">
+        {% trans 'Save changes' %}
+      </a>
+    </div>
+  </form>
 {% endblock content %}
-{% endcomment %}
-

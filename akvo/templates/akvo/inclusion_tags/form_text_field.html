@@ -1,0 +1,15 @@
+{% load i18n rsr_tags %}
+<div>
+  <div style="width:45%; float:left;">
+    {{ form_element }}
+    <p class="grey tiny">{{form_info}}.</p>
+  </div>
+  <div style="width:45%; float:right;">
+    {% if form_error %}
+      <div class="error">
+        <p>{{ form_error|join:", " }}</p>
+      </div>
+    {% endif %}
+  </div>
+<div class="clear"></div>
+</div>
