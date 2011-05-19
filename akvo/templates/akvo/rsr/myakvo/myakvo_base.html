@@ -1,0 +1,26 @@
+{% extends "rsr/base_sheet.html" %}
+{% load i18n permissions_tags %}
+{% load url from future %}
+
+{% block breadcrum_items %}
+  {{block.super}}
+  <li><a href="{% url 'myakvo' %}"><span>{% trans 'My Akvo' %}</span></a></li>
+{% endblock breadcrum_items %}
+
+{% block pre_content %}
+<h1>{% trans "My" %} Akvo</h1>
+
+<div id="myakvo_navigation">
+    User information |
+    Password |
+    SMS Updates setup |
+    Notices |
+    Notice preferences
+</div>
+
+
+
+{% comment %}
+ {% include "rsr/myakvo/navigation.html" %} 
+{% endcomment %}
+{% endblock pre_content %}

@@ -1,9 +1,26 @@
+{% extends "rsr/myakvo/myakvo_base.html" %}
+{% comment %}
 {% extends "rsr/base_sheet.html" %}
+{% endcomment %}
 {% load i18n %}
 {% load url from future %}
 
 
 {% block title %}{% trans 'Update your Akvo RSR account information' %}{% endblock title %}
+
+{% block breadcrum_items %}
+{{block.super}}
+  <li id="last_breadcrum_item">{% trans 'Update your Akvo RSR account information' %}</li>
+{% endblock breadcrum_items %}
+
+
+{% block content %}
+  <h2>User information</h2>
+{% endblock content %}
+
+
+{% comment %}
+
 
 {% block breadcrum_items %}
 {{block.super}}
@@ -73,5 +90,6 @@
 			</a>
 		</div>
 	</form>	
-{% endblock content %}	
+{% endblock content %}
+{% endcomment %}
 

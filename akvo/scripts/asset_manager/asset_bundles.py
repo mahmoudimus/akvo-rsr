@@ -21,6 +21,7 @@ ASSET_BUNDLES = {
             'org.css',
             'index.css',
             'jquery-ui-1.8.5.custom.css',
+            'myakvo.css',
             ],
     },
     'akvo_script': {
