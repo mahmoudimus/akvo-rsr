@@ -1,0 +1,12 @@
+
+div#myakvo_navigation {
+    margin-top:20px;
+    margin-bottom:15px;
+    font-size:0.875em;
+    font-weight:bold;
+    }
+
+div#myakvo_navigation .seperator {
+    margin:0 10px;
+    color:#7E8197;
+}

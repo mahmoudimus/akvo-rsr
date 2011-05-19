@@ -8,7 +8,7 @@
 	<meta charset="UTF-8" />
 	<meta name="description" content="{% trans 'We help donors and doers reach out to fund many thousands of new water and sanitation projects.' %}" />
 	<meta name="keywords" content="akvo, Akvo, akvo.org, Akvo.org, water, sanitation" />
-	<title>Akvo.org - {% block title %}{% trans 'See it happen' %}{% endblock %}</title>
+	<title>Akvo - {% block title %}{% trans 'See it happen' %}{% endblock %}</title>
 
 	{% asset_bundle 'akvo_style' %}
 	<!--[if IE 6]>
@@ -80,7 +80,7 @@
 							<span>{% trans 'Register' %}</span>
 						</a>
 					{% else %}
-						<a href="{% url 'myakvo' %}">
+						<a href="{% url 'myakvo' %}" class="{% if site_section = 'myakvo' %}active{% endif %}">
 							<span>{% trans 'My Akvo' %}</span>
 						</a>
 					{% endif %}

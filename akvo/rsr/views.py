@@ -898,7 +898,7 @@ def password_change(request, template_name='registration/password_change_form.ht
         form.fields['new_password1'].widget.attrs = {'class': 'input'}
         form.fields['new_password2'].widget.attrs = {'class': 'input'}
     return render_to_response(template_name, {
-        'form': form,
+        'form': form, 'site_section': 'myakvo',
     }, context_instance=RequestContext(request))
 password_change = login_required(password_change)
 
@@ -930,7 +930,8 @@ def update_user_profile(
         template_name,
         {
             'form': form,
-            'profile': user.get_profile()
+            'profile': user.get_profile(),
+            'site_section': 'myakvo'
         },
         context_instance=context
     )
@@ -1122,6 +1123,7 @@ def myakvo_mobile(request):
             'form': form,
             'sms_updating_enabled': state_equals(profile, profile.STATE_UPDATES_ENABLED),
             'notices': notices,
+            'site_section': 'myakvo',
         }, RequestContext(request))
 
 @login_required()

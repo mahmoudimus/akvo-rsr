@@ -1,3 +1,24 @@
+{% extends "rsr/myakvo/myakvo_base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+
+{% block title %}{% trans 'Notie preference' %}{% endblock title %}
+
+{% block breadcrum_items %}
+{{block.super}}
+  <li id="last_breadcrum_item">{% trans 'Notice preference' %}</li>
+{% endblock breadcrum_items %}
+
+
+{% block content %}
+  <h2>{% trans "Notice preference" %}</h2>
+  
+{% endblock content %}
+
+
+{% comment %}
+
 {% extends "rsr/base_sheet.html" %}
 {% load humanize i18n pagination_tags rsr_tags %}
 {% load url from future %}
@@ -64,3 +85,4 @@
     </form>
 </div>
 {% endblock content %}
+{% endcomment %}

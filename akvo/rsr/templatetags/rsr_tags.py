@@ -10,6 +10,16 @@ from akvo.scripts.asset_manager import map, asset_bundles
 register = template.Library()
 
 
+@register.inclusion_tag('inclusion_tags/form_text_field.html', takes_context=True)
+def form_text_field(context, form_element, form_error, form_info):
+    """Shortcut for creating forms"""
+    return {
+        'MEDIA_URL': context['MEDIA_URL'],
+        'form_element': form_element,
+        'form_error': form_error,
+        'form_info': form_info
+        }
+
 @register.inclusion_tag('inclusion_tags/funding_box.html', takes_context=True)
 def funding_box(context, project):
     '''
