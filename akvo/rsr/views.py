@@ -4,13 +4,13 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module. 
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
+from akvo.rsr.forms import InvoiceForm, OrganisationForm, RSR_RegistrationFormUniqueEmail, RSR_ProfileUpdateForm, ProjectUpdateForm# , RSR_RegistrationForm, RSR_PasswordChangeForm, RSR_AuthenticationForm, RSR_RegistrationProfile
+from akvo.rsr.decorators import fetch_project
 from akvo.rsr.models import MiniCMS, FocusArea, Category, Organisation, Project, ProjectUpdate, ProjectComment, FundingPartner, PHOTO_LOCATIONS, STATUSES, UPDATE_METHODS, Location, CONTINENTS, Country
 from akvo.rsr.models import UserProfile, Invoice, SmsReporter
-from akvo.rsr.forms import InvoiceForm, OrganisationForm, RSR_RegistrationFormUniqueEmail, RSR_ProfileUpdateForm, ProjectUpdateForm# , RSR_RegistrationForm, RSR_PasswordChangeForm, RSR_AuthenticationForm, RSR_RegistrationProfile
-
-from akvo.rsr.decorators import fetch_project
-
 from akvo.rsr.utils import wordpress_get_lastest_posts, get_rsr_limited_change_permission, get_random_from_qs, state_equals
+
+from akvo.gateway.models import Gateway
 
 from django import forms
 from django import http
@@ -1026,14 +1026,17 @@ def updateform(request, project_id):
         }, RequestContext(request))
 
 class MobileProjectForm(forms.Form):
-    project         = forms.ChoiceField(required=False, widget=forms.Select())
+    #queryset is assigned in __init__
+    project         = forms.ModelChoiceField(queryset=None, required=False,)
 
     def __init__(self, *args, **kwargs):
         profile = kwargs.pop('profile', None)
         forms.Form.__init__(self, *args, **kwargs)
         if profile and profile.available_gateway_numbers():
-            self.fields['project'].choices = ((u'', u'---------'),) + tuple([(p.id, "%s - %s" % (unicode(p.pk), p.name)) for p in profile.my_unreported_projects()])
-
+            self.fields['project'].queryset = profile.my_unreported_projects()
+        else:
+            self.fields['project'].queryset = []
+            
     def clean(self):
         """
         
@@ -1042,24 +1045,36 @@ class MobileProjectForm(forms.Form):
             
 class MobileNumberForm(forms.Form):
     phone_number    = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'input', 'size':'25', 'maxlength':'15',}))
+    gateway         = forms.ModelChoiceField(queryset=Gateway.objects.all(), required=False,)
+    
+    #def __init__(self, *args, **kwargs):
+    #    profile = kwargs.pop('profile', None)
+    #    forms.Form.__init__(self, *args, **kwargs)
+    #    if profile and profile.gateway:
+    #        self.fields['gateway'].initial = profile.gateway
 
     def clean(self):
         """
         
         """
         cd = self.cleaned_data
-        if not 'phone_number' in cd:
-            raise forms.ValidationError(_(u'Field phone_number missing from MobileForm.'))        
-        if cd['phone_number']:
-            if self.has_changed():
-                try:
-                    UserProfile.objects.get(phone_number=cd['phone_number'])
-                except:
-                    pass
-                else:
-                    raise forms.ValidationError(_(u'The phone number %s is already registered for updating. Please check the number entered.' % cd['phone_number']))
-        else:
-            pass # disable updating for this user
+        self._changed_data = []
+
+        if cd['phone_number'] and not cd['gateway']: #empty choice returns None
+            raise forms.ValidationError(_(u'You must select a gateway'))
+
+        # self.has_changed() won't work when form contains ModelChoiceField
+        if cd['phone_number'] != self.initial['phone_number']:
+            try:
+                UserProfile.objects.get(phone_number=cd['phone_number'])
+            except:
+                self._changed_data += ['phone_number']
+            else:
+                raise forms.ValidationError(_(u'The phone number %s is already registered for updating. Please check the number entered.' % cd['phone_number']))
+        
+        if cd['gateway'] != self.initial['gateway']:
+            self._changed_data += ['gateway']
+
         return self.cleaned_data            
 
 @login_required()
@@ -1069,12 +1084,12 @@ def myakvo_mobile_number(request):
     '''
     profile = request.user.get_profile()
     if request.method == 'POST':
-        form = MobileNumberForm(request.POST, request.FILES, initial={'phone_number': profile.phone_number})
+        form = MobileNumberForm(request.POST, request.FILES, initial={'phone_number': profile.phone_number, 'gateway': profile.gateway})
         if form.is_valid():
             # workflow for mobile Akvo
-            if 'phone_number' in form.changed_data:
+            if 'phone_number' in form.changed_data or 'gateway' in form.changed_data:
                 if form.cleaned_data['phone_number']: # phone number added or changed
-                    profile.add_phone_number(form.cleaned_data['phone_number'])
+                    profile.add_phone_number(form.cleaned_data['gateway'], form.cleaned_data['phone_number'])
                 else: # phone number removed
                     profile.disable_sms_update_workflow()
                 #always save change to phone number
@@ -1082,7 +1097,7 @@ def myakvo_mobile_number(request):
                 profile.save()
             return HttpResponseRedirect(reverse('myakvo_mobile'))
     else:
-        form = MobileNumberForm(initial={'phone_number': profile.phone_number},)
+        form = MobileNumberForm(initial={'phone_number': profile.phone_number, 'gateway': profile.gateway},)
     return render_to_response('rsr/myakvo/mobile_number.html', {'form': form, }, RequestContext(request))
 
 @login_required()
@@ -1093,11 +1108,10 @@ def myakvo_mobile(request):
     profile = request.user.get_profile()
     form_data = {'phone_number': profile.phone_number}
     notices = Notice.objects.notices_for(request.user, on_site=True)
-    
     if request.method == 'POST':
         form = MobileProjectForm(request.POST, request.FILES, profile=profile)
         if form.is_valid():
-            project = Project.objects.get(pk=form.cleaned_data['project'])
+            project = form.cleaned_data['project']
             profile.create_reporter(project)
             return HttpResponseRedirect('./')
     else:

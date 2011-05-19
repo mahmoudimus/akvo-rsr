@@ -1073,6 +1073,10 @@ class SmsReporterInline(admin.TabularInline):
             self.readonly_fields = ()            
         return super(SmsReporterInline, self).get_readonly_fields(request, obj)
 
+    def get_formset(self, request, obj=None, **kwargs):
+        kwargs.update({"formfield_callback": curry(self.formfield_for_dbfield, request=request, obj=obj)})
+        return super(SmsReporterInline, self).get_formset(request, obj=None, **kwargs)
+
     def formfield_for_dbfield(self, db_field, **kwargs):
         """
         Hook for specifying the form Field instance for a given database Field
@@ -1084,14 +1088,22 @@ class SmsReporterInline(admin.TabularInline):
         Use hook to implement limits to project list select for org users.
         """
         request = kwargs.get("request", None)
+        profile = kwargs.pop("obj", None)
+        user = request.user
         
         # Limit the choices of the project db_field to projects linked to user's org
         # if we have an org user
         if db_field.attname == 'project_id':
             opts = self.opts
-            user = request.user
             if user.has_perm(opts.app_label + '.' + get_rsr_limited_change_permission(opts)):
                 db_field.rel.limit_choices_to = {'pk__in': user.get_profile().organisation.all_projects()}
+            
+        if db_field.attname == 'gw_number_id':
+            if profile:
+                db_field.rel.limit_choices_to = {'gateway__pk__exact': getattr(profile.gateway, 'id', 0)}
+            else:
+                db_field.rel.limit_choices_to = {'gateway__pk__exact': getattr(user.get_profile().gateway, 'id', 0)}
+
             
         return super(SmsReporterInline, self).formfield_for_dbfield(db_field, **kwargs)
 
@@ -1140,7 +1152,7 @@ class UserProfileAdmin(admin.ModelAdmin):
         # non-superusers don't get to see it all
         if not request.user.is_superuser:
             # hide sms-related stuff
-            self.exclude =  ('phone_number', 'validation',)
+            self.exclude =  ('phone_number', 'validation', 'gateway',)
             # user and org are only shown as text, not select widget
             #self.readonly_fields = ('user', 'organisation',)
         # this is needed to remove some kind of caching on exclude and readonly_fk,
@@ -1168,7 +1180,6 @@ class UserProfileAdmin(admin.ModelAdmin):
             self.form.declared_fields['is_sms_updater'].widget.attrs.pop('readonly', None)
             self.form.declared_fields['is_sms_updater'].widget.attrs.pop('disabled', None)
             return []
-        
 
     def queryset(self, request):
         """

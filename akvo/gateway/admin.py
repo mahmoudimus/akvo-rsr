@@ -22,18 +22,27 @@ class GatewayNumberInLine(admin.TabularInline):
 
 class GatewayAdmin(admin.ModelAdmin):
     model = Gateway #get_model('gateway', 'gateway')
-    list_display = ('name', 'host_name', 'send_path', 'numbers', )
+    list_display = ('name', 'slug', 'host_name', 'send_path', 'numbers', )
     inlines = [GatewayNumberInLine, ]
     fieldsets = (
         (_(u'Gateway general info'), {
             'fields': (
-                'name', 'host_name', 'send_path',
+                'name', 'slug', 'host_name', 'send_path',
             ),
          }),
-        (_(u'Query string variable names'), {
+        (_(u'Sending (MT) SMS query string identifier mappings'), {
             'description': _(u'''<p style="margin-left:0; padding-left:0; margin-top:1em; width:75%;">
-                                The names of the query string varibles for mo sms http callback.
-                            </p>'''),
+                The names of the query string variables used when constructing a querystring to send an SMS
+            </p>'''),
+            'fields': (
+                'mt_receiver', 'mt_sender', 'mt_message', 'mt_extra'
+            ),
+         }),
+        
+        (_(u'Receiveing (MO) SMS callback querystring identifier mappings'), {
+            'description': _(u'''<p style="margin-left:0; padding-left:0; margin-top:1em; width:75%;">
+                The names of the query string variables for mo sms http callback.
+            </p>'''),
             'fields': (
                 'sender', 'receiver', 'message', 'timestamp', 'msg_id',
             ),

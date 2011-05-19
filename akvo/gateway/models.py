@@ -25,22 +25,29 @@ class Gateway(models.Model):
     """
 
     """
-    name        = models.SlugField(
-        _(u'gateway name'), max_length=30,
+    name        = models.CharField(_(u'gateway name'), blank=True, max_length=100, help_text=_(u'For information only'), )
+    slug        = models.SlugField(
+        _(u'slug'), max_length=30,
         help_text='''
-            The name is used in the callback to determine the gateway used.
-            For example if the name is "42it" the callback path will be /gateway/42it/
+            The slug is used in the callback to determine the gateway used.
+            For example if the slug is "42it" the callback path will be /gateway/42it/
+            Use only lower case letters and _ or -
         '''
     )
     host_name   = models.CharField(_(u'host name'), max_length=255, help_text=_(u'Host name to use when sending an SMS through the gateway'), )
     send_path   = models.CharField(_(u'send message path'), max_length=255, help_text=_(u'Path at gateway when sending an SMS'), )
 
-    sender      = models.CharField(_(u'sender'),    max_length=30, help_text=_(u"Sender's phone number"), )
-    receiver    = models.CharField(_(u'receiver'),  max_length=30, help_text=_(u'Receiving number at gateway'), )
-    message     = models.CharField(_(u'message'),   max_length=30, help_text=_(u'The message text'), )
-    timestamp   = models.CharField(_(u'timestamp'), max_length=30, help_text=_(u'Gateway timestamp'), )
-    msg_id      = models.CharField(_(u'msg_id'),    max_length=30, help_text=_(u'Gateway message id'), )
-
+    sender      = models.CharField(_(u'sender'),        max_length=30, help_text=_(u"Sender's phone number"), )
+    receiver    = models.CharField(_(u'receiver'),      max_length=30, help_text=_(u'Receiving number at gateway'), )
+    message     = models.CharField(_(u'message'),       max_length=30, help_text=_(u'The message text'), )
+    timestamp   = models.CharField(_(u'timestamp'),     max_length=30, blank=True, help_text=_(u'Gateway timestamp'), )
+    msg_id      = models.CharField(_(u'msg id'),        max_length=30, blank=True, help_text=_(u'Gateway message id'), )
+    
+    mt_receiver = models.CharField(_(u'mt number'),     max_length=30, help_text=_(u'Mobile number to send to'), )
+    mt_sender   = models.CharField(_(u'mt number'),     max_length=30, help_text=_(u'Gateway number sending from'), )
+    mt_message  = models.CharField(_(u'mt message'),    max_length=30, help_text=_(u'Message to be sent'), )
+    mt_extra    = models.TextField(_(u'mt extra'),      max_length=255, blank=True, help_text=_(u'Extra query string data, account info on the GW for instance'), )
+    
     def __unicode__(self):
         return self.name
 

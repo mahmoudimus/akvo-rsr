@@ -2044,6 +2044,7 @@ class UserProfile(models.Model, PermissionBase, WorkflowBase):
     organisation        = models.ForeignKey(Organisation)
     phone_number        = models.CharField(max_length=50, blank=True)# TODO: check uniqueness if non-empty
     validation          = models.CharField(_('validation code'), max_length=20, blank=True)
+    gateway             = models.ForeignKey(Gateway, blank=True, null=True)
 
     objects             = UserProfileManager()
 
@@ -2154,15 +2155,18 @@ class UserProfile(models.Model, PermissionBase, WorkflowBase):
         
     def my_unreported_projects(self):
         """
-        Projects I may do SMS updates for that aren't linked through an SmsReporter yet, filtering out reporters that have no project set
+        return Projects I may do SMS updates for that aren't linked through an SmsReporter yet,
+        filtering out reporters that have no project set
         """
         return self.my_projects().exclude(pk__in=[r.project.pk for r in self.reporters.exclude(project=None)])
 
     def available_gateway_numbers(self):
-        # TODO: user selectable gateways
-        gw = Gateway.objects.get(name=self.GATEWAY_42IT)
         # find all "free" numbers
-        numbers = GatewayNumber.objects.filter(gateway=gw).exclude(number__in=[r.gw_number.number for r in self.reporters.exclude(project=None)])
+        numbers = GatewayNumber.objects.filter(gateway=self.gateway).exclude(
+            number__in=[
+                r.gw_number.number for r in self.reporters.exclude(project=None)
+            ]
+        )
         return numbers
 
     def create_reporter(self, project=None):
@@ -2339,7 +2343,7 @@ class UserProfile(models.Model, PermissionBase, WorkflowBase):
         self.set_initial_state() #Phone disabled
         logger.debug("Exiting: %s()" % who_am_i())
     
-    def add_phone_number(self, phone_number):
+    def add_phone_number(self, gateway, phone_number):
         """
         Set up workflow
         Transit to STATE_PHONE_NUMBER_ADDED
@@ -2355,9 +2359,8 @@ class UserProfile(models.Model, PermissionBase, WorkflowBase):
         if self.do_transition(self.TRANSITION_ADD_PHONE_NUMBER, user):
             self.validation = User.objects.make_random_password(length=6).upper()
             self.phone_number = phone_number
+            self.gateway = gateway
             self.save()
-            # TODO: gateway selection!
-            #gw_number = Gateway.objects.get(name=self.GATEWAY_42IT).gatewaynumber_set.all()[0]
             # Setup an initial SmsReporter for handling of registration SMSs so no project assigned to reporter yet.
             reporter = self.find_reporter()
             reporter.create_validation_request()

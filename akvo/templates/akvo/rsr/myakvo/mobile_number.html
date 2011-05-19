@@ -26,25 +26,28 @@ For additional details on the GNU license please see < http://www.gnu.org/licens
 {% block content %}
 
 	<form method="post" name="number_change_form">
-    {% csrf_token %}
-    <h1>{% trans 'Enter your mobile phone number' %}</h1>
-
-    {% if form.non_field_errors %}
-        <p class="error">{{ form.non_field_errors.as_text }}</p>
-    {% endif %}
-    {{form.phone_number}}
-    <p class="small grey">{% trans 'Mobile phone number' %}.</p>
-
-    <p class="small grey">{% trans 'The number should be entered as numbers only, starting with your country code. Example: 46707277477' %}</p>
-
-		<div style="text-align:center; padding-bottom:20px;">
-			<div style="float:left;">
-				<a href="{% url myakvo_mobile %}" class="small">{% trans 'Cancel' %}</a>
-			</div>
-			<a class="aqua awesome" href="javascript:document.number_change_form.submit();">
-				{% trans 'Change' %}
-			</a>
-		</div>
+        {% csrf_token %}
+        <h1>{% trans 'Enter your mobile phone number' %}</h1>
+    
+        {% if form.non_field_errors %}
+            <p class="error">{{ form.non_field_errors.as_text }}</p>
+        {% endif %}
+        {{form.phone_number}}
+        <p class="small grey">{% trans 'Mobile phone number' %}.</p>
+    
+        <p class="small grey">{% trans 'The number should be entered as numbers only, starting with your country code. Example: 46707277477' %}</p>
+    
+        {{form.gateway}}
+        <p class="small grey">{% trans 'Select the SMS gateway to use' %}.</p>
+    
+        <div style="text-align:center; padding-bottom:20px;">
+            <div style="float:left;">
+                <a href="{% url myakvo_mobile %}" class="small">{% trans 'Cancel' %}</a>
+            </div>
+            <a class="aqua awesome" href="javascript:document.number_change_form.submit();">
+                {% trans 'Change' %}
+            </a>
+        </div>
 
 	</form>
 	
