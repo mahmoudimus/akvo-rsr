@@ -12,9 +12,55 @@
 
 
 {% block content %}
-  <h2>{% trans "SMS updates setup" %}</h2>
-
-  
+  <div style="float:left; width:45%">
+    <h2>{% trans "SMS updates setup" %}</h2>
+    <p class="grey tiny">
+      {% trans "Send project updates to Akvo via SMS using your mobile phone" %}
+    </p>
+    <p class="tiny">
+      {% trans "Your mobile phone number:" %}
+    </p>
+    <a class="aqua awesome" href="{% url 'myakvo_mobile_number' %}">
+      {% trans "Register phone..." %}
+    </a>
+  </div>
+  <div style="float:right; width:45%">
+    <h2>{% trans "SMS project update setup instructions" %}</h2>
+      <ol class="tiny">
+        <li>
+          {% trans "Register your mobile phone on this page." %}
+        </li>
+        <li>
+          {% trans "Next, validate you mobile phone:" %}
+          <ul style="font-size:1em; margin-top:5px;">
+            <li>
+              {% trans "We will send an email to your nomal email account with a validation code*" %}
+            </li>
+            <li>
+              {% trans "We will also send an SMS message using your email validation code." %}
+            </li>
+            <li>
+              {% trans "Reply to the SMS message using your email validation code." %}
+            </li>
+          </ul>
+        </li>
+        <li>
+          {% trans "After those steps are complete, return to this page:" %}
+          <ul style="font-size:1em; margin-top:5px;">
+            <li>{% trans "Choose the project which you want to update via SMS." %}</li>
+            <li>{% trans "We will send an SMS message to your mobile phone with a project phone number." %}</li>
+          </ul>
+        </li>
+        <li>{% trans "Send SMS messages to the prooject phone nuymber:" %}
+          <ul style="font-size:1em; margin-top:5px;">
+            <li>{% trans "Your SMS messages will appear on Akvo.org as project updates." %}</li>
+          </ul>
+        </li>
+      </ol>
+      <p class="grey nano">
+        {% trans "* Will also appear as a Notice below." %}
+  </div>
+  <div class="clear"></div>
 {% endblock content %}
 
 

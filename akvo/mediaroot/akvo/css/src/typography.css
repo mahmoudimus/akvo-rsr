@@ -113,7 +113,7 @@ ul li { margin-left:1em;}
 ul { list-style-position: outside; list-style-type: disc; margin-left: 0.5em; }
 ul ul { list-style-type: square; }
 ul ul ul { list-style-type: circle; }
-ol { list-style-position: inside; list-style-type: decimal; margin-left: 0.5em;}
+ol { list-style-position: outside; list-style-type: decimal; margin-left: 0.5em;}
 ol li {  margin-left:1em; }
 dt { font-weight: bold; margin-top: .8em; margin-bottom: .4em; }
 /*
@@ -224,17 +224,17 @@ p.lede {
     margin-bottom:1.3em;
     }
 
-p.small, .small p, span.small, .small span,  .small label, ul.small, a.small, .simplelist ul li {
+p.small, .small p, span.small, .small span,  .small label, ul.small, ol.small, a.small, .simplelist ul li {
     font-size:0.8125em;
     line-height:1.4em;
     }
 
-p.tiny, .tiny p, span.tiny, .tiny span, .tiny label, ul.tiny, a.tiny {
+p.tiny, .tiny p, span.tiny, .tiny span, .tiny label, ul.tiny, ol.tiny, a.tiny {
     font-size:0.6875em;
     line-height:1.4em;
     }
 
-p.nano, .nano p, span.nano, .nano span, .nano label ul.nano, a.nano {
+p.nano, .nano p, span.nano, .nano span, .nano label ul.nano, ol.nano, a.nano {
     font-size:0.56725em;
     line-height:1.4em;
     }
