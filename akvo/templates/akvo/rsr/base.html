@@ -28,6 +28,11 @@
 <body>
 	<div id="header">
 		<div id="header_container" class="container">
+      {% comment %}
+        Non RSR views get their site_section added in a context procesor.
+        RSR view is responsible to adding the variable them selfs
+      {% endcomment %}
+
 			<ul id="main_nav">
 				<li>
 					<a id="main_nav_left" href="/" class="{% if site_section = 'index' %}active{% endif %} {% if not site_section %}active{% endif %} ">
