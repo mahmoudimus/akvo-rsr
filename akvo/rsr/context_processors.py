@@ -23,7 +23,8 @@ def site_section_massage(request):
     RSR views. This to be able to set the correct toolbar item."""
     request_url = request.get_full_path().split('?')[0]
     if not request_url.startswith('/rsr/notices') \
-        and not request_url.startswith('/rsr/accounts'):
+        and not request_url.startswith('/rsr/accounts') \
+        and not request_url.startswith('/rsr/myakvo'):
         return dict()
 
     template_context = dict(site_section='myakvo')

@@ -28,7 +28,8 @@
     {% if request.user.get_profile.has_perm_add_sms_updates %}
       
       {% url 'myakvo_mobile' as url_myakvo_mobile %}
-      {% if request.path = url_myakvo_mobile %}
+      {% url 'myakvo_mobile_number' as url_myakvo_mobile_number %}
+      {% if request.path = url_myakvo_mobile or request.path = url_myakvo_mobile_number %}
         <b>{% trans "SMS updates" %}</b> <span class="seperator">|</span>
       {% else %}
         <a href="{{url_myakvo_mobile}}">{% trans "SMS updates" %}</a> <span class="seperator">|</span> 
