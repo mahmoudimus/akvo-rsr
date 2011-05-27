@@ -37,10 +37,10 @@
   <form method="post" action="" name="account_change_form">
     {% csrf_token %}
     {% if form.non_field_erros %}
-      {% form_text_field  '' form.non_field.errors '' %}
+      {% form_text_field  '' form.non_field.errors '' '' %}
     {% endif %}
-    {% form_text_field form.first_name form.first_name.errors 'First (given) name' %}
-    {% form_text_field form.last_name form.last_name.errors 'Last (family) name' %}
+    {% form_text_field form.first_name form.first_name.errors '' 'First (given) name' %}
+    {% form_text_field form.last_name form.last_name.errors '' 'Last (family) name' %}
     <div class="text_center">
       <a class="aqua awesome" href="javascript:document.account_change_form.submit();">
         {% trans 'Save changes' %}

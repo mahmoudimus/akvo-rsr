@@ -4,13 +4,16 @@
 
 <div>
   <div style="width:45%; float:left;">
-    {{ form_element }}
-    <p class="grey tiny">{{form_info}}.</p>
+    <p class="no_margin_bottom small">
+      {{field_title}}
+    </p>
+    {{ field }}
+    <p class="grey tiny">{{field_info}}.</p>
   </div>
   <div style="width:45%; float:right;">
-    {% if form_error %}
+    {% if field_error %}
       <div class="error">
-        <p>{{ form_error|join:", " }}</p>
+        <p>{{ field_error|join:", " }}</p>
       </div>
     {% endif %}
   </div>
