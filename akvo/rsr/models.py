@@ -2238,7 +2238,7 @@ class UserProfile(models.Model, PermissionBase, WorkflowBase):
     def disable_all_reporters(self):
         self.disable_reporting()
         
-    def destroy_reporter(self, reporter=None):
+    def delete_reporter(self, reporter=None):
         logger.debug("Entering: %s()" % who_am_i())
         if reporter:
             reporters = [reporter]
@@ -2249,6 +2249,9 @@ class UserProfile(models.Model, PermissionBase, WorkflowBase):
             reporter.delete()
         logger.debug("Exiting: %s()" % who_am_i())
 
+    def delete_all_reporters(self):
+        self.delete_reporter()
+        
     def disable_sms_update_workflow(self, admin_user=None):
         logger.debug("Entering: %s()" % who_am_i())
         # this profile's user

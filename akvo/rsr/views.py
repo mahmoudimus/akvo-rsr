@@ -140,7 +140,6 @@ def get_query(query_string, search_fields):
         
     return query
 
-
 @render_to('rsr/index.html')
 def index(request, cms_id=None):
     '''
@@ -1132,7 +1131,7 @@ def myakvo_cancel_reporter(request, reporter_id):
     '''
     profile = request.user.get_profile()
     reporter = SmsReporter.objects.get(id=reporter_id)
-    profile.destroy_reporter(reporter)
+    profile.delete_reporter(reporter)
     return HttpResponseRedirect(reverse('myakvo_mobile'))
     
 class CommentForm(ModelForm):
