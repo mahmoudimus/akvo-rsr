@@ -3,13 +3,15 @@
 {% load url from future %}
 
 
-{% block title %}{% trans 'Set up your mobile phone' %}{% endblock title %}
+{% block title %}{% trans 'SMS updates setup' %}{% endblock title %}
 
 {% block breadcrum_items %}
 {{block.super}}
-  <li><a href=""><span>{% trans 'Set up your mobile phone' %}</span></a></li>
   <li id="last_breadcrum_item">{% trans 'SMS updates setup' %}</li>
 {% endblock breadcrum_items %}
+
+{% block myakvo_navigation %}<div id="myakvo_navigation">&nbsp;</div>{% endblock %}
+
 
 {% block content %}
   <h2>{% trans "Set up your mobile phone" %}</h2>
@@ -19,6 +21,7 @@
   <form method="post" name="number_change_form">
     {% csrf_token %}
     {% form_text_field form.phone_number form.phone_number.errors 'Your mobile phone number' 'Numbers only, starting with your country code. Example: 46707277477' %}
+    <p></p>
     <p class="no_margin_bottom small">
       {% trans "Select a gateway" %}
     </p>
@@ -29,8 +32,12 @@
       <option value="audi">Audi</option>
     </select>
     <p class="grey tiny" style="margin-top:5px">{% trans "Tip text here" %}</p>
-    <hr />
+    <p>&nbsp;</p>
+    <hr style="margin-bottom:25px" />
     <div class="text_center">
+      <div style="float:left;">
+        <a class="small" href="#">{% trans "Cancel" %}</a>
+      </div>
       <a class="aqua awesome" href="javascript:document.number_change_form.submit();">
         {% trans 'Save changes' %}
       </a>

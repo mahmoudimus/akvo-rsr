@@ -3,7 +3,7 @@
 {% load url from future %}
 
 
-{% block title %}{% trans 'Notie preference' %}{% endblock title %}
+{% block title %}{% trans 'Notice preference' %}{% endblock title %}
 
 {% block breadcrum_items %}
 {{block.super}}
@@ -13,7 +13,61 @@
 
 {% block content %}
   <h2>{% trans "Notice preference" %}</h2>
-  
+  <p class="grey tiny">
+    {% trans "Choose which notices we should send to you and how they should be sent" %}
+  </p>
+  <p class="tiny">
+    {% trans "Your user name" %}: <b>{{request.user}}</b>
+  </p>
+  <p class="tiny">
+    {% trans "Your organisation" %}: <b>{{request.user.get_profile.organisation_name}}</b>
+  </p>
+  <form action="#" method="post" name="notice_change_form" accept-charset="utf-8">
+    {% csrf_token %}
+    <table class="preferences" border="0" cellspacing="0" cellpadding="0" class="tiny">
+      <tr>
+        <th>{% trans "Notice type" %}</th>
+        <th>{% trans "Via email" %}</th>
+        <th>{% trans "Via SMS" %}</th>
+      </tr>
+      <tr class="even">
+        <td>{% trans "Mobile phone number added or changed" %}</td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+      </tr>
+      <tr>
+        <td>{% trans "Mobile phone validated" %}</td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+      </tr>
+      <tr class="even">
+        <td>{% trans "Mobile phone no longer valid" %}</td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+      </tr>
+      <tr>
+        <td>{% trans "SMS updates enabled for a specific project" %}</td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+       <td><input type="checkbox" name="vehicle" value="Bike" /></td>       
+      </tr>
+      <tr class="even">
+        <td>{% trans "SMS updates discontinued for a specfic project" %}</td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+      </tr>
+      <tr>
+        <td>{% trans "SMS update received" %}</td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+        <td><input type="checkbox" name="vehicle" value="Bike" /></td>
+      </tr>
+    </table>
+    <p>&nbsp;</p>
+    <div class="text_center">
+      <a class="aqua awesome" href="javascript:document.notice_change_form.submit();">
+        {% trans 'Save changes' %}
+      </a>
+    </div>
+  </form>
 {% endblock content %}
 
 
