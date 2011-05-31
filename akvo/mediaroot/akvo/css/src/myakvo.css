@@ -9,4 +9,25 @@ div#myakvo_navigation {
 div#myakvo_navigation .seperator {
     margin:0 10px;
     color:#7E8197;
-}
+    }
+
+table.preferences {
+    margin-top:30px;
+    font-size:0.6875em;
+    line-height:1.4em;
+    border:2px solid #C6C7CD;
+    }
+
+table.preferences th {
+    background-color:#DEDEE5;
+    font-weight:normal;
+    }
+
+table.preferences td {
+    border:none;
+    }
+
+table.preferences tr.even {
+    background-color:#F8F9FF;
+    }
+

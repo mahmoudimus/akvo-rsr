@@ -13,6 +13,38 @@
 
 {% block content %}
   <h2>{% trans "Notices" %}</h2>
+  <p class="tiny grey">
+    {% trans "A history of all notices related to SMS project updates" %}
+  </p>
+  <p class="tiny"><a href="#">{% trans "Hide notices" %}</a></p>
+  <hr />
+  <div style="float:left; width:20%">
+    <p class="tiny bold">2011-04-20 20-01</p>
+    <p class="tiny">{% trans "Phone number added" %}</p>
+  </div>
+  <div style="float:left; width:75%; margin-left:15px">
+    <p class="tiny">
+      {% trans "Your mobile phone number" %}, 15105023302, {% trans "has been registred" %}.
+    </p>
+   <p class="tiny">
+     {% trans "We have send an SMS message to this number. Please validate your mobile phone by replying via SMS with the following code only:" %}
+  </p>
+  <p class="tiny bold" style="text-transform:uppercase">
+    C8ELMR
+  </p>
+  <p class="tiny">
+    {% trans "If our SMS message didn&#x27;t reach you for some reason, please send an SMS with the code to the following phone number:" %}
+  </p>
+  <p class="tiny bold">
+    467301203262115
+  </p>
+  <p class="tiny">
+    {% trans "Please return to this page and select the project for which you wish to enable SMS updates." %}
+   </p>
+  </div>
+  <div class="clear"></div>
+  <hr />
+  <p class="tiny"><a href="#">{% trans "Show all notices" %}</a></p>
   
 {% endblock content %}
 
