@@ -23,60 +23,47 @@
     <a class="aqua awesome" href="{% url 'myakvo_mobile_number' %}">
       {% trans "Register phone..." %}
     </a>
-    <p>&nbsp;</p>
-    <h2>{% trans "Select project to update via SMS" %}</h2>
-    <p class="grey tiny">
-      {% trans "Each project have a unique phone number" %}
-    </p>
-    <div style="float:left; width:280px;">
-      <select style="width:250px">
-      <option value="">{% trans "Select project to add.." %}</option>
-      <option value="volvo">Volvo</option>
-      <option value="saab">Saab</option>
-      <option value="mercedes">Mercedes</option>
-      <option value="audi">Audi</option>
-      </select>
-    </div>
-    <div style="float:left; width:130px;">
-      <a style="float:right; margin-right:5px" class="aqua awesome" href="{% url 'myakvo_mobile_number' %}">
-        {% trans "Add project" %}
-      </a>
-    </div>
-    <div class="clear"></div>
-    <p>&nbsp;</p>
-    {# First project #}
-    <div style="border:1px solid #BCBEC5; padding:3px;">
-      <div style="float:left; width:280px">
-        <p class="tiny" style="margin-bottom:5px;">
-          2 - zzz DEMO Akvo RSR SMS demo project DEMO<br />
-          Project phone number:
-          <span class="bold"> 4673123334000</span>
-        </p>
-      </div>
-      <div style="float:left; width:130px; padding-top:5px;">
-        <a style="float:right; margin-right:5px" class="aqua awesome" href="{% url 'myakvo_mobile_number' %}">
-          {% trans "Discontinue" %}
-        </a>
-      </div>
+    {% if sms_updating_enabled %}
+      <p>&nbsp;</p>
+      <h2>{% trans "Select project to update via SMS" %}</h2>
+      <p class="grey tiny">
+        {% trans "Each project has a unique phone number" %}
+      </p>
+      {% if form.fields.project.choices %}
+      <form method="post" name="add_project_form">
+        {% csrf_token %}  
+        <div style="float:left; width:280px;">
+          {{form.project}}
+        </div>
+        <div style="float:left; width:130px;">
+          <a style="float:right; margin-right:5px" class="aqua awesome" href="javascript:document.add_project_form.submit();">
+            {% trans "Add project" %}
+          </a>
+        </div>
+      </form>
+      {% endif %}
       <div class="clear"></div>
-    </div>
-    {# last project if many (no top border) #}
-    <div style="border:1px solid #BCBEC5; padding:3px; border-top:none;">
-      <div style="float:left; width:280px">
-        <p class="tiny" style="margin-bottom:5px;">
-          3 - zzz DEMO Yet another DEMO<br />
-          Project phone number:
-          <span class="bold">46731987543</span>
-        </p>
-      </div>
-      <div style="float:left; width:130px; padding-top:5px;">
-        <a style="float:right; margin-right:5px;" class="aqua awesome" href="{% url 'myakvo_mobile_number' %}">
-          {% trans "Discontinue" %}
-        </a>
-      </div>
-      <div class="clear"></div>
-    </div>
-    
+      <p>&nbsp;</p>
+      {% for reporter in profile.reporters.all %}
+        {% if reporter.project %}    
+          <div style="border:1px solid #BCBEC5; padding:3px; {% if not forloop.first %} border-top:none;{% endif %}">
+            <div style="float:left; width:280px">
+              <p class="tiny" style="margin-bottom:5px;">
+                {{reporter.project.pk}} - {{reporter.project.name}}<br />
+                {% trans 'Project phone number:' %}
+                <span class="bold"> {{reporter.gw_number}}</span>
+              </p>
+            </div>
+            <div style="float:left; width:130px; padding-top:5px;">
+              <a style="float:right; margin-right:5px" class="aqua awesome" href="{% url 'myakvo_cancel_reporter' reporter.id %}">
+                {% trans "Discontinue" %}
+              </a>
+            </div>
+            <div class="clear"></div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
   </div>
   <div style="float:right; width:45%">
     <h2>{% trans "SMS project update setup instructions" %}</h2>
