@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+"""
+    Akvo RSR is covered by the GNU Affero General Public License.
+    See more details in the license.txt file located at the root folder of the
+    Akvo RSR module. For additional details on the GNU license please
+    see < http://www.gnu.org/licenses/agpl.html >.
+"""
+
+
+DEBUG = True
+ASSET_MANAGER_DEV = True
+PIPELINE_AUTO = True
+
+SITE_ID = 1
+MEDIA_ROOT = '/var/akvo/rsr_media'
+MEDIA_URL = '/rsr/media/'
+DOMAIN_NAME = 'akvo.dev'
+APP_DOMAIN_NAME = 'akvoapp.dev'
+
+DATABASES = {
+    'default': {
+        'NAME': 'akvo-rsr',
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': 'rsr-user',
+        'PASSWORD': 'water',
+        'HOST': 'localhost',
+    },
+    'wordpress': {
+        'NAME': 'akvo-wp',
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': 'rsr-user',
+        'PASSWORD': 'water',
+        'HOST': 'localhost',
+        'PORT': '3309',
+    }
+}
+
+SECRET_KEY = 'CHANGE-ME'

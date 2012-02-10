@@ -1,5 +1,6 @@
 {% load i18n rsr_tags webdesign %}
 {% load url from future %}
+{% load compressed %}
 
 
 <!DOCTYPE html>
@@ -18,6 +19,8 @@
   <style type="text/css" media="screen">
   	{% block inline_styles %}{% endblock inline_styles %}
 	</style>
+
+  {% compressed_css 'test_style' %}
   
 	<link rel="shortcut icon" href="{{MEDIA_URL}}akvo/img/favicon.ico" type="image/x-icon">
 	{% block head %}
