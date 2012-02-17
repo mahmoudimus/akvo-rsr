@@ -9,18 +9,18 @@
 
 import os.path
 
+DOMAIN_NAME = 'akvo.dev'
+APP_DOMAIN_NAME = 'akvoapp.dev'
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '{{SECRET_KEY}}'
+DEBUG = True
+# PIPELINE = False    # Enables raw files
+PIPELINE_AUTO = True  # Creates one css resouce on the fly 
 
-PVW_RSR = {{PVW_RSR}}
+PROJECT_UPDATE_TIMEOUT = 6000 # Sets the timeout time for project update changes
 
 # If local development you might want to have the logs in the project dir.
 #LOG_FILE_PATH = os.path.join(os.path.dirname(__file__),'../log')
 
-
-LIVE_EARTH_ENABLED = {{LIVE_EARTH_ENABLED}}
-WALKING_FOR_WATER_ENABLED = {{WALKING_FOR_WATER_ENABLED}}
 SITE_ID = {{SITE_ID}}
 MEDIA_ROOT = {{MEDIA_ROOT}}
 MEDIA_URL = {{MEDIA_URL}}
@@ -41,6 +41,8 @@ DATABASES = {
     }
 }
 
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = '{{SECRET_KEY}}'
 
 #TEST_RUNNER = 'test_runner.run_tests'
 

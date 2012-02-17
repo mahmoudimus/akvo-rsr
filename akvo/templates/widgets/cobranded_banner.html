@@ -1,4 +1,4 @@
-{% load i18n rsr_tags rsr_filters thumbnail cache counter_tags humanize%}
+{% load compressed i18n rsr_tags rsr_filters thumbnail cache counter_tags humanize%}
 {% load url from future %}
 
 
@@ -15,7 +15,7 @@
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	
-	{% asset_bundle 'widget_cobranded_banner' %}
+  {% compressed_css 'widget_cobranded_banner' %}
 		
 	<style type="text/css" media="screen">
 	{% block inline_styles %}
