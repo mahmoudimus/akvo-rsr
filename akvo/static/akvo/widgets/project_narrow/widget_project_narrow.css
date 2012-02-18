@@ -35,7 +35,7 @@ div.photo_frame {
 
 
 .fundingboxnarrow-header {
-	background: transparent url(/rsr/static/akvo/base/img/fundingboxnarrow.png) no-repeat 0 0;
+	background: transparent url(../../base/img/fundingboxnarrow.png) no-repeat 0 0;
 	height:5px;
 	width:150px;
 	overflow:hidden;
@@ -43,7 +43,7 @@ div.photo_frame {
 }
 
 .fundingboxnarrow-footer {
-    background: transparent url(/rsr/static/akvo/base/img/fundingboxnarrow.png) no-repeat -300px 0;
+    background: transparent url(../../base/img/fundingboxnarrow.png) no-repeat -300px 0;
 	height:6px;	
 	width:150px;
 	overflow:hidden;
@@ -52,7 +52,7 @@ div.photo_frame {
 
 
 .fundingboxnarrow-content {
-	background: transparent url(/rsr/static/akvo/base/img/fundingboxnarrow.png) repeat-y -150px 0;
+	background: transparent url(../../base/img/fundingboxnarrow.png) repeat-y -150px 0;
 	width:150px;
 	margin:0px auto 0px auto;
 	overflow:hidden;

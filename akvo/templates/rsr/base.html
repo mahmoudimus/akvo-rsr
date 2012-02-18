@@ -11,7 +11,7 @@
 	<meta name="keywords" content="akvo, Akvo, akvo.org, Akvo.org, water, sanitation" />
 	<title>Akvo.org - {% block title %}{% trans 'See it happen' %}{% endblock %}</title>
 
-	{% asset_bundle 'akvo_style' %}
+  {% compressed_css 'akvo_style' %}
 	<!--[if IE 6]>
 		{% asset_bundle 'akvo_ie6_style' %}
 	<![endif]-->
@@ -20,7 +20,6 @@
   	{% block inline_styles %}{% endblock inline_styles %}
 	</style>
 
-  {% compressed_css 'test_style' %}
   
 	<link rel="shortcut icon" href="{{MEDIA_URL}}akvo/img/favicon.ico" type="image/x-icon">
 	{% block head %}

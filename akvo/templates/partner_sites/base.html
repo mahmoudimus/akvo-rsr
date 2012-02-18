@@ -1,4 +1,4 @@
-{% load i18n rsr_tags webdesign rsr_tags thumbnail %}
+{% load compressed i18n rsr_tags webdesign rsr_tags thumbnail %}
 {% load url from future %}
 
 
@@ -11,7 +11,7 @@
   <meta charset="utf-8">
   <title>{% block title %}{% endblock title %}{{organisation}}</title>
 
-  {% asset_bundle 'partner_sites_style' %}
+  {% compressed_css 'partner_sites_style' %}
   {% if stylesheet %}<link rel="stylesheet" href="{{MEDIA_URL}}{{stylesheet}}">{% endif %}
   {% if favicon %}<link rel="shortcut icon" href="{{MEDIA_URL}}{{favicon}}" type="image/x-icon">{% endif %}
   {% block head %}{% endblock head %}
@@ -123,7 +123,7 @@
       <div class="two_col_right" style="text-align:right;">
           <p class="small">
             <a href="{{domain_url}}">
-              <img src="{{MEDIA_URL}}widgets/img/akvo-badge.gif" width="100" height="30" alt="Akvo.org" style="vertical-align:text-bottom;" />
+              <img src="{{domain_url}}/rsr/static/akvo/widgets/base/img/akvo-badge.gif" width="100" height="30" alt="Akvo.org" style="vertical-align:text-bottom;" />
             </a>
           </p>
       </div>

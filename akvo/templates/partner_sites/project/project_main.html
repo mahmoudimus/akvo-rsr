@@ -1,5 +1,5 @@
 {% extends "partner_sites/project/base_project.html" %}
-{% load i18n rsr_tags webdesign thumbnail counter_tags cache humanize google_maps %}
+{% load compressed i18n rsr_tags webdesign thumbnail counter_tags cache humanize google_maps %}
 {% load url from future %}
 
 
@@ -142,7 +142,7 @@
   {% else %}
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
   {% endif %}
-  {% asset_bundle 'partner_sites_script' %}
+  {% compressed_js 'partner_sites_script' %}
   <script>
     var galleria_data = [
       {

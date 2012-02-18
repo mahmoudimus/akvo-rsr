@@ -1,5 +1,5 @@
 {% extends "rsr/project/project_subpage_base.html" %}
-{% load i18n rsr_tags %}
+{% load compressed i18n rsr_tags %}
 {% load url from future %}
 
 
@@ -815,7 +815,7 @@
 
 {% block js %}
 {{block.super}}
-{% asset_bundle 'akvo_machinery_js' %}
+{% compressed_js 'akvo_machinery_js' %}
 {% endblock js %}
 
 {% block jq_ready %}
