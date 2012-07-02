@@ -3,4 +3,7 @@ Exec {
   path => ["/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "bin", "/opt/vagrant_ruby/bin"]
 }
 
-include ubuntu
+include ubuntu::bootstrap
+include ubuntu::deps
+include ubuntu::tools
+include ubuntu::python
