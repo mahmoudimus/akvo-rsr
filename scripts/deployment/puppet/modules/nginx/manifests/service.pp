@@ -1,4 +1,4 @@
-class nginx {
+class nginx::service {
 
 	package { 'nginx': 
 	    ensure => present,

@@ -9,7 +9,7 @@ class ubuntu::bootstrap {
   }
 
   exec { 'apt-get upgrade':
-    command => 'sudo /usr/bin/apt-get upgrade',
+    command => 'sudo /usr/bin/apt-get -y upgrade',
     require => [Exec["apt-get update"]],
   }	
 

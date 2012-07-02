@@ -7,3 +7,6 @@ include ubuntu::bootstrap
 include ubuntu::deps
 include ubuntu::tools
 include ubuntu::python
+
+include nginx::service
+# include nginx::conf
