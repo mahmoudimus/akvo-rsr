@@ -5,6 +5,7 @@ Vagrant::Config.run do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
+  config.vm.host_name = "akvo.dev"
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "precise64"
@@ -44,6 +45,13 @@ Vagrant::Config.run do |config|
   # You will need to create the manifests directory and a manifest in
   # the file precise64.pp in the manifests_path directory.
   #
+  config.vm.provision :puppet do |puppet|
+    puppet.manifests_path = "scripts/deployment/puppet/manifests"
+    puppet.manifest_file = "dev.pp"
+    puppet.module_path = "scripts/deployment/puppet/modules"
+    puppet.options = "--verbose --debug"
+  end
+
   # An example Puppet manifest to provision the message of the day:
   #
   # # group { "puppet":
