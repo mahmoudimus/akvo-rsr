@@ -7,7 +7,7 @@ class ubuntu::python {
     	"python-virtualenv"
     ]:
     ensure => "latest",
-    require => Class['ubuntu::tools'],
+    require => Class["ubuntu::tools"],
   }
   
 }

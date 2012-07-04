@@ -5,10 +5,10 @@ class ubuntu::tools {
       "nodejs",
       "npm",
       "node-less",
-      "yui-compressor"
+      "yui-compressor",
     ]:
     ensure => "latest",
-    require => Class['ubuntu::deps'],
+    require => Class["ubuntu::deps"],
   }
   
 }

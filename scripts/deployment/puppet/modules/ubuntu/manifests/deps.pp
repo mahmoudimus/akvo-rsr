@@ -2,12 +2,12 @@ class ubuntu::deps {
 
   package {
     [
-      "build-essential",
       "checkinstall",
       "libssl-dev",
+      "python-software-properties",
     ]:
     ensure => "latest",
-    require => Class['ubuntu::bootstrap'],
+    require => Class["ubuntu::bootstrap"],
   }
   
 }

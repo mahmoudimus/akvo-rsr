@@ -9,4 +9,18 @@ include ubuntu::tools
 include ubuntu::python
 
 include nginx::service
-include nginx::conf
+# include nginx::conf
+
+class { 'mysql': }
+class { 'mysql::python': }
+class { 'mysql::server':
+	config_hash => { 'root_password' => 'ocean' }
+}
+mysql::db { 'mydb':
+  user     => 'rsr-user',
+  password => 'lake',
+  host     => 'localhost',
+  grant    => ['all'],
+}
+
+#include uwsgi

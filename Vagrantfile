@@ -41,34 +41,11 @@ Vagrant::Config.run do |config|
   # config.vm.share_folder "v-data", "/vagrant_data", "../data"
   config.vm.share_folder("v-root", "/var/akvo", ".", :nfs => true)
 
-  # Enable provisioning with Puppet stand alone.  Puppet manifests
-  # are contained in a directory path relative to this Vagrantfile.
-  # You will need to create the manifests directory and a manifest in
-  # the file precise64.pp in the manifests_path directory.
-  #
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "scripts/deployment/puppet/manifests"
     puppet.manifest_file = "dev.pp"
     puppet.module_path = "scripts/deployment/puppet/modules"
-    # puppet.options = "--verbose --debug"
+    puppet.options = "--verbose --debug"
   end
-
-  # An example Puppet manifest to provision the message of the day:
-  #
-  # # group { "puppet":
-  # #   ensure => "present",
-  # # }
-  # #
-  # # File { owner => 0, group => 0, mode => 0644 }
-  # #
-  # # file { '/etc/motd':
-  # #   content => "Welcome to your Vagrant-built virtual machine!
-  # #               Managed by Puppet.\n"
-  # # }
-  #
-  # config.vm.provision :puppet do |puppet|
-  #   puppet.manifests_path = "manifests"
-  #   puppet.manifest_file  = "precise64.pp"
-  # end
 
 end
