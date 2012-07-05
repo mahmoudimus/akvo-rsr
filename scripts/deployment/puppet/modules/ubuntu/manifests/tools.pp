@@ -2,6 +2,8 @@ class ubuntu::tools {
 
   package {
     [
+      "git-core",
+      "mercurial",
       "nodejs",
       "npm",
       "node-less",
