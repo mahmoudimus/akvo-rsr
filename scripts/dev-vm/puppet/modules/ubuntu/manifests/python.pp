@@ -2,7 +2,7 @@ class ubuntu::python {
 
   package {
     [
-    	"python2.7-dev",
+    	"python-dev",
     	"python-setuptools",
     	"python-pip",
     	"python-virtualenv"
@@ -13,13 +13,13 @@ class ubuntu::python {
 
   exec { "PyCrypto":
     command => "sudo pip install PyCrypto",
-    require => Package["python.2.7-dev"],
+    # require => Package["python-deps"],
+    require => Package["python-dev"],
   }
 
   exec { "Fabric":
     command => "sudo pip install Fabric",
     require => Exec["PyCrypto"],
   }
-
-  
+ 
 }

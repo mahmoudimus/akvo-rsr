@@ -16,7 +16,7 @@ class { 'mysql::python': }
 class { 'mysql::server':
 	config_hash => { 'root_password' => 'ocean' }
 }
-mysql::db { 'mydb':
+mysql::db { 'rsr':
   user     => 'rsr-user',
   password => 'lake',
   host     => 'localhost',
