@@ -17,7 +17,7 @@ akvo/testing.py
 
 .vagrant
 scripts/dev-vm/venv
-dev-env
+# dev-env
 
 ## Deployment
 scripts/deployment/builders/osx/config/python_system.config
