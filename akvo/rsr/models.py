@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Akvo RSR is covered by the GNU Affero General Public License.
-# See more details in the license.txt file located at the root folder of the Akvo RSR module. 
+# See more details in the license.txt file located at the root folder of the Akvo RSR module.
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 from datetime import date, datetime, timedelta
@@ -12,8 +12,10 @@ import logging
 logger = logging.getLogger('akvo.rsr')
 
 import oembed
+import re
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Max, Sum
 from django.db.models.query import QuerySet
@@ -62,6 +64,7 @@ from akvo.rsr.signals import (
 
 from iso3166 import ISO_3166_COUNTRIES, CONTINENTS
 
+
 #Custom manager
 #based on http://www.djangosnippets.org/snippets/562/ and
 #http://simonwillison.net/2008/May/1/orm/
@@ -83,6 +86,30 @@ OLD_CONTINENTS = (
     ("5", _(u'North America')),
     ("6", _(u'South America')),
 )
+
+
+def validate_iati_id(iati_id):
+    """Validates that the iati_id string follows the guide lines at
+    http://iatistandard.org/guides/organisation-data/organisation-identifiers
+
+    For example "SE-FKR-QWERTY" where:
+    "SE-FKR" is the namespace code given by IATI supporrt
+    "-QWERTY" is the organisations own identifier
+
+    Validation is not very strict since information about the rules where
+    not easy to find.
+
+    >>> validate_iati_id("SE-AD-123")
+    >>>
+
+    >>> validate_iati_id("non valid id")
+    ValidationError: [u'se- is not a valid IATI identifier']
+
+    """
+    pattern = r'(^[A-Z]{2}[-]{1}[A-Z]{3}[-]{1}[A-Z0-9_\-]{2,}$)'
+    if not re.match(pattern, iati_id):
+        raise ValidationError(u'%s is not a valid IATI identifier' % iati_id)
+
 
 class Country(models.Model):
 
@@ -166,11 +193,13 @@ class BaseLocation(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-primary',]
+        ordering = ['-primary', ]
+
 
 class OrganisationLocation(BaseLocation):
     # the organisation that's related to this location
     location_target = models.ForeignKey('Organisation', null=True, related_name='locations')
+
 
 class ProjectLocation(BaseLocation):
     # the project that's related to this location
@@ -178,14 +207,14 @@ class ProjectLocation(BaseLocation):
 
 
 class Partnership(models.Model):
-    FIELD_PARTNER       = u'field'
-    FUNDING_PARTNER     = u'funding'
-    SPONSOR_PARTNER     = u'sponsor'
-    SUPPORT_PARTNER     = u'support'
+    FIELD_PARTNER = u'field'
+    FUNDING_PARTNER = u'funding'
+    SPONSOR_PARTNER = u'sponsor'
+    SUPPORT_PARTNER = u'support'
 
-    PARTNER_TYPE_LIST   = [FIELD_PARTNER,      FUNDING_PARTNER,      SPONSOR_PARTNER,      SUPPORT_PARTNER,]
-    PARTNER_LABELS      = [_(u'Field partner'), _(u'Funding partner'), _(u'Sponsor partner'), _(u'Support partner'),]
-    PARTNER_TYPES       = zip(PARTNER_TYPE_LIST, PARTNER_LABELS)
+    PARTNER_TYPE_LIST = [FIELD_PARTNER, FUNDING_PARTNER, SPONSOR_PARTNER, SUPPORT_PARTNER, ]
+    PARTNER_LABELS = [_(u'Field partner'), _(u'Funding partner'), _(u'Sponsor partner'), _(u'Support partner'), ]
+    PARTNER_TYPES = zip(PARTNER_TYPE_LIST, PARTNER_LABELS)
 
     organisation = models.ForeignKey('Organisation', verbose_name=_(u'organisation'))
     project = models.ForeignKey('Project', verbose_name=_(u'project'),)
@@ -197,6 +226,12 @@ class Partnership(models.Model):
         blank=True,
         null=True
     )
+    iati_id = models.CharField(_(u'IATI ID'),
+        max_length=75,
+        blank=True,
+        null=True,
+        help_text=_(u'IATI ID format e.g. have to start with the following format "SE-FKR-"'),
+        validators=[validate_iati_id])
 
     class Meta:
         verbose_name = _(u'project partner')
@@ -210,6 +245,7 @@ class Partnership(models.Model):
 class ProjectsQuerySetManager(QuerySetManager):
     def get_query_set(self):
         return self.model.ProjectsQuerySet(self.model)
+
 
 class Organisation(models.Model):
     """
@@ -239,45 +275,51 @@ class Organisation(models.Model):
     name = models.CharField(_(u'name'), max_length=25, help_text=_(u'Short name which will appear in organisation and partner listings (25 characters).'))
     long_name = models.CharField(_(u'long name'), blank=True, max_length=75, help_text=_(u'Full name of organisation (75 characters).'))
     organisation_type = models.CharField(_(u'organisation type'), max_length=1, choices=ORG_TYPES)
+    iati_id = models.CharField(_(u'IATI ID'),
+        max_length=75,
+        blank=True,
+        null=True,
+        help_text=_(u'IATI ID format e.g. have to start with the following format "SE-FKR-"'),
+        validators=[validate_iati_id]
+        )
 
     logo = ImageWithThumbnailsField(_(u'logo'),
                                     blank=True,
                                     upload_to=image_path,
-                                    thumbnail={'size': (360,270)},
+                                    thumbnail={'size': (360, 270)},
                                     help_text=_(u'Logos should be approximately 360x270 pixels (approx. 100-200kB in size) on a white background.'),
                                    )
-    
-    url = models.URLField(blank=True, verify_exists = False, help_text=_(u'Enter the full address of your web site, beginning with http://.'))
+
+    url = models.URLField(blank=True, verify_exists=False, help_text=_(u'Enter the full address of your web site, beginning with http://.'))
 
     phone = models.CharField(_(u'phone'), blank=True, max_length=20, help_text=_(u'(20 characters).'))
     mobile = models.CharField(_(u'mobile'), blank=True, max_length=20, help_text=_(u'(20 characters).'))
     fax = models.CharField(_(u'fax'), blank=True, max_length=20, help_text=_(u'(20 characters).'))
     contact_person = models.CharField(_(u'contact person'), blank=True, max_length=30, help_text=_(u'Name of external contact person for your organisation (30 characters).'))
     contact_email = models.CharField(_(u'contact email'), blank=True, max_length=50, help_text=_(u'Email to which inquiries about your organisation should be sent (50 characters).'))
-    description = models.TextField(_(u'description'), blank=True, help_text=_(u'Describe your organisation.') )
+    description = models.TextField(_(u'description'), blank=True, help_text=_(u'Describe your organisation.'))
 
-#    old_locations = generic.GenericRelation(Location)
+    # old_locations = generic.GenericRelation(Location)
     primary_location = models.ForeignKey('OrganisationLocation', null=True, on_delete=models.SET_NULL)
 
-    #Managers, one default, one custom
-    #objects = models.Manager()
+    # Managers, one default, one custom
+    # objects = models.Manager()
     objects = QuerySetManager()
-#    projects = ProjectsQuerySetManager()
+    # projects = ProjectsQuerySetManager()
 
     @models.permalink
     def get_absolute_url(self):
         return ('organisation_main', (), {'org_id': self.pk})
 
-#    @property
-#    def primary_location(self):
-#        '''Returns an organisations's primary location'''
-#        qs = self.locations.filter(primary=True)
-#        qs = qs.exclude(latitude=0, longitude=0)
-#        if qs:
-#            location = qs[0]
-#            return location
-#        return
-
+    # @property
+    # def primary_location(self):
+    #     '''Returns an organisations's primary location'''
+    #     qs = self.locations.filter(primary=True)
+    #     qs = qs.exclude(latitude=0, longitude=0)
+    #     if qs:
+    #         location = qs[0]
+    #         return location
+    #     return
 
     class QuerySet(QuerySet):
         def has_location(self):
@@ -286,7 +328,7 @@ class Organisation(models.Model):
         def partners(self, partner_type):
             "return the organisations in the queryset that are partners of type partner_type"
             return self.filter(partnership__partner_type__exact=partner_type).distinct()
-        
+
         def allpartners(self):
             return self.distinct()
 
@@ -398,8 +440,8 @@ class Organisation(models.Model):
     # New API end
 
     class Meta:
-        verbose_name=_(u'organisation')
-        verbose_name_plural=_(u'organisations')
+        verbose_name = _(u'organisation')
+        verbose_name_plural = _(u'organisations')
         ordering = ['name']
         permissions = (
             ("%s_organisation" % RSR_LIMITED_CHANGE, u'RSR limited change organisation'),
