@@ -8,7 +8,7 @@
 import fabric.api
 import mox, os
 
-from testing.helpers.execution import TestSuiteLoader, TestRunner
+from testing.helpers.execution import TestRunner, TestSuiteLoader
 
 from fab.app.deployer import RSRAppDeployer
 from fab.config.rsr.deployment import RSRDeploymentConfig
@@ -109,7 +109,6 @@ class RSRAppDeployerTest(mox.MoxTestBase):
         self._verify_symlink_target_paths()
         self.mock_feedback.comment("Ensuring expected RSR app symlinks exist")
         self._link_configuration_files()
-        self._link_mod_python_file()
         self._link_mediaroot_directories()
         self._link_current_deployment_home()
         self._link_static_media_directories()
@@ -120,7 +119,6 @@ class RSRAppDeployerTest(mox.MoxTestBase):
     def _verify_symlink_target_paths(self):
         self.mock_deployment_host.exit_if_directory_does_not_exist(self.deployment_config.host_config_home)
         self.mock_deployment_host.exit_if_file_does_not_exist(self.deployment_config.deployed_rsr_settings_file)
-        self.mock_deployment_host.exit_if_file_does_not_exist(self.deployment_config.deployed_mod_python_file)
         self.mock_deployment_host.exit_if_directory_does_not_exist(self.deployment_config.django_media_admin_path)
         self.mock_deployment_host.exit_if_directory_does_not_exist(self.deployment_config.rsr_static_media_home)
         self.mock_deployment_host.exit_if_directory_does_not_exist(self.deployment_config.static_media_db_path)
@@ -129,11 +127,6 @@ class RSRAppDeployerTest(mox.MoxTestBase):
         self._change_dir_to(self.deployment_config.rsr_settings_home)
         self.mock_deployment_host.ensure_symlink_exists(self.deployment_config.local_rsr_settings_file_name,
                                                         self.deployment_config.deployed_rsr_settings_file)
-
-    def _link_mod_python_file(self):
-        self._change_dir_to(os.path.join(self.deployment_config.current_virtualenv_path, "bin"))
-        self.mock_deployment_host.ensure_symlink_exists(self.deployment_config.mod_python_file_name,
-                                                        self.deployment_config.deployed_mod_python_file)
 
     def _link_mediaroot_directories(self):
         self._change_dir_to(self.deployment_config.rsr_media_root)
@@ -155,6 +148,5 @@ class RSRAppDeployerTest(mox.MoxTestBase):
 def suite():
     return TestSuiteLoader().load_tests_from(RSRAppDeployerTest)
 
-if __name__ == "__main__":
-    from fab.tests.test_settings import TEST_MODE
-    TestRunner(TEST_MODE).run_test_suite(suite())
+if __name__ == '__main__':
+    TestRunner().run_test_suite(suite())

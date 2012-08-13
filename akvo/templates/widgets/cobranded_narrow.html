@@ -6,7 +6,7 @@
 {% block title %}project@{{block.super}}{% endblock title %}
 
 {% block style %}
-  {% compressed_css 'widget_cobranded_narrow' %}
+  {% asset_bundle 'widget_cobranded_narrow' %}
 
 	<!--[if IE]>
 	<style type="text/css" media="screen">
@@ -66,7 +66,7 @@
 
 {% block content %}
 <div id="heightconstrain">
-	<h2 id="project_title"><a href="{% url 'project_main' project.id %}">{{project.name|smart_truncate:35}}</a></h2>
+	<h2 id="project_title"><a href="{% url 'project_main' project.id %}">{{project.title|smart_truncate:35}}</a></h2>
 	<p id="project_subtitle" class="grey">{{project.subtitle|smart_truncate:30}}</p>	
 	<div class="photo_frame">
 		<a href="{% url 'project_main' project.id %}">{% project_thumb project 150 113 %}</a>

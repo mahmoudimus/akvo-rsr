@@ -35,14 +35,14 @@ class TaskParametersTest(unittest2.TestCase):
         """fab.tests.tasks.task_parameters_test  Can compose parameter list from a given host configuration specification and additional task parameters"""
 
         host_config_specification = 'standard:uat;some_repo_branch;some_rsrdb'
-        expected_parameter_list = 'host_config_specification=%s,%s' % (host_config_specification, TaskParameters.REMOTE_HOST_CONTROLLER_MODE)
+        expected_parameter_list = 'host_config_specification=%s,%s,other=parameter' % (host_config_specification, TaskParameters.REMOTE_HOST_CONTROLLER_MODE)
 
-        self.assertEqual(expected_parameter_list, TaskParameters().compose_from(host_config_specification, TaskParameters.REMOTE_HOST_CONTROLLER_MODE))
+        self.assertEqual(expected_parameter_list, TaskParameters().compose_from(host_config_specification,
+                                                                                [TaskParameters.REMOTE_HOST_CONTROLLER_MODE, 'other=parameter']))
 
 
 def suite():
     return TestSuiteLoader().load_tests_from(TaskParametersTest)
 
-if __name__ == "__main__":
-    from fab.tests.test_settings import TEST_MODE
-    TestRunner(TEST_MODE).run_test_suite(suite())
+if __name__ == '__main__':
+    TestRunner().run_test_suite(suite())

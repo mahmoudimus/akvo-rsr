@@ -7,7 +7,7 @@
 
 import unittest2
 
-from testing.helpers.execution import TestSuiteLoader, TestRunner
+from testing.helpers.execution import TestRunner, TestSuiteLoader
 
 from fab.config.environment.linux.systempackages import SystemPackageSpecifications
 
@@ -68,10 +68,8 @@ class SystemPackageSpecificationsTest(unittest2.TestCase):
     def test_has_expected_package_specifications_for_python_package_dependencies(self):
         """fab.tests.config.environment.linux.system_package_specifications_test  Has expected package specifications for Python package dependencies"""
 
-        expected_packages = ['python-support', 'python-central', 'libxml2', 'libxml2-dev', 'libgpg-error0',
-                             'libgcrypt11', 'libxslt1.1', 'libxslt1-dev', 'python-libxml2', 'python-libxslt1',
-                             'libgmp3c2', 'libgmpxx4ldbl', 'libgmp3-dev', 'python-gmpy', 'libfreetype6',
-                             'libjpeg62', 'libjpeg62-dev']
+        expected_packages = ['python-support', 'python-central', 'libxml2', 'libxml2-dev', 'libgpg-error0', 'libgcrypt11',
+                             'libxslt1.1', 'libxslt1-dev', 'libfreetype6', 'libjpeg62', 'libjpeg62-dev']
 
         self.assertEqual(expected_packages, self._package_names_in(SystemPackageSpecifications.PYTHON_PACKAGE_DEPENDENCIES))
 
@@ -88,7 +86,7 @@ class SystemPackageSpecificationsTest(unittest2.TestCase):
 
         expected_packages = ['mysql-common', 'libmysqlclient15off', 'libmysqlclient15-dev', 'libnet-daemon-perl',
                              'libplrpc-perl', 'libdbi-perl', 'libdbd-mysql-perl', 'libwrap0', 'mysql-client-5.0',
-                             'ncurses-bin', 'sed', 'lsb-base', 'psmisc', 'mysql-server-5.0', 'python-mysqldb']
+                             'ncurses-bin', 'sed', 'lsb-base', 'psmisc', 'mysql-server-5.0']
 
         self.assertEqual(expected_packages, self._package_names_in(SystemPackageSpecifications.DATABASE))
 
@@ -142,6 +140,5 @@ class SystemPackageSpecificationsTest(unittest2.TestCase):
 def suite():
     return TestSuiteLoader().load_tests_from(SystemPackageSpecificationsTest)
 
-if __name__ == "__main__":
-    from fab.tests.test_settings import TEST_MODE
-    TestRunner(TEST_MODE).run_test_suite(suite())
+if __name__ == '__main__':
+    TestRunner().run_test_suite(suite())

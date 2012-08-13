@@ -11,7 +11,7 @@ import unittest2
 from testing.helpers.execution import TestRunner, TestSuiteLoader
 
 from fab.config.loader import DeploymentConfigLoader
-from fab.config.rsr.credentials.user import UserCredentials
+from fab.config.rsr.credentials.user import User
 from fab.tasks.base import BaseDeploymentTask
 
 
@@ -20,7 +20,7 @@ class BaseDeploymentTaskTest(unittest2.TestCase):
     def test_initialiser_sets_deployment_user(self):
         """fab.tests.tasks.base_deployment_task_test  Initialiser sets deployment user"""
 
-        self.assertEquals(UserCredentials.CURRENT_USER, BaseDeploymentTask().deployment_user)
+        self.assertEquals(User.CURRENT, BaseDeploymentTask().deployment_user)
 
     def test_initialiser_sets_deployment_config_loader(self):
         """fab.tests.tasks.base_deployment_task_test  Initialiser sets config loader"""
@@ -32,5 +32,4 @@ def suite():
     return TestSuiteLoader().load_tests_from(BaseDeploymentTaskTest)
 
 if __name__ == '__main__':
-    from fab.tests.test_settings import TEST_MODE
-    TestRunner(TEST_MODE).run_test_suite(suite())
+    TestRunner().run_test_suite(suite())

@@ -1,4 +1,4 @@
-Last changed: 30 January 2012, bw
+Last changed: 6 August 2012 ac
 
 Akvo RSR (Really Simple Reporting) makes it easy to put any type of projects online and share status updates from your teams.
 
@@ -7,7 +7,452 @@ We provide Akvo RSR as a service on your own URL and with your own branding, as 
 Check out [Introducing Akvo Really Simple Reporting](http://www.akvo.org/web/akvo-rsr).
 Read more about the [Akvo Platform](http://www.akvo.org/web/akvo_platform_overview).
 
-Akvo RSR v 2.0.2 release notes
+Akvo RSR ver 2.1.0 release notes
+----
+2 August 2012, (Code name: Iyokan) ac
+
+Overview
+----
+This release contains improvements to the map functionality that was implemented in the previous release. As well as some structural changes to the database to facilitate this functionality. We've also squeezed in more than a handful of bug fixes as well.
+
+New features & changes
+----
+
+###TastyPie API
+This release brings the first prototype of our new API into play. This is a simple model to begin with, but we will be working with some close partners to pad out the functionality to provide exactly what everyone wants from this functionality.
+More information about this can be found on this subject on the Github wiki page for the [Akvo RSR API](https://github.com/akvo/akvo-rsr/wiki/Akvo-RSR-API).
+The existing API will shortly be depreciated in favour of this one.
+
+Github issue: [21](https://github.com/akvo/akvo-rsr/issues/21)
+
+###Text Formatting in Project Updates
+We have added the ability to use some Markdown formatting when submitting project updates to RSR. We have restricted the language to a relevant sub-set and will be providing partners with information on how to utilise this feature in the update process.
+
+Github issue: [24](https://github.com/akvo/akvo-rsr/issues/24)
+
+###Map info bubbles
+In our last release we introduced a new style of maps. In this release the info windows contained only a link to the object. Now we have embellished this a little further to also include the primary image for the object. Further work on these windows is still to be completed.
+
+###Map zoom level outliers
+
+We have implemented a new style of maps on the system which will enable us to use more geospacial tools and tricks going forwards. However there was an issue that for Partner Sites which had only 1 project, the map zoomed so far that it occasionally looked as though there was no map loaded in the background. We have now applied a default zoom level to maps that only have a single pin.
+
+GitHub issue: [46](https://github.com/akvo/akvo-rsr/issues/46)
+
+###People who get...
+
+We have removed the 'People who get' box from Organisation pages as this was often providing misleading results. We will be working to determine what information should be displayed in this location.
+
+GitHub issue: [10](https://github.com/akvo/akvo-rsr/issues/10)
+
+###Searching on secondary locations
+
+Within the work we have done on locations, we have improved the search filter in the application to include the information in secondary locations.
+
+GitHub issue: [18](https://github.com/akvo/akvo-rsr/issues/18)
+
+###Location Refactor
+
+We have changed the way locations are stored and served in the system. Now a location can be either a project location or an organisation location. This provides us with the additional flexibility required to provide better information and functionality in maps and location functions.
+
+GitHub issue: [27](https://github.com/akvo/akvo-rsr/issues/27)
+
+###Adding Kosovo to our country list
+
+Kosovo declared [independence](http://en.wikipedia.org/wiki/2008_Kosovo_declaration_of_independence) in 2008, however to date it has not been allocated an ISO country code. We have recently partnered with an organisation working in Kosovo and so have added it to our country list.
+
+GitHub issue: [56](https://github.com/akvo/akvo-rsr/issues/56)
+
+###AJAX Loading Animation
+
+While we have made many changes to improve the speed and performance of the site, it still occasionally happens that a map needs some time to load in the browser before being visible. In this instance we needed a loading animation, so we put one in. If you want to see this then you'll need to be quick as it doesn't hang around for long.
+
+GitHub issue: [42](https://github.com/akvo/akvo-rsr/issues/42)
+
+Bug fixes
+----
+
+###Multiple Primary Locations Bug
+
+We fixed an issue which created an error when a project was labelled with multiple primary locations. All duplicates have now been removed and the fix also prevents this from reoccurring.
+
+GitHub issue: [7](https://github.com/akvo/akvo-rsr/issues/7)
+
+###PayPal Donations blank confirmation page
+
+PayPal changed it's methods to use HTTP GET in place of HTTP POST. This had an effect that after making a donation, the confirmation page was not served to the user.
+
+GitHub issue: [63](https://github.com/akvo/akvo-rsr/issues/63)
+
+###Runtime error when removing projects
+
+We fixed an issue which caused errors when making major changes to projects and the connected database items.
+
+GitHub issue: [59](https://github.com/akvo/akvo-rsr/issues/59)
+
+###Partner Map Widget Error
+
+The Map Widgets for Partner Sites were not working due to an error in the templates. This is resolved and they have been fully functional for several weeks now, but the full fix is being checked in with this release.
+
+GitHub issue: [45](https://github.com/akvo/akvo-rsr/issues/45)
+
+###Resolving some display issues
+
+Some organisations had contact details such as websites or email addresses, which were too long for the fields in the application. So we've made a change to truncate these items whilst continuing to provide the full clickable link.
+[How it used to look](https://www.dropbox.com/s/pvlxism0hdkkfij/Screen%20Shot%202012-07-25%20at%2013.51.20%20PM.png) and [how it looks now]{(https://www.dropbox.com/s/gvps4pbfufn2zqo/Screen%20Shot%202012-07-25%20at%2013.51.26%20PM.png)
+
+GitHub issue: [36](https://github.com/akvo/akvo-rsr/issues/36)
+
+We noticed that in some partner sites, the funding box on project pages was over-running it's boundaries and obscuring the figures. We made a change to hide some of the text when this spills over to preserve the numbers.
+[Originally](https://www.dropbox.com/s/0cxjsu8e3upvlfx/Screen%20Shot%202012-07-25%20at%2013.55.10%20PM.png) and now [with the fix.](https://www.dropbox.com/s/oe6vo8sqqgyl738/Screen%20Shot%202012-07-25%20at%2013.56.23%20PM.png)
+
+GitHub issue: [40](https://github.com/akvo/akvo-rsr/issues/40)
+
+###Project to organisation relationship duplicates
+
+We have fixed an error in the system which was caused by a project being linked to an organisation twice with the same type of relationship. This had the knock-on effect of doubling amounts related to funding and budgets for the project. It is no longer possible to create this situation, and we have resolved all the previous instances.
+
+GitHub issue: [35](https://github.com/akvo/akvo-rsr/issues/35) & [58](https://github.com/akvo/akvo-rsr/issues/58)
+
+Non-functional changes
+----
+
+###Python 2.7 Upgrade
+
+Various Python packages are no longer supported on Python 2.5, so we needed to upgrade our servers to use the 2.7 version.
+
+GitHub issue: [9](https://github.com/akvo/akvo-rsr/issues/9)
+
+###Web server to use mod_wsgi
+
+The web server components have been upgraded to use the newer [mod_wsgi](https://docs.djangoproject.com/en/1.4/howto/deployment/wsgi/modwsgi/) app handler since mod_python is now [deprecated](https://docs.djangoproject.com/en/1.4/howto/deployment/modpython/) and support will be removed in Django 1.5.
+
+GitHub issue: [55](https://github.com/akvo/akvo-rsr/issues/55)
+
+Akvo RSR ver 2.0.7 release notes
+----
+29 June 2012, (Code name: Hawthorn) pb
+
+Overview
+----
+This release contains improvements to the way global maps are rendered in Akvo RSR. These maps are now rendered using AJAX calls resulting in dramatically reduced template size and rendering times for the pages in question.
+
+New features & changes
+----
+### New global project and organisation maps
+The global projects and organisations maps (including the small map on the akvo.org home page) are now rendered using JSON data and AJAX. This has resulted in dramatic speed improvements to these pages.
+
+GitHub issue:
+[38](https://github.com/akvo/akvo-rsr/issues/38)
+
+### "People who get..." box removal
+
+The "People who get..." box has been removed on all Organisation pages.
+
+GitHub issue:
+[10](https://github.com/akvo/akvo-rsr/issues/10)
+
+### Partner site error pages
+
+Specific HTTP status code 403, 404 and 500 error pages now exist for partner sites.
+
+GitHub issue:
+[31](https://github.com/akvo/akvo-rsr/issues/31)
+
+### Partner site widget wording
+
+The page for getting a PS Widget, displays incorrect information about how to widget will work. It says that the widget will redirect back to the Akvo.org page and it will redirect back to the original partner site page. The wording on this widget has been fixed.
+
+GitHub issue:
+[25](https://github.com/akvo/akvo-rsr/issues/25)
+
+Bug fixes
+----
+### Partner list navigation
+The navigation of multiple pages of partners in Akvo RSR was not working correctly. This has been fixed.
+
+GitHub issue:
+[26](https://github.com/akvo/akvo-rsr/issues/26)
+
+### Sorting on continent/country in listing widget
+Due to complexity in the way we are currently storing location data, continent and country sorting in listing widgets is broken. This sorting has been disabled until we change the way location data is handled in the system.
+
+GitHub Issue:
+[11](https://github.com/akvo/akvo-rsr/issues/11)
+
+Akvo RSR ver 2.0.6 release notes
+----
+7 June 2012, (Code name: Guava) gvh
+
+Overview
+----
+This release contains the Beta Version of our Multi-Lingual Interface for Partner Sites and also the first Partner Site Widget, with a Map. Additionally, we have also performed several important de-normalisation modifications to the system to improve performance throughout the site.
+
+New features & changes
+----
+###Multi-lingual Partners Sites Beta
+Partner Sites introduces beta support for different lanugages. The URLs now have a lanauge code prefix (en/es/fe/nl) which sets the user interface language. This means it is now possible to link to a specific lanauge. The language can be changed from a drop down menu at the top right of the site.
+
+Pivotal Tracker Stories:
+[29702725](https://www.pivotaltracker.com/story/show/29702725) and [29625905](https://www.pivotaltracker.com/story/show/29625905)
+
+###Create Partner Site Map Widget
+We have created a new Map Widget which is available via Projects visible in Partner Sites. This has been implemented using async map loading and an API.
+
+Pivotal Tracker Story:
+[23693093](https://www.pivotaltracker.com/story/show/23693093)
+
+###De-normalise Financial Information for Projects and Organisations
+Some de-normalisation of Database Information that is referenced within Akvo RSR has been performed to speed up the provision of web pages. As an example the loading time of Akvo.org homepage has been significantly reduced. To achieve this improvement, jonny-cache has been implemented.
+
+Pivotal Tracker Story:
+[27249075](https://www.pivotaltracker.com/story/show/27249075)
+
+###Refactor the API for Financial Information
+As part of the de-normalisation being done in the system, the API to transfer information internally has been refactored to allow Financial Information to be delivered.
+
+Pivotal Tracker Story:
+[27250173](https://www.pivotaltracker.com/story/show/27250173)
+
+###Conversion of LICENSE file
+The LICENSE File in Guthub has been converted to Markdown format, and the root docs have been updated.
+
+Pivotal Tracker Story:
+[30320839](https://www.pivotaltracker.com/story/show/30320839)
+
+Bug Fixes
+----
+###Set Initial Partnership Inline to User's Organisation
+When a user creates a new Project now, the Organisation they belong to is automatically added as one of the Partners for the Project.
+
+Pivotal Tracker Story:
+[25288719](https://www.pivotaltracker.com/story/show/25288719)
+
+###Budget Items within RSR Admin Missing
+A problem with Permissions caused certain Data Items not to appear in RSR Admin to Users and Administrators. This has now been resolved.
+
+Pivotal Tracker Story:
+[29704531](https://www.pivotaltracker.com/story/show/29704531)
+
+###Ensure Deployment Directories have Applicable Web Group Permissions
+The Deployment Process Home and other Relevant Deployment Directories are now created with Web Group File System Permissions and Access.
+
+Pivotal Tracker Story:
+[23664419](https://www.pivotaltracker.com/story/show/23664419)
+
+###Resolve Translation Issues
+A variety of issues, queries and feedback items have been resolved resulting from the previous Translation Implementation.
+
+Pivotal Tracker Stories:
+[29976705](https://www.pivotaltracker.com/story/show/29976705) and
+[28720359](https://www.pivotaltracker.com/story/show/28720359)
+
+###Donation Engine on Test Site not working
+We have fixed a bug in the Test System caused the Donation Process to direct to the Live Donation Site.
+
+Pivotal Tracker Stories:
+[30559557](https://www.pivotaltracker.com/story/show/30559557)
+
+Akvo RSR ver 2.0.5 release notes
+----
+15 May 2012, (Code name: Fennel) pb, ogl, ac
+
+Overview
+----
+This release addresses a problem whereby certain project fields were not being constrained in length consistently. Django >= 1.4 is now a requirement of Akvo RSR and, as such, several parts of the system have been upgraded to support it.
+
+New features & changes
+----
+### New translations
+Initial preparation work has been done to support Dutch, French and Spanish localisations.
+
+Pivotal Tracker stories:
+[25221481](https://www.pivotaltracker.com/story/show/25221481),
+[26502217](https://www.pivotaltracker.com/story/show/26502217) and
+[26786625](https://www.pivotaltracker.com/story/show/26786625)
+
+### Project goals improvements
+In order to support custom goals within a project, a new Goal model has been created.
+
+Pivotal Tracker story:
+[27515615](https://www.pivotaltracker.com/story/show/27515615) and
+[28809041](https://www.pivotaltracker.com/story/show/28809041)
+
+### Project field constraints
+Due to a problem whereby certain project fields were not being consistently constrained, several changes have taken place under the hood to limit these fields going forward whilst maintaining support for the old data.
+
+More information about this problem can be found [here](http://www.akvo.org/blog/?p=5262).
+
+Pivotal Tracker stories:
+[25606657](https://www.pivotaltracker.com/story/show/25606657) and
+[27251477](https://www.pivotaltracker.com/story/show/27251477)
+
+### Project fields renamed
+To improve consistency between the Project PDF form and the Project sections of the Django admin interface, certain Project fields were renamed.
+
+Pivotal Tracker stories:
+[27010245](https://www.pivotaltracker.com/story/show/27010245),
+[27011303](https://www.pivotaltracker.com/story/show/27011303),
+[29704721](https://www.pivotaltracker.com/story/show/29704721) and
+[29907631](https://www.pivotaltracker.com/story/show/29907631)
+
+### Project details
+Improved the layout for project details summary.
+
+Pivotal Tracker story:
+[27008303](https://www.pivotaltracker.com/story/show/27008303)
+
+### Partner site routing middleware improvements
+It is now possible to configure in settings files which domain names the partner sites routing middleware will operate on. Previously this was hardcoded into the middleware. In addition to this, the routing middleware has been updated to work together with the Django Sites framework so as not to break third party applications which depend on the functionality of the Sites framework.
+
+Pivotal Tracker stories:
+[22953583](https://www.pivotaltracker.com/story/show/22953583) and
+[27234363](https://www.pivotaltracker.com/story/show/27234363)
+
+### Partner site UI improvements
+Improved the Add Update and Get a Widget UI components.
+
+Pivotal Tracker story:
+[26903241](https://www.pivotaltracker.com/story/show/26903241)
+
+### User permissions admin
+Improved the Admin UI for managing user permissions and groups and updated permissions for use with Django 1.4.
+
+Pivotal Tracker story:
+[28126391](https://www.pivotaltracker.com/story/show/28126391)
+
+### Project admin
+Corrected project listing order subsequent to Django 1.4 upgrade.
+
+Pivotal Tracker story:
+[28107129](https://www.pivotaltracker.com/story/show/28107129)
+
+### Project Page UI Changes
+In addition to some of the field changes, there have been some important modiofications in the layout and design of the Project Page. Within the Summary area this includes restricting the amount of space available for the Summary and adding a View More button for the Project Indicators, allowing the viewer to choose if they want to see all of the Indicators. Further in the Project Page, a new Tab has been added called Goals, and moved some of the information within these tabs to be more evenly distributed. The tabs are set out in chronological order, so it reads more like a story from left to right with the past, present and future.
+
+Fixes
+----
+### Project updates
+The "Sign in to add update" textual hint now disappears as expected when a user is already signed in.
+
+Pivotal Tracker story:
+[26983111](https://www.pivotaltracker.com/story/show/26983111)
+
+### RSR admin
+Replaced project goals overview in project admin.  Corrected project listing order subsequent to Django 1.4 upgrade.
+
+Pivotal Tracker stories:
+[28105979](https://www.pivotaltracker.com/story/show/28105979),
+[28107129](https://www.pivotaltracker.com/story/show/28107129),
+[28110191](https://www.pivotaltracker.com/story/show/28110191) and
+[28874085](https://www.pivotaltracker.com/story/show/28874085)
+
+### Partner sites
+Partner site project update edit form now retains previously entered data.  Budget line item text is now displayed as expected.
+Fixed the sign-in process when partner sites are hosted on partner's own domain.
+
+Pivotal Tracker stories:
+[23990641](https://www.pivotaltracker.com/story/show/23990641),
+[29684439](https://www.pivotaltracker.com/story/show/29684439) and
+[29907575](https://www.pivotaltracker.com/story/show/29907575)
+
+### Akvo blog posts
+Corrected markup for blog posts so that they appear as expected on the Akvo home page.
+
+Pivotal Tracker story:
+[22517473](https://www.pivotaltracker.com/story/show/22517473)
+
+Non-functional changes
+----
+### Upgrade to Django 1.4
+The latest version of Django contains several backwards incompatible changes across the framework. Release 2.0.5 of Akvo RSR has been updated to support Django 1.4. In addition, some third-party Django apps also had to be patched or upgraded to support the upgrade to Django 1.4.
+
+Pivotal Tracker stories:
+[26809039](https://www.pivotaltracker.com/story/show/26809039),
+[27784115](https://www.pivotaltracker.com/story/show/27784115),
+[27833485](https://www.pivotaltracker.com/story/show/27833485),
+[27835435](https://www.pivotaltracker.com/story/show/27835435),
+[27893279](https://www.pivotaltracker.com/story/show/27893279) and
+[28673101](https://www.pivotaltracker.com/story/show/28673101)
+
+### Deployment automation
+Improvements were made to the RSR deployment process so that RSR instances can now be deployed automatically for testing purposes.
+
+Pivotal Tracker stories:
+[21406319](https://www.pivotaltracker.com/story/show/21406319),
+[23633289](https://www.pivotaltracker.com/story/show/23633289),
+[26763721](https://www.pivotaltracker.com/story/show/26763721) and
+[29670447](https://www.pivotaltracker.com/story/show/29670447)
+
+Akvo RSR ver 2.0.4 release notes
+----
+27 March 2012, (Code name: Eggplant) ogl
+
+
+Overview
+----
+This is primarily a maintenance release.
+
+New features & changes
+----
+### Switched the 'Get a widget' button and 'Add update' link
+[PT story 25207905](https://www.pivotaltracker.com/story/show/25207905) The 'Get a widget' button and 'Add update' link in the 'Tools for this page' section of a project page have been switched around since users would more frequently be viewing a project page to provide project updates rather than to get project widgets.
+
+Fixes
+----
+### Corrected display of global organisation map
+[PT story 26632783](https://www.pivotaltracker.com/story/show/26632783) The global organisation map now displays without errors.
+
+### Corrected highlighted text colour for selected text on partner sites
+[PT story 24968667](https://www.pivotaltracker.com/story/show/24968667) The highlighted text colour on partner sites is now blue, as is the convention for selected text, instead of pink.
+
+### Corrected validation process when entering video project updates on partner sites
+[PT story 24054429](https://www.pivotaltracker.com/story/show/24054429) The validation process now waits for the video URL to be entered before validating.
+
+### Corrected styling on project update pages for parter sites
+[22289553](https://www.pivotaltracker.com/story/show/22289553) Corrected colour differences of photo and video captions and credits on partner sites.
+
+
+
+Akvo RSR ver 2.0.3 release notes
+-------------------------------------------
+22 February 2012, (Code name: Dewberry) bw
+
+
+New features & changes
+----------------
+### Expanded and customizable budget line items 
+This release reworks how line items for project budgets are handled within RSR. Up to this point there have been 6 budget line items: building, employment, maintenance, management, training and other. Release 2.0.3 removes "other" and adds the fields other 1, other 2, other 3. Organisation administrators and project editors can enter custom labels for these line items in their budgets.
+
+Additionally, Akvo's administrators now have the flexibility to expand the list of common budget items. The list of choices should be expanded cautiously as the commonly-used forms become obvious. Having a standard list helps users compare & understand financial plans across multiple projects and organisations.
+
+### Size of photos and videos in updates.
+The photos and embedded videos on an individual update page are now larger, making details easier to see.
+
+### Custom landing page URLs redirected to appropriate partner sites.
+Landing page functionality is deprecated in favor of partner sites.
+
+
+Bug fixes
+---------
+### Enter/Return does not post form on Sign in page.
+Certain browsers did not post the sign in form when Enter/Return key was hit; this is now fixed.
+
+### Latest Updates missing on project comments page.
+Fixed a bug where Latest Updates section did not appear on the project comments page.
+
+### Funding amounts field appears for non-funding partners.
+Fixed a bug in the changed partner types code whereby it was possible to set funding amounts for other partner types.
+
+### Map display when there are no projects or none fitting selection criteria.
+The main partner site page includes a map displaying all organisation projects. When there were not yet any projects or filtering returned no matching projects the map completely disappeared, leaving only a display glitch. This is now fixed.
+
+### Partner site workflow issues when signing in to add an update.
+Fixed page routing to match expectations.
+
+
+
+Akvo RSR ver 2.0.2 release notes
 -------------------------------------------
 30 January 2012, (Code name: Carrot) bw
 
@@ -53,7 +498,7 @@ Removed old template files associated with the PvW/DWS project, which will be ma
 ---
 
 
-Akvo RSR v 2.0.1 release notes
+Akvo RSR ver 2.0.1 release notes
 -------------------------------------------
 29 November 2011, (Code name: Elderberry) kad
 
@@ -109,7 +554,7 @@ Link to funding details have disappeared on Partner Sites.
 
 ---
 
-Akvo RSR v 2.0 release notes
+Akvo RSR ver 2.0 release notes
 -------------------------------------------
 28 October 2011, (Code name: Garlic) tbp
 
@@ -175,7 +620,7 @@ The link to the latest blog news article was not shown on the home page.
 
 ---
 
-Akvo RSR v 1.0.11 release notes
+Akvo RSR ver 1.0.11 release notes
 -------------------------------------------
 17 October 2011, (Code name: Rhubarb) pb & bw
 
@@ -218,7 +663,7 @@ Bug fixes
 ---
 
 
-Akvo RSR v 1.0.10 release notes
+Akvo RSR ver 1.0.10 release notes
 -------------------------------------------
 17 October 2011 / Deployed 4 July 2011, (Code name: Granite) pb
 
@@ -243,7 +688,7 @@ Fixed broken benchmarks list which caused the project page to render incorrectly
 After the addition of the SMS gateway application, the cron script to detect stale invoices was no longer able to run. The script now functions as expected.
 
 
-Akvo RSR v 1.0.9 release notes
+Akvo RSR ver 1.0.9 release notes
 -------------------------------------------
 28 June 2011, (Code name: Quadrant) pb
 
@@ -270,7 +715,7 @@ More information about the new template syntax can be found [here](https://docs.
 
 ---
 
-Akvo RSR v 1.0.8 release notes
+Akvo RSR ver 1.0.8 release notes
 -------------------------------------------
 29 April 2011, (Code name: Blockbuster) bw
 
@@ -290,7 +735,7 @@ First steps toward the ability for users to send text updates from a particular 
 
 ---
 
-Akvo RSR v 1.0.7 release notes
+Akvo RSR ver 1.0.7 release notes
 -------------------------------------------
 5 April 2011, (Code name: Lustre) bw
 
@@ -369,7 +814,7 @@ Update photos set to display at the end of the update are now behaving properly.
 
 ---
 
-Akvo RSR v 1.0.6 release notes
+Akvo RSR ver 1.0.6 release notes
 -------------------------------------------
 15 Mar 2011, (Code name: Sextant) kad
 
@@ -394,7 +839,7 @@ In Internet Explorer 7 the mini gallery of project photos on the project page wo
 
 ---
 
-Akvo RSR v 1.0.5 release notes
+Akvo RSR ver 1.0.5 release notes
 ------------------------------
 9 Mar 2011, (Code name: Encore) tbp
 
@@ -411,7 +856,7 @@ Modified the formatting of the release notes for release 1.0.1-1.0.4 to be more 
 
 ---
 
-Akvo RSR v 1.0.4 release notes
+Akvo RSR ver 1.0.4 release notes
 ------------------------------
 28 Feb 2011, (Code name: Crossbow) pb
 
@@ -453,7 +898,7 @@ A bug in the image gallery code on the project main page resulted in a rendering
 
 ---
 
-Akvo RSR v 1.0.3 release notes
+Akvo RSR ver 1.0.3 release notes
 ------------------------------
 9 Feb 2011, (Code name: Primrose) bw
 
@@ -486,7 +931,7 @@ Certain searches on the organisation listing page returned duplicate entries. Th
 
 ---
 
-Akvo RSR v1.0.2 release notes
+Akvo RSR ver 1.0.2 release notes
 -----------------------------
 18 Jan 2011 (Code name: Hailstorm) ogl
 
@@ -510,7 +955,7 @@ The All Updates page for a particular project now displays titles for all update
 
 ---
 
-Akvo RSR v 1.0.1 release notes
+Akvo RSR ver 1.0.1 release notes
 -------------------------------------------
 14 Jan 2011, (Code name: Indigo) bw
 Note: The original 16 Dec 2010 release notes have been edited to better document changes made in 1.0.1.
@@ -545,7 +990,7 @@ The following improvements have been made to the MiniCMS.
 
 ---
 
-Akvo RSR v 1.0.0 release notes
+Akvo RSR ver 1.0.0 release notes
 -------------------------------------------
 4 Nov 2010, (Code name: One Oh) tbp
 
