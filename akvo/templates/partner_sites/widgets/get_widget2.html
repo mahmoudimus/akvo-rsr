@@ -131,7 +131,7 @@
 {% block js %}
   {{block.super}}
 
-  {% asset_bundle 'akvo_ps_machinery_js' %}
+  {% compressed_js 'akvo_ps_machinery_js' %}
 	
   <script type="text/javascript">
     {% if project %}

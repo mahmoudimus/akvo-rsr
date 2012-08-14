@@ -6,7 +6,7 @@
 {% block title %}projects@{{block.super}}{% endblock title %}
 
 {% block style %}
-  {% asset_bundle 'widget_project_list' %}
+  {% compressed_css 'widget_project_list' %}
   {# <link rel="stylesheet" href="{{MEDIA_URL}}widgets/project_list/css/screen.css" type="text/css" media="screen, projection" /> #}
 {% endblock style %}
 
