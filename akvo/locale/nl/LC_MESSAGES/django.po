@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: Akvo RSR\n"
 "Report-Msgid-Bugs-To: https://akvo.lighthouseapp.com/projects/46515-akvo-rsr/tickets\n"
 "POT-Creation-Date: 2012-05-22 07:25-0700\n"
-"PO-Revision-Date: 2012-05-29 21:43+0000\n"
+"PO-Revision-Date: 2012-08-13 13:16+0000\n"
 "Last-Translator: Anke van Lenteren <anke@vanlenteren.com>\n"
-"Language-Team: Dutch (http://www.transifex.net/projects/p/akvo-rsr/language/nl/)\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/akvo-rsr/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nl\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: gateway/utils.py:219 rsr/utils.py:219
 msgid "Thank you from Akvo.org!"
@@ -2680,7 +2680,7 @@ msgstr "Terug naar"
 
 #: templates/partner_sites/base.html:77
 msgid "Contact at "
-msgstr "Contactpersoon bij "
+msgstr "Voor meer informatie, gelieve contact op te nemen met"
 
 #: templates/partner_sites/base.html:83
 #: templates/partner_sites/auth/sign-in.html:47 templates/rsr/base.html:93
@@ -3496,7 +3496,7 @@ msgstr "externe link, nieuw venster"
 #: templates/partner_sites/widgets/get_widget2.html:84
 #: templates/rsr/project/get-a-widget/machinery_step2.html:195
 msgid "B: Set height of the widget"
-msgstr "B:Geef de gewenste hoogte van de widget aan"
+msgstr "B: De gewenste hoogte van de widget aangeven"
 
 #: templates/partner_sites/widgets/get_widget2.html:89
 msgid "C: Set width of the widget"
@@ -4825,19 +4825,19 @@ msgstr "U kunt met PayPal via de in uw land geaccepteerde creditcards of bankrek
 #: templates/rsr/project/donate/donate_step3.html:95
 #, python-format
 msgid ""
-"PayPal charges transaction fees of up to 3.9%% of your donation amount + 35 "
+"PayPal charges transaction fees of up to 3.9% of your donation amount + 35 "
 "Euro cents. So if you donate &euro;100, at a minimum 95.75 will go to the "
 "selected project."
-msgstr "PayPal houdt per transactie maximaal 3,9%% + 35 eurocent van uw donatie in. Als u bijv. &euro;100 doneert, gaat daarvan tenminste 95,75 naar het door u gekozen project."
+msgstr "PayPal houdt per transactie maximaal 3,9% + 35 eurocent van uw donatie in. Als u bijv. &euro;100 doneert, gaat daarvan tenminste 95,75 naar het door u gekozen project."
 
 #: templates/rsr/project/donate/donate_step2.html:100
 #: templates/rsr/project/donate/donate_step3.html:98
 #, python-format
 msgid ""
-"PayPal charges transaction fees of up to 3.9%% of your donation amount + 30 "
+"PayPal charges transaction fees of up to 3.9% of your donation amount + 30 "
 "Dollar cents. So if you donate 100 US Dollars, at a minimum 95.80 will go to"
 " the selected project."
-msgstr "PayPal houdt per transactie maximaal 3,9%% + 30 dollarcent van uw donatie in. Als u bijv. 100 dollar doneert, gaat daarvan tenminste 95,80 dollar naar het door u gekozen project."
+msgstr "PayPal houdt per transactie maximaal 3,9% + 30 dollarcent van uw donatie in. Als u bijv. 100 dollar doneert, gaat daarvan tenminste 95,80 dollar naar het door u gekozen project."
 
 #: templates/rsr/project/donate/donate_step2.html:107
 #: templates/rsr/project/donate/donate_step2.html:144
@@ -5338,7 +5338,7 @@ msgstr "Wit"
 
 #: templates/rsr/project/get-a-widget/machinery_step2.html:199
 msgid "D: Set width of the widget"
-msgstr "D: Geef de gewenste breedte van de widget aan"
+msgstr "D: De gewenste breedte van de widget aangeven"
 
 #: templates/rsr/project/get-a-widget/machinery_step2.html:204
 msgid "C: Map state"

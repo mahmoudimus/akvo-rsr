@@ -107,7 +107,7 @@ class OrganisationLocationInline(admin.StackedInline):
 
 class OrganisationAdmin(admin.ModelAdmin):
     fieldsets = (
-        (_(u'General information'), {'fields': ('name', 'long_name', 'organisation_type', 'logo', 'url', 'iati_id', )}),
+        (_(u'General information'), {'fields': ('name', 'long_name', 'organisation_type', 'logo', 'url', 'iati_org_id', )}),
         (_(u'Contact information'), {'fields': ('phone', 'mobile', 'fax',  'contact_person',  'contact_email', ), }),
         (_(u'About the organisation'), {'fields': ('description', )}),
     )
@@ -605,7 +605,7 @@ class ProjectAdmin(admin.ModelAdmin):
             prefixes = {}
             for FormSet, inline in zip(self.get_formsets(request), inline_instances):
                 prefix = FormSet.get_default_prefix()
-                # add to add_view() from jango 1.4
+                # add to add_view() from django 1.4
                 # check if we're trying to create a new project by copying an existing one. If so we ignore
                 # location and benchmark inlines
                 if not "_saveasnew" in request.POST or not prefix in ['benchmarks', 'rsr-location-content_type-object_id']:
@@ -643,7 +643,7 @@ class ProjectAdmin(admin.ModelAdmin):
                     prefix = "%s-%s" % (prefix, prefixes[prefix])
 
                 # hack by GvH to get user's organisation preset as partner when adding a new project
-                if prefix == 'partnership_set':
+                if prefix == 'partnerships':
                     formset = FormSet(instance=self.model(), prefix=prefix,
                                       initial=[{'organisation': request.user.get_profile().organisation}],
                                       queryset=inline.queryset(request))
@@ -817,7 +817,7 @@ class SmsReporterInline(admin.TabularInline):
 
 class UserProfileAdminForm(forms.ModelForm):
     """
-    This form dispalys two extra fields that show if the user belongs to the groups
+    This form displays two extra fields that show if the user belongs to the groups
     GROUP_RSR_PARTNER_ADMINS and/or GROUP_RSR_PARTNER_EDITORS.
     """
     class Meta:
