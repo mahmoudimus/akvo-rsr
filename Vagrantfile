@@ -7,15 +7,13 @@ Vagrant::Config.run do |config|
   # please see the online documentation at vagrantup.com.
   config.vm.host_name = "akvo.dev"
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "precise64"
+  # Dev Box conf
+  config.vm.box = "akvo_rsr_12.04_64_4.18"
+  config.vm.box_url = "https://dl.dropbox.com/s/cf4huumpd2tangs/akvo_rsr_12.04_64_4.18.box?dl=1"
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://domain.com/path/to/above.box"
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
-
-  # Boot with a GUI so you can see the screen. (Default is headless)
+  # Box config for building a base box
+  # config.vm.box = "precise64"
+  # config.vm.box_url = "http://files.vagrantup.com/precise64.box"
   # config.vm.boot_mode = :gui
 
   # Assign this VM to a host-only network IP, allowing you to access it
@@ -42,10 +40,11 @@ Vagrant::Config.run do |config|
   config.vm.share_folder("v-root", "/var/akvo", ".", :nfs => true)
 
   config.vm.provision :puppet do |puppet|
-    puppet.manifests_path = "scripts/dev-vm/puppet/manifests"
+    puppet.manifests_path = "dev-env/puppet/manifests"
     puppet.manifest_file = "dev.pp"
-    puppet.module_path = "scripts/dev-vm/puppet/modules"
-    puppet.options = "--verbose --debug"
+    puppet.module_path = "dev-env/puppet/modules"
+    # puppet.options = "--verbose --debug"
+    puppet.options = "--verbose"
   end
 
 end

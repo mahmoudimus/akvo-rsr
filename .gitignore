@@ -16,8 +16,10 @@ akvo/settings/backup
 akvo/testing.py
 
 .vagrant
+venv
+
+# Old
 scripts/dev-vm/venv
-# dev-env
 
 ## Deployment
 scripts/deployment/builders/osx/config/python_system.config
