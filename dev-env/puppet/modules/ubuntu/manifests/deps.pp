@@ -8,7 +8,6 @@ class ubuntu::deps {
       "libxml2-dev",
       "libxslt1-dev",
       "libmysqlclient-dev",
-      # "build-dep",
       "build-essential", 
       "python-imaging",
       "libjpeg62-dev",

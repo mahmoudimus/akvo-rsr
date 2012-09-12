@@ -13,7 +13,6 @@ class ubuntu::python {
 
   exec { "PyCrypto":
     command => "sudo pip install PyCrypto",
-    # require => Package["python-deps"],
     require => Package["python-dev"],
   }
 

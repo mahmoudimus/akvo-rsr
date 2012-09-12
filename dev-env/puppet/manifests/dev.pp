@@ -9,7 +9,6 @@ include ubuntu::tools
 include ubuntu::python
 
 include nginx::service
-# include nginx::conf
 
 class { 'mysql': }
 class { 'mysql::python': }
@@ -23,4 +22,4 @@ mysql::db { 'rsr':
   grant    => ['all'],
 }
 
-#include uwsgi
+include akvo-rsr

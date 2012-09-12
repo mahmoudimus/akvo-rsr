@@ -17,6 +17,8 @@ akvo/testing.py
 
 .vagrant
 venv
+dev-env/2-on-host-pull-db.sh
+dev-env/tmp
 
 # Old
 scripts/dev-vm/venv
@@ -54,6 +56,9 @@ Desktop.ini
 ## Python
 *.py[co]
 *.mo
+
+## Vagrant
+*.box
 
 ## Vim
 .*.sw[a-z]

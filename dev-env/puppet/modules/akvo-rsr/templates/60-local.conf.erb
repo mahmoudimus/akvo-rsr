@@ -1,0 +1,49 @@
+# -*- coding: utf-8 -*-
+"""
+    Akvo RSR is covered by the GNU Affero General Public License.
+    See more details in the license.txt file located at the root folder of the
+    Akvo RSR module. For additional details on the GNU license please
+    see < http://www.gnu.org/licenses/agpl.html >.
+"""
+
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'xcdxa6x1^(Wxb4|I@2xfdxd2ITx92dca0xf6Txd7x063xb7(07'
+
+SITE_ID = 2
+DOMAIN_NAME = 'akvo.dev'
+APP_DOMAIN_NAME = 'akvoapp.dev'
+
+DEBUG = True
+ASSET_MANAGER_DEV = True
+
+DONATION_TEST = True
+DONATION_NOTIFICATION_EMAILS = True
+
+MEDIA_ROOT = '/var/akvo/akvo/mediaroot/'
+MEDIA_URL = 'http://%s/rsr/media/' % DOMAIN_NAME
+
+DEFAULT_HOST_ALIASES = ('akvo.dev')
+
+OLD_PROJECT_MAX_ID = 470
+
+DATABASES = {
+    'default': {
+        'NAME': 'rsr',
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': 'rsr-user',
+        'PASSWORD': 'lake',
+        'HOST':'localhost',
+    },
+    'wordpress': {
+        'NAME': 'wordpress',
+        'ENGINE': 'django.db.backends.mysql',
+        'USER': 'rsr-user',
+        'PASSWORD': 'lake',
+        'HOST': 'localhost',
+    }
+}
+
+PAYPAL_SANDBOX_GATEWAY='paul.b_1340886007_biz@gmail.com'
+
+TEST_RUNNER = 'akvo.test_runner_nodb.NoDbTestRunner'

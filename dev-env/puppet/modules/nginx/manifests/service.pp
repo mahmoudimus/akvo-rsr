@@ -4,13 +4,23 @@ class nginx::service {
 		ensure => "installed"
 	}
 
+  # Add our nginc.conf file
+  file { "/etc/nginx/nignx.conf":
+    ensure  => present,
+    mode    => 644,
+    owner   => "root",
+    group   => "root",
+    content => template("nginx/nginx.conf.erb"),
+    require => Package["nginx"],
+  }
+
 	file { "default-nginx-disable":
     path => "/etc/nginx/sites-enabled/default",
     ensure => absent,
     require => Package["nginx"],
   }
 
-# Add our vhost file to sites-available
+  # Add our vhost file to sites-available
   file { "/etc/nginx/sites-available/akvo.dev":
     ensure  => present,
     mode    => 644,
@@ -20,7 +30,7 @@ class nginx::service {
     require => File["default-nginx-disable"]
   }
  
-   # Enable our host file
+  # Enable our host file
   file { "/etc/nginx/sites-enabled/akvo.dev":
     ensure => "link",
     target => "/etc/nginx/sites-available/akvo.dev",
