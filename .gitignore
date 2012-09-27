@@ -14,10 +14,12 @@ akvo/settings/5*.conf
 akvo/settings/6*.conf
 akvo/settings/backup
 akvo/testing.py
-scripts/dev-vm/
 
-dev-env
-scripts/dev-vm
+# Dev environment
+.vagrant
+venv
+dev-env/2-on-host-pull-db.sh
+dev-env/tmp
 
 scripts/dev-vm
 
@@ -54,6 +56,9 @@ Desktop.ini
 ## Python
 *.py[co]
 *.mo
+
+## Vagrant
+*.box
 
 ## Vim
 .*.sw[a-z]

@@ -49,7 +49,7 @@
         var mapOptions = {
           draggable: false,
           disableDefaultUI: true
-        }    
+        }
       {% else %}
         var mapOptions = {}
       {% endif %}
@@ -57,8 +57,8 @@
       map_element.gmap(mapOptions).bind('init', function() {
           $.getJSON('{{app_url}}/api/beta/projects_cordinates.json?callback=?', function(data) {
               $.each(data.projects, function(i, project) {
-                  map_element.gmap('addMarker', { 
-                      'position': new google.maps.LatLng(project.latitude, project.longitude), 
+                  map_element.gmap('addMarker', {
+                      'position': new google.maps.LatLng(project.latitude, project.longitude),
                       'bounds': true,
                   }).click(function() {
                       map_element.gmap('openInfoWindow', { 'content': project.content }, this);
