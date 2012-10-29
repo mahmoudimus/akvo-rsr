@@ -1,0 +1,220 @@
+SELECT 
+
+*
+
+from
+
+rsr_project PT
+
+join
+
+rsr_partnership PP on PP.project_id = PT.id
+
+join
+
+rsr_organisation O on O.id = PP.organisation_id
+
+join
+
+rsr_projectupdate PU on PU.project_id = PP.project_id
+
+where PT.id = 243
+
+
+
+
+SELECT 
+
+O.name,
+O.long_name,
+O.organisation_type,
+PT.title, PT.status,
+PT.currency,
+PT. date_request_posted,
+PT.date_complete,
+PT.budget,
+PT.funds,
+PT.funds_needed,
+PU.title,
+PU.time,
+PU.time_last_updated
+
+from
+
+rsr_project PT
+
+join
+
+rsr_partnership PP on PP.project_id = PT.id
+
+join
+
+rsr_organisation O on O.id = PP.organisation_id
+
+join
+
+rsr_projectupdate PU on PU.project_id = PP.project_id
+
+where PT.id = 243
+
+
+
+#Counts number of updates per Project but creates duplicates as project is counted per organisation/partner.
+
+SELECT 
+
+O.name,
+O.long_name,
+O.organisation_type,
+PT.title, PT.status,
+PT.currency,
+PT. date_request_posted,
+PT.date_complete,
+PT.budget,
+PT.funds,
+PT.funds_needed,
+PU.title,
+count (distinct PU.time),
+PU.time_last_updated
+
+from
+
+rsr_project PT
+
+join
+
+rsr_partnership PP on PP.project_id = PT.id
+
+join
+
+rsr_organisation O on O.id = PP.organisation_id
+
+join
+
+rsr_projectupdate PU on PU.project_id = PP.project_id
+
+Group by 4
+
+
+
+
+#Creates data for unique project ids instead of showing multiple updates based on each partner involved
+
+
+SELECT rsr_project.id, rsr_project.title, COUNT( rsr_projectupdate.id ) 
+FROM  `rsr_project` , rsr_projectupdate
+WHERE project_id = rsr_project.id
+GROUP BY rsr_project.id
+
+
+
+
+#Create project list with organisation names & total number of updates per project
+
+
+SELECT DISTINCT O.name, proj_id, proj_title, updates.update_count
+FROM rsr_partnership PS, rsr_organisation O, (
+
+SELECT P.id AS proj_id, P.title AS proj_title, COUNT( PU.id ) AS update_count
+FROM rsr_project P, rsr_projectupdate PU
+WHERE PU.project_id = P.id
+GROUP BY P.title
+ORDER BY P.id
+)updates
+WHERE PS.project_id = proj_id
+AND PS.organisation_id = O.id
+ORDER BY O.name
+
+#start simple, 
+
+SELECT id, title, date_request_posted, budget, primary_location_id
+from rsr_project
+
+
+
+SELECT id, project_id, title, time
+FROM rsr_projectupdate
+ORDER BY time
+
+
+
+#creates project list with count of updates, title, organisation & budget/value - GOOD ONE
+
+
+SELECT DISTINCT O.name, proj_id, proj_title, value, updates.update_count
+FROM rsr_partnership PS, rsr_organisation O, (
+
+SELECT P.id AS proj_id, P.title AS proj_title, P.budget AS value, COUNT( PU.id ) AS update_count
+FROM rsr_project P, rsr_projectupdate PU
+WHERE PU.project_id = P.id
+GROUP BY P.title
+ORDER BY P.id
+)updates
+WHERE PS.project_id = proj_id
+AND PS.organisation_id = O.id
+ORDER BY O.name 
+
+
+
+
+#creates project list without organisation/partner
+
+SELECT DISTINCT proj_id, proj_title, value, updates.update_count
+FROM rsr_partnership PS, rsr_organisation O, (
+
+SELECT P.id AS proj_id, P.title AS proj_title, P.budget AS value, COUNT( PU.id ) AS update_count
+FROM rsr_project P, rsr_projectupdate PU
+WHERE PU.project_id = P.id
+GROUP BY P.title
+ORDER BY P.id
+)updates
+WHERE PS.project_id = proj_id
+AND PS.organisation_id = O.id
+ORDER BY proj_id
+
+
+#with currency - correct one for pulling no. of proj data for KPI
+
+SELECT DISTINCT proj_id, proj_title, currency, value, updates.update_count
+FROM rsr_partnership PS, rsr_organisation O, (
+
+SELECT P.id AS proj_id, P.title AS proj_title, P.currency AS currency, P.budget AS value, COUNT( PU.id ) AS update_count
+FROM rsr_project P, rsr_projectupdate PU
+WHERE PU.project_id = P.id
+GROUP BY P.title
+ORDER BY P.id
+)updates
+WHERE PS.project_id = proj_id
+AND PS.organisation_id = O.id
+ORDER BY proj_id
+
+
+
+
+#pull country/organisation data although primary_location_id is rsr_projectlocation.id
+
+SELECT O.id AS organisation_id, O.name AS organisation, O.primary_location_id AS country_id, C.name, C.continent
+
+FROM rsr_organisation O
+
+JOIN rsr_country C ON C.id = O.primary_location_id
+
+
+#Adrian's script with publishing status added, works
+
+
+SELECT
+rsr_project.id AS proj_id,
+rsr_project.title AS proj_title,
+rsr_project.currency AS currency,
+rsr_project.budget AS value,
+COUNT( rsr_projectupdate.id ) AS update_count,
+rsr_publishingstatus.status AS publishing_status
+FROM rsr_project
+LEFT JOIN rsr_projectupdate ON rsr_project.id = rsr_projectupdate.project_id
+LEFT JOIN rsr_publishingstatus ON rsr_project.id = rsr_publishingstatus.project_id
+GROUP BY rsr_project.title
+ORDER BY proj_id
+
+
+
