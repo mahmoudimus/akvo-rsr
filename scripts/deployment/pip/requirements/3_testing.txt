@@ -3,7 +3,7 @@ lxml==2.3.6
 
 # Requirements for building lettuce
 fuzzywuzzy==0.1
-sure==1.0.6
+sure==1.1.4
 
 # Modules used for app testing
 nose==1.2.1
@@ -11,4 +11,4 @@ mox==0.5.3
 py==1.4.12
 selenium==2.26.0
 splinter==0.4.8
-lettuce==0.2.10
+lettuce==0.2.11
