@@ -29,6 +29,11 @@ class AkvoPermissionsTest(mox.MoxTestBase):
 
         self.assertEqual('sudo', AkvoPermissions.SUDO_USER_GROUP)
 
+    def test_has_expected_web_user_group_name(self):
+        """fab.tests.os.akvo_permissions_test  Has expected web user group name"""
+
+        self.assertEqual('www-edit', AkvoPermissions.WEB_USER_GROUP)
+
     def test_will_confirm_if_user_has_sudo_permission(self):
         """fab.tests.os.akvo_permissions_test  Will confirm if user has sudo permission"""
 
