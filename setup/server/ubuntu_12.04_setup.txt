@@ -1,0 +1,23 @@
+Admin user setups:
+------------------
+
+sudo useradd -s /bin/bash -m -d /home/some_admin some_admin
+sudo usermod -a -G sudo some_admin
+sudo usermod -a -G adm some_admin
+
+System packages:
+----------------
+
+sudo aptitude install build-essential python python-dev mysql-server gettext
+sudo aptitude install vim curl wget ssh tar zip unzip
+sudo aptitude install libxml2-dev libxslt1-dev libcurl4-openssl-dev libexpat1-dev
+
+Git installation:
+-----------------
+
+cd /some/temp/dir
+wget http://git-core.googlecode.com/files/git-1.8.0.1.tar.gz
+tar -xf git-1.8.0.1.tar.gz
+cd git-1.8.0.1
+make prefix=/usr/local all
+sudo make prefix=/usr/local install
