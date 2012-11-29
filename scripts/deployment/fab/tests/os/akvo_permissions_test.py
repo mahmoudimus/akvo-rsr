@@ -24,51 +24,56 @@ class AkvoPermissionsTest(mox.MoxTestBase):
         self.mock_host_controller.feedback = self.mock_feedback
         self.permissions = AkvoPermissions(self.mock_host_controller)
 
+    def test_has_expected_sudo_group_name(self):
+        """fab.tests.os.akvo_permissions_test  Has expected sudo group name"""
+
+        self.assertEqual('sudo', AkvoPermissions.SUDO_USER_GROUP)
+
     def test_will_confirm_if_user_has_sudo_permission(self):
         """fab.tests.os.akvo_permissions_test  Will confirm if user has sudo permission"""
 
-        self.mock_host_controller.run("groups joesoap").AndReturn("joesoap accounts admin everyone writers")
-        self.mock_feedback.comment("User [joesoap] has expected sudo permission through membership of the [admin] group")
+        self.mock_host_controller.run('groups joesoap').AndReturn('joesoap accounts %s everyone writers' % AkvoPermissions.SUDO_USER_GROUP)
+        self.mock_feedback.comment('User [joesoap] has expected sudo permission through membership of the [%s] group' % AkvoPermissions.SUDO_USER_GROUP)
         self.mox.ReplayAll()
 
-        self.permissions.exit_if_user_does_not_have_sudo_permission("joesoap")
+        self.permissions.exit_if_user_does_not_have_sudo_permission('joesoap')
 
     def test_exit_if_user_does_not_have_sudo_permission(self):
         """fab.tests.os.akvo_permissions_test  Exit if the user does not have sudo permission"""
 
-        self.mock_host_controller.run("groups joesoap").AndReturn("joesoap accounts everyone writers")
-        expected_user_not_in_group_message = "User [joesoap] should have sudo permission through membership of the [admin] group"
+        self.mock_host_controller.run('groups joesoap').AndReturn('joesoap accounts everyone writers')
+        expected_user_not_in_group_message = 'User [joesoap] should have sudo permission through membership of the [%s] group' % AkvoPermissions.SUDO_USER_GROUP
         self.mock_feedback.abort(expected_user_not_in_group_message).AndRaise(SystemExit(expected_user_not_in_group_message))
         self.mox.ReplayAll()
 
         with self.assertRaises(SystemExit):
-            self.permissions.exit_if_user_does_not_have_sudo_permission("joesoap")
+            self.permissions.exit_if_user_does_not_have_sudo_permission('joesoap')
 
     def test_will_confirm_group_membership_if_user_is_member_of_web_group(self):
         """fab.tests.os.akvo_permissions_test  Will confirm group membership if user is a member of the web user group"""
 
-        self.mock_host_controller.run("groups joesoap").AndReturn("joesoap accounts everyone %s" % AkvoPermissions.WEB_USER_GROUP)
-        self.mock_feedback.comment("User [joesoap] is a member of expected group [%s]" % AkvoPermissions.WEB_USER_GROUP)
+        self.mock_host_controller.run('groups joesoap').AndReturn('joesoap accounts everyone %s' % AkvoPermissions.WEB_USER_GROUP)
+        self.mock_feedback.comment('User [joesoap] is a member of expected group [%s]' % AkvoPermissions.WEB_USER_GROUP)
         self.mox.ReplayAll()
 
-        self.permissions.exit_if_user_is_not_member_of_web_group("joesoap")
+        self.permissions.exit_if_user_is_not_member_of_web_group('joesoap')
 
     def test_exit_if_user_is_not_a_member_of_web_group(self):
         """fab.tests.os.akvo_permissions_test  Exit if the user is not a member of the web user group"""
 
-        self.mock_host_controller.run("groups joesoap").AndReturn("joesoap accounts everyone writers")
-        expected_user_not_in_group_message = "User [joesoap] should be a member of group [%s]" % AkvoPermissions.WEB_USER_GROUP
+        self.mock_host_controller.run('groups joesoap').AndReturn('joesoap accounts everyone writers')
+        expected_user_not_in_group_message = 'User [joesoap] should be a member of group [%s]' % AkvoPermissions.WEB_USER_GROUP
         self.mock_feedback.abort(expected_user_not_in_group_message).AndRaise(SystemExit(expected_user_not_in_group_message))
         self.mox.ReplayAll()
 
         with self.assertRaises(SystemExit):
-            self.permissions.exit_if_user_is_not_member_of_web_group("joesoap")
+            self.permissions.exit_if_user_is_not_member_of_web_group('joesoap')
 
     def test_can_set_web_group_ownership_on_specified_directory(self):
         """fab.tests.os.akvo_permissions_test  Can set web group ownership on a specified directory"""
 
-        web_dir = "/var/tmp/web/apps"
-        self.mock_host_controller.sudo("chown -R root:%s %s" % (AkvoPermissions.WEB_USER_GROUP, web_dir))
+        web_dir = '/var/tmp/web/apps'
+        self.mock_host_controller.sudo('chown -R root:%s %s' % (AkvoPermissions.WEB_USER_GROUP, web_dir))
         self.mox.ReplayAll()
 
         self.permissions.set_web_group_ownership_on_directory(web_dir)
@@ -76,10 +81,10 @@ class AkvoPermissionsTest(mox.MoxTestBase):
     def test_can_set_web_group_permissions_on_specified_directory(self):
         """fab.tests.os.akvo_permissions_test  Can set web group permissions on a specified directory"""
 
-        web_dir = "/var/tmp/web/apps"
-        self.mock_host_controller.sudo("chown -R root:%s %s" % (AkvoPermissions.WEB_USER_GROUP, web_dir))
-        self.mock_host_controller.sudo("chmod -R g+rw %s" % web_dir)
-        self.mock_host_controller.sudo("chmod g+s %s" % web_dir)
+        web_dir = '/var/tmp/web/apps'
+        self.mock_host_controller.sudo('chown -R root:%s %s' % (AkvoPermissions.WEB_USER_GROUP, web_dir))
+        self.mock_host_controller.sudo('chmod -R g+rw %s' % web_dir)
+        self.mock_host_controller.sudo('chmod g+s %s' % web_dir)
         self.mox.ReplayAll()
 
         self.permissions.set_web_group_permissions_on_directory(web_dir)
