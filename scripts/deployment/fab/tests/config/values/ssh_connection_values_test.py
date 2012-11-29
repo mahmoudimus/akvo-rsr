@@ -34,6 +34,11 @@ class SSHConnectionValuesTest(unittest.TestCase):
 
         self.assertEqual('test.akvo.org:2270', SSHConnection.for_host(HostAlias.TEST))
 
+    def test_has_connection_string_for_test1_host(self):
+        """fab.tests.config.values.ssh_connection_values_test  Has SSH connection string for test1 host"""
+
+        self.assertEqual('test1.akvo.org:22', SSHConnection.for_host(HostAlias.TEST1))
+
     def test_has_connection_string_for_test2_host(self):
         """fab.tests.config.values.ssh_connection_values_test  Has SSH connection string for test2 host"""
 

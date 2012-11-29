@@ -29,6 +29,11 @@ class DeploymentHostPathsTest(unittest.TestCase):
 
         self.assertEqual(DeploymentHostPaths(HostPathValues.DEFAULT), DeploymentHostPaths.for_host(HostAlias.TEST))
 
+    def test_has_host_paths_for_test1_server(self):
+        """fab.tests.config.values.deployment_host_paths_test  Has host paths for test1 server"""
+
+        self.assertEqual(DeploymentHostPaths(HostPathValues.TEST1), DeploymentHostPaths.for_host(HostAlias.TEST1))
+
     def test_has_host_paths_for_test2_server(self):
         """fab.tests.config.values.deployment_host_paths_test  Has host paths for test2 server"""
 

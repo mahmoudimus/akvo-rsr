@@ -42,6 +42,13 @@ class DeploymentConfigLoaderTest(mox.MoxTestBase):
 
         self.assertEqual(CIDeploymentHostConfig.for_test(), self.config_loader.parse(self._preconfigured_config_spec_for(HostAlias.TEST)))
 
+    def test_can_parse_preconfigured_test1_host_config_from_given_task_parameters(self):
+        """fab.tests.config.loader.deployment_config_loader_test  Can parse preconfigured test1 host configuration from given task parameters"""
+
+        self.mox.ReplayAll()
+
+        self.assertEqual(CIDeploymentHostConfig.for_test1(), self.config_loader.parse(self._preconfigured_config_spec_for(HostAlias.TEST1)))
+
     def test_can_parse_preconfigured_test2_host_config_from_given_task_parameters(self):
         """fab.tests.config.loader.deployment_config_loader_test  Can parse preconfigured test2 host configuration from given task parameters"""
 

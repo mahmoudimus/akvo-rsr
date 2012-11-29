@@ -35,6 +35,7 @@ class ConfigType(object):
 class DeploymentConfigLoader(object):
 
     preconfigured_hosts = { HostAlias.TEST:     CIDeploymentHostConfig.for_test(),
+                            HostAlias.TEST1:    CIDeploymentHostConfig.for_test1(),
                             HostAlias.TEST2:    CIDeploymentHostConfig.for_test2(),
                             HostAlias.DATA:     DataHostConfig() }
 

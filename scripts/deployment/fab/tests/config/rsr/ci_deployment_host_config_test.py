@@ -18,17 +18,23 @@ class CIDeploymentHostConfigTest(unittest.TestCase):
     def test_can_create_deployment_host_config_for_test_host(self):
         """fab.tests.config.rsr.ci_deployment_host_config_test  Can create CI deployment host config for test host"""
 
-        expected_test_host_config = DeploymentHostConfig.create_with(HostAlias.TEST, RepositoryBranch.DEVELOP, 'rsrdb_develop')
+        expected_host_config = DeploymentHostConfig.create_with(HostAlias.TEST, RepositoryBranch.DEVELOP, 'rsrdb_develop')
 
-        self.assertEqual(expected_test_host_config, CIDeploymentHostConfig.for_test())
+        self.assertEqual(expected_host_config, CIDeploymentHostConfig.for_test())
+
+    def test_can_create_deployment_host_config_for_test1_host(self):
+        """fab.tests.config.rsr.ci_deployment_host_config_test  Can create CI deployment host config for test1 host"""
+
+        expected_host_config = DeploymentHostConfig.create_with(HostAlias.TEST1, RepositoryBranch.DEVELOP, 'rsrdb_develop')
+
+        self.assertEqual(expected_host_config, CIDeploymentHostConfig.for_test1())
 
     def test_can_create_deployment_host_config_for_test2_host(self):
         """fab.tests.config.rsr.ci_deployment_host_config_test  Can create CI deployment host config for test2 host"""
 
-        expected_test2_host_config = DeploymentHostConfig.create_with(HostAlias.TEST2, RepositoryBranch.DEVELOP, 'test2_rsrdb_develop')
+        expected_host_config = DeploymentHostConfig.create_with(HostAlias.TEST2, RepositoryBranch.DEVELOP, 'test2_rsrdb_develop')
 
-        self.assertEqual(expected_test2_host_config, CIDeploymentHostConfig.for_test2())
-
+        self.assertEqual(expected_host_config, CIDeploymentHostConfig.for_test2())
 
 def suite():
     return TestSuiteLoader().load_tests_from(CIDeploymentHostConfigTest)

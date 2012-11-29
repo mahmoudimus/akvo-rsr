@@ -64,5 +64,9 @@ class CIDeploymentHostConfig(object):
         return DeploymentHostConfig.create_with(HostAlias.TEST, RepositoryBranch.DEVELOP, 'rsrdb_develop')
 
     @staticmethod
+    def for_test1():
+        return DeploymentHostConfig.create_with(HostAlias.TEST1, RepositoryBranch.DEVELOP, 'rsrdb_develop')
+
+    @staticmethod
     def for_test2():
         return DeploymentHostConfig.create_with(HostAlias.TEST2, RepositoryBranch.DEVELOP, 'test2_rsrdb_develop')

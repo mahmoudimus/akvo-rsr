@@ -12,6 +12,7 @@ class HostAlias(object):
     LIVE    = 'live'
     MEDIA   = 'media'
     TEST    = 'test'
+    TEST1   = 'test1'
     TEST2   = 'test2'
     UAT     = 'uat'
 
@@ -23,6 +24,7 @@ class SSHConnection(object):
                         HostAlias.LIVE:     'www.akvo.org:22',
                         HostAlias.MEDIA:    '89.233.254.43:2268',
                         HostAlias.TEST:     'test.akvo.org:2270',
+                        HostAlias.TEST1:    'test1.akvo.org:22',
                         HostAlias.TEST2:    'test2.akvo.org:2273',
                         HostAlias.UAT:      'uat.akvo.org:2279' }
 
@@ -49,6 +51,13 @@ class HostPathValues(object):
                 'static_media_home':            DEFAULT['static_media_home'],
                 'logging_home':                 DEFAULT['logging_home'],
                 'deployment_processing_home':   DEFAULT['deployment_processing_home'] }
+
+    TEST1   = { 'config_home':                  '/var/akvo/config',
+                'repo_checkout_home':           '/var/akvo/repo',
+                'virtualenvs_home':             '/var/akvo/virtualenvs',
+                'static_media_home':            '/var/akvo/www',
+                'logging_home':                 '/var/akvo/logs',
+                'deployment_processing_home':   '/var/akvo/deployment' }
 
     TEST2   = { 'config_home':                  '/usr/local/etc/akvo/test2',
                 'repo_checkout_home':           '/var/dev/test2',
@@ -83,6 +92,7 @@ class DeploymentHostPaths(object):
     host_paths_map  = { HostAlias.CI:       HostPathValues.DEFAULT,
                         HostAlias.LIVE:     HostPathValues.LIVE,
                         HostAlias.TEST:     HostPathValues.DEFAULT,
+                        HostAlias.TEST1:    HostPathValues.TEST1,
                         HostAlias.TEST2:    HostPathValues.TEST2,
                         HostAlias.UAT:      HostPathValues.DEFAULT }
 
