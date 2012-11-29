@@ -8,9 +8,9 @@ sudo usermod -a -G adm some_admin
 System packages:
 ----------------
 
-sudo aptitude install build-essential python python-dev mysql-server gettext
+sudo aptitude install build-essential python python-dev mysql-server gettext openssl
 sudo aptitude install vim curl wget ssh tar zip unzip
-sudo aptitude install libxml2-dev libxslt1-dev libcurl4-openssl-dev libexpat1-dev
+sudo aptitude install libxml2-dev libxslt1-dev libssl-dev libcurl4-openssl-dev libexpat1-dev
 
 Git installation:
 -----------------
@@ -21,3 +21,21 @@ tar -xf git-1.8.0.1.tar.gz
 cd git-1.8.0.1
 make prefix=/usr/local all
 sudo make prefix=/usr/local install
+
+Nginx installation:
+-------------------
+cd /some/temp/dir
+wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.31.tar.gz
+wget http://zlib.net/zlib-1.2.7.tar.gz
+wget http://nginx.org/download/nginx-1.3.9.tar.gz
+tar -xf pcre-8.31.tar.gz
+tar -xf zlib-1.2.7.tar.gz
+tar -xf nginx-1.3.9.tar.gz
+rm *.gz
+cd nginx-1.3.9
+./configure --with-http_ssl_module --with-pcre=../pcre-8.31 --with-pcre-jit --with-zlib=../zlib-1.2.7
+make
+sudo make install
+cd /usr/local/bin
+sudo ln -s /usr/local/nginx/sbin/nginx
+sudo nginx -t
