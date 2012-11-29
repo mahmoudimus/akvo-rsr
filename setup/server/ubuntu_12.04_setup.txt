@@ -18,7 +18,7 @@ System packages:
 
 sudo aptitude install build-essential python python-dev mysql-server gettext openssl
 sudo aptitude install vim curl wget ssh tar zip unzip
-sudo aptitude install libxml2-dev libxslt1-dev libssl-dev libcurl4-openssl-dev libexpat1-dev
+sudo aptitude install libxml2-dev libxslt1-dev libssl-dev libcurl4-openssl-dev libexpat1-dev libpng12-dev libjpeg-dev libmysqlclient-dev
 
 Git installation:
 -----------------
