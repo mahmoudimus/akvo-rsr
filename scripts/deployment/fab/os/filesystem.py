@@ -105,7 +105,11 @@ class FileSystem(object):
         self.host_controller.run("mv %s %s" % (original_path, new_path))
 
     def make_file_writable_for_all_users(self, file_path):
-        self.host_controller.sudo("chmod a+w %s" % file_path)
+        if self.file_exists(file_path):
+            self.feedback.comment('Making file writable for all users: %s' % file_path)
+            self.host_controller.sudo('chmod a+w %s' % file_path)
+        else:
+            self.feedback.comment('Unable to make file writable -- file not found: %s' % file_path)
 
     def delete_file(self, file_path):
         self._delete_at_path_with(self.host_controller.run, "file", file_path)

@@ -304,11 +304,25 @@ class FileSystemTest(mox.MoxTestBase):
     def test_can_make_file_writable_for_all_users(self):
         """fab.tests.os.file_system_test  Can make file writable for all users"""
 
-        file_path = "/var/tmp/file_to_change.txt"
-        self.mock_host_controller.sudo("chmod a+w %s" % file_path)
+        file_path = '/var/tmp/file_to_change.txt'
+
+        self.mock_host_controller.path_exists(file_path).AndReturn(True)
+        self.mock_feedback.comment('Making file writable for all users: %s' % file_path)
+        self.mock_host_controller.sudo('chmod a+w %s' % file_path)
         self.mox.ReplayAll()
 
         self.file_system.make_file_writable_for_all_users(file_path)
+
+    def test_will_warn_if_file_not_found_when_attempting_to_make_file_writable_for_all_users(self):
+        """fab.tests.os.file_system_test  Will warn if file not found when attempting to make file writable for all users"""
+
+        nonexistent_file = '/var/tmp/wibble.txt'
+
+        self.mock_host_controller.path_exists(nonexistent_file).AndReturn(False)
+        self.mock_feedback.comment('Unable to make file writable -- file not found: %s' % nonexistent_file)
+        self.mox.ReplayAll()
+
+        self.file_system.make_file_writable_for_all_users(nonexistent_file)
 
     def test_can_delete_an_existing_file(self):
         """fab.tests.os.file_system_test  Can delete an existing file"""
