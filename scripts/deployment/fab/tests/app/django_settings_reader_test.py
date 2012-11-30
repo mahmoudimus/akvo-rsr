@@ -40,7 +40,11 @@ class DjangoSettingsReaderTest(mox.MoxTestBase):
         rsr_app_path = '/path/to/rsr/app'
 
         mock_host_controller = self.mox.CreateMock(host_controller_class)
-        mock_host_controller.feedback = self.mox.CreateMock(ExecutionFeedback)
+        mock_feedback = self.mox.CreateMock(ExecutionFeedback)
+        mock_host_controller.feedback = mock_feedback
+
+        mock_host_controller.path_exists(self.rsr_log_file_path).AndReturn(True)
+        mock_feedback.comment('Making file writable for all users: %s' % self.rsr_log_file_path)
         mock_host_controller.sudo('chmod a+w %s' % self.rsr_log_file_path)
         self.mox.ReplayAll()
 

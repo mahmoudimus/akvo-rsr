@@ -44,12 +44,14 @@ class DatabaseHostTest(mox.MoxTestBase):
         self.assertIsInstance(self._create_database_host_instance_with(LocalHostController), DatabaseHost)
 
     def _create_database_host_instance_with(self, host_controller_class):
-        rsr_deployment_config = RSRDeploymentConfig.create_with(self.deployment_host_config)
+        rsr_log_file_path = RSRDeploymentConfig.create_with(self.deployment_host_config).log_file_path
 
         mock_host_controller = self.mox.CreateMock(host_controller_class)
         mock_host_controller.feedback = self.mox.CreateMock(ExecutionFeedback)
 
-        mock_host_controller.sudo('chmod a+w %s' % rsr_deployment_config.log_file_path)
+        mock_host_controller.path_exists(rsr_log_file_path).AndReturn(True)
+        mock_host_controller.feedback.comment('Making file writable for all users: %s' % rsr_log_file_path)
+        mock_host_controller.sudo('chmod a+w %s' % rsr_log_file_path)
         self.mox.ReplayAll()
 
         return DatabaseHost.create_with(self.database_credentials, self.deployment_host_config, mock_host_controller)

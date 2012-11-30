@@ -51,10 +51,14 @@ class RSRDataRetrieverTest(mox.MoxTestBase):
 
     def _can_create_instance_for(self, host_controller_class):
         database_credentials = TemplateLoader.load_database_credentials()
+        log_file_path = self.data_retriever_config.rsr_log_file_path
 
         mock_host_controller = self.mox.CreateMock(host_controller_class)
         mock_host_controller.feedback = self.mock_feedback
-        mock_host_controller.sudo('chmod a+w %s' % self.data_retriever_config.rsr_log_file_path)
+
+        mock_host_controller.path_exists(log_file_path).AndReturn(True)
+        self.mock_feedback.comment('Making file writable for all users: %s' % log_file_path)
+        mock_host_controller.sudo('chmod a+w %s' % log_file_path)
         self.mox.ReplayAll()
 
         self.assertIsInstance(RSRDataRetriever.create_with(database_credentials, mock_host_controller), RSRDataRetriever)

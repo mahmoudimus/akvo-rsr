@@ -29,9 +29,14 @@ class DataRetrievalHostTest(mox.MoxTestBase):
     def test_can_create_instance_for_remote_host(self):
         """fab.tests.host.data_retrieval_host_test  Can create a DataRetrievalHost instance for a remote host"""
 
+        rsr_log_file_path = RSRDataRetrieverConfig(DataHostPaths()).rsr_log_file_path
+
         mock_remote_host_controller = self.mox.CreateMock(RemoteHostController)
         mock_remote_host_controller.feedback = self.mox.CreateMock(ExecutionFeedback)
-        mock_remote_host_controller.sudo('chmod a+w %s' % RSRDataRetrieverConfig(DataHostPaths()).rsr_log_file_path)
+
+        mock_remote_host_controller.path_exists(rsr_log_file_path).AndReturn(True)
+        mock_remote_host_controller.feedback.comment('Making file writable for all users: %s' % rsr_log_file_path)
+        mock_remote_host_controller.sudo('chmod a+w %s' % rsr_log_file_path)
         self.mox.ReplayAll()
 
         self.assertIsInstance(DataRetrievalHost.create_with(TemplateLoader.load_database_credentials(), mock_remote_host_controller),
