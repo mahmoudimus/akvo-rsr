@@ -55,12 +55,6 @@ sudo mkdir akvo
 sudo chown root:www-edit akvo && sudo chmod g+rw akvo && sudo chmod g+s akvo
 
 cd /var/akvo
-mkdir config
-sudo chown root config
-cd config
-- copy the 60-local.conf and database credentials files from another test server and edit them as necessary
-
-cd /var/akvo
 mkdir -p www/rsr
 sudo chown -R www-data www
 - use the update_media.sh script to copy the latest media assets to /var/akvo/www/rsr/db from the hourly snapshots
@@ -68,5 +62,12 @@ sudo chown -R www-data www
 cd /var/akvo
 mkdir logs
 sudo chown root logs
+
+cd /var/akvo
+mkdir config
+sudo chown root config
+cd config
+- copy the 60-local.conf and database credentials files from another test server and edit them as necessary
+- check that the configured paths use the new /var/akvo base path as necessary
 
 Run the deployment execution steps for RSR
