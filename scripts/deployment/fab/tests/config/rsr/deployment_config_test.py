@@ -20,7 +20,7 @@ class RSRDeploymentConfigTest(unittest.TestCase):
         super(RSRDeploymentConfigTest, self).setUp()
 
         self.deployment_user = 'rupaul'
-        self.deployment_host_config = CIDeploymentHostConfig.for_test()
+        self.deployment_host_config = CIDeploymentHostConfig.for_test1()
         self.deployment_host_paths = self.deployment_host_config.host_paths
         self.codebase_config = RSRCodebaseConfig(self.deployment_host_config.repository_branch)
 
@@ -109,12 +109,12 @@ class RSRDeploymentConfigTest(unittest.TestCase):
     def test_has_rsr_static_media_home(self):
         """fab.tests.config.rsr.deployment_config_test  Has RSR static media home"""
 
-        self.assertEqual(os.path.join(self.deployment_host_paths.static_media_home, 'akvo'), self.deployment_config.rsr_static_media_home)
+        self.assertEqual(os.path.join(self.deployment_host_paths.static_media_home, 'rsr'), self.deployment_config.rsr_static_media_home)
 
     def test_has_static_media_db_path(self):
         """fab.tests.config.rsr.deployment_config_test  Has static media DB path"""
 
-        self.assertEqual(os.path.join(self.deployment_host_paths.static_media_home, 'akvo/db'), self.deployment_config.static_media_db_path)
+        self.assertEqual(os.path.join(self.deployment_host_paths.static_media_home, 'rsr/db'), self.deployment_config.static_media_db_path)
 
     def test_has_host_config_home(self):
         """fab.tests.config.rsr.deployment_config_test  Has host configuration home"""
