@@ -45,40 +45,42 @@ class RSRDataPopulator(object):
     def populate_database(self, database_name):
         self._ensure_expected_paths_exist()
 
-        data_archive_file_path = os.path.join(self.config.data_archives_home, self._find_latest_data_archive())
-        data_extract_file_path = data_archive_file_path.rstrip('.zip')
+        latest_data_archive_name    = self._find_latest_data_archive_name()
+        local_data_archive_path     = os.path.join(self.config.local_data_archives_home, latest_data_archive_name)
+        remote_data_archive_path    = os.path.join(self.config.remote_data_archives_home, latest_data_archive_name)
+        remote_data_extract_path    = remote_data_archive_path.rstrip('.zip')
 
-        self._upload_and_unpack_data_archive(data_archive_file_path, data_extract_file_path)
-        self._populate_rsr_database(data_extract_file_path, database_name)
+        self._upload_and_unpack_data_archive(local_data_archive_path, remote_data_archive_path, remote_data_extract_path)
+        self._populate_rsr_database(remote_data_extract_path, database_name)
 
     def _ensure_expected_paths_exist(self):
-        self.local_file_system.exit_if_directory_does_not_exist(self.config.data_archives_home)
-        self.data_host_file_system.ensure_directory_exists(self.config.data_archives_home)
+        self.local_file_system.exit_if_directory_does_not_exist(self.config.local_data_archives_home)
+        self.data_host_file_system.ensure_directory_exists(self.config.remote_data_archives_home)
         self.data_host_file_system.ensure_directory_exists(self.config.rsr_deployment_home)
 
-    def _find_latest_data_archive(self):
+    def _find_latest_data_archive_name(self):
         # we use the same data archive path both locally and on the data host
-        latest_data_archive_name = self.local_file_system.most_recent_file_in_directory(self.config.data_archives_home)
+        latest_data_archive_name = self.local_file_system.most_recent_file_in_directory(self.config.local_data_archives_home)
 
         if len(latest_data_archive_name) > 0:
             return latest_data_archive_name
         else:
-            self.feedback.abort('No local data archives available for uploading from: %s' % self.config.data_archives_home)
+            self.feedback.abort('No local data archives available for uploading from: %s' % self.config.local_data_archives_home)
 
-    def _upload_and_unpack_data_archive(self, data_archive_file_path, data_extract_file_path):
-        if self.data_host_file_system.file_exists(data_extract_file_path):
-            self.feedback.comment('Found latest data extract at: %s' % data_extract_file_path)
+    def _upload_and_unpack_data_archive(self, local_data_archive_path, remote_data_archive_path, remote_data_extract_path):
+        if self.data_host_file_system.file_exists(remote_data_extract_path):
+            self.feedback.comment('Found latest data extract at: %s' % remote_data_extract_path)
         else:
             self.feedback.comment('Uploading and unpacking latest data archive:')
-            self.data_host_file_system.upload_file(data_archive_file_path, self.config.data_archives_home)
-            self.data_host_file_system.decompress_data_archive(data_archive_file_path, self.config.data_archives_home)
-            self.data_host_file_system.delete_file(data_archive_file_path)
+            self.data_host_file_system.upload_file(local_data_archive_path, self.config.remote_data_archives_home)
+            self.data_host_file_system.decompress_data_archive(remote_data_archive_path, self.config.remote_data_archives_home)
+            self.data_host_file_system.delete_file(remote_data_archive_path)
 
-    def _populate_rsr_database(self, data_extract_file_path, rsr_database_name):
+    def _populate_rsr_database(self, remote_data_extract_path, rsr_database_name):
         with self.data_host_file_system.cd(self.config.rsr_deployment_home):
             self.feedback.comment('Loading RSR data')
-            self.data_handler.load_data_from(data_extract_file_path, rsr_database_name)
-            self.data_host_file_system.delete_file(data_extract_file_path)
+            self.data_handler.load_data_from(remote_data_extract_path, rsr_database_name)
+            self.data_host_file_system.delete_file(remote_data_extract_path)
 
     def _data_archive_path(self, latest_data_archive_name):
         return os.path.join(self.config.data_archives_home, latest_data_archive_name)

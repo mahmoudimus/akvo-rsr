@@ -48,8 +48,9 @@ class RSRDataPopulatorTest(mox.MoxTestBase):
         self.mock_last_migration_file = self.mox.CreateMock(file)
 
         self.latest_data_archive_name = 'rsr_data_20111112.sql.zip'
-        self.expected_data_archive_file_path = os.path.join(self.data_populator_config.data_archives_home, self.latest_data_archive_name)
-        self.expected_data_extract_file_path = self.expected_data_archive_file_path.rstrip('.zip')
+        self.expected_local_data_archive_path = os.path.join(self.data_populator_config.local_data_archives_home, self.latest_data_archive_name)
+        self.expected_remote_data_archive_path = os.path.join(self.data_populator_config.remote_data_archives_home, self.latest_data_archive_name)
+        self.expected_remote_data_extract_path = self.expected_remote_data_archive_path.rstrip('.zip')
 
         self.data_populator = StubbedRSRDataPopulator(self.data_populator_config, self.mock_data_host_file_system,
                                                       self.mock_local_file_system, self.mock_django_admin,
@@ -71,7 +72,9 @@ class RSRDataPopulatorTest(mox.MoxTestBase):
         mock_host_controller.feedback = self.mock_feedback
         self.mox.ReplayAll()
 
-        data_populator = RSRDataPopulator.create_with(TemplateLoader.load_database_credentials(), self.deployment_host_config, mock_host_controller)
+        data_populator = RSRDataPopulator.create_with(TemplateLoader.load_database_credentials(),
+                                                      self.deployment_host_config,
+                                                      mock_host_controller)
 
         self.assertIsInstance(data_populator, RSRDataPopulator)
 
@@ -90,10 +93,10 @@ class RSRDataPopulatorTest(mox.MoxTestBase):
         """fab.tests.data.rsr_data_populator_test  Can upload data archive and populate RSR database"""
 
         self._ensure_expected_paths_exist()
-        self._find_latest_data_archive(self.latest_data_archive_name)
-        self._upload_data_archive(self.expected_data_archive_file_path, self.expected_data_extract_file_path)
-        self._unpack_data_archive(self.expected_data_archive_file_path)
-        self._populate_rsr_database_with(self.expected_data_extract_file_path, 'some_rsrdb')
+        self._find_latest_data_archive_name()
+        self._upload_data_archive()
+        self._unpack_data_archive()
+        self._populate_rsr_database()
         self.mox.ReplayAll()
 
         self.data_populator.populate_database('some_rsrdb')
@@ -102,9 +105,9 @@ class RSRDataPopulatorTest(mox.MoxTestBase):
         """fab.tests.data.rsr_data_populator_test  Can populate RSR database from an existing data archive"""
 
         self._ensure_expected_paths_exist()
-        self._find_latest_data_archive(self.latest_data_archive_name)
-        self._use_existing_data_extract(self.expected_data_extract_file_path)
-        self._populate_rsr_database_with(self.expected_data_extract_file_path, 'some_rsrdb')
+        self._find_latest_data_archive_name()
+        self._use_existing_data_extract()
+        self._populate_rsr_database()
         self.mox.ReplayAll()
 
         self.data_populator.populate_database('some_rsrdb')
@@ -120,36 +123,37 @@ class RSRDataPopulatorTest(mox.MoxTestBase):
             self.data_populator.populate_database('some_rsrdb')
 
     def _ensure_expected_paths_exist(self):
-        self.mock_local_file_system.exit_if_directory_does_not_exist(self.data_populator_config.data_archives_home)
-        self.mock_data_host_file_system.ensure_directory_exists(self.data_populator_config.data_archives_home)
+        self.mock_local_file_system.exit_if_directory_does_not_exist(self.data_populator_config.local_data_archives_home)
+        self.mock_data_host_file_system.ensure_directory_exists(self.data_populator_config.remote_data_archives_home)
         self.mock_data_host_file_system.ensure_directory_exists(self.data_populator_config.rsr_deployment_home)
 
-    def _find_latest_data_archive(self, latest_data_archive_name):
-        self.mock_local_file_system.most_recent_file_in_directory(self.data_populator_config.data_archives_home).AndReturn(latest_data_archive_name)
+    def _find_latest_data_archive_name(self):
+        self.mock_local_file_system.most_recent_file_in_directory(self.data_populator_config.local_data_archives_home).AndReturn(self.latest_data_archive_name)
 
-    def _upload_data_archive(self, expected_data_archive_file_path, expected_data_extract_file_path):
-        self.mock_data_host_file_system.file_exists(expected_data_extract_file_path).AndReturn(False)
+    def _upload_data_archive(self):
+        self.mock_data_host_file_system.file_exists(self.expected_remote_data_extract_path).AndReturn(False)
         self.mock_feedback.comment('Uploading and unpacking latest data archive:')
-        self.mock_data_host_file_system.upload_file(expected_data_archive_file_path, self.data_populator_config.data_archives_home)
+        self.mock_data_host_file_system.upload_file(self.expected_local_data_archive_path, self.data_populator_config.remote_data_archives_home)
 
-    def _unpack_data_archive(self, expected_data_archive_file_path):
-        self.mock_data_host_file_system.decompress_data_archive(expected_data_archive_file_path, self.data_populator_config.data_archives_home)
-        self.mock_data_host_file_system.delete_file(expected_data_archive_file_path)
+    def _unpack_data_archive(self):
+        self.mock_data_host_file_system.decompress_data_archive(self.expected_remote_data_archive_path,
+                                                                self.data_populator_config.remote_data_archives_home)
+        self.mock_data_host_file_system.delete_file(self.expected_remote_data_archive_path)
 
-    def _use_existing_data_extract(self, expected_data_extract_file_path):
-        self.mock_data_host_file_system.file_exists(expected_data_extract_file_path).AndReturn(True)
-        self.mock_feedback.comment('Found latest data extract at: %s' % expected_data_extract_file_path)
+    def _use_existing_data_extract(self):
+        self.mock_data_host_file_system.file_exists(self.expected_remote_data_extract_path).AndReturn(True)
+        self.mock_feedback.comment('Found latest data extract at: %s' % self.expected_remote_data_extract_path)
 
     def _exit_when_no_data_archives_exist_on_local_host(self):
-        self.mock_local_file_system.most_recent_file_in_directory(self.data_populator_config.data_archives_home).AndReturn('')
-        no_data_archives_available = 'No local data archives available for uploading from: %s' % self.data_populator_config.data_archives_home
+        self.mock_local_file_system.most_recent_file_in_directory(self.data_populator_config.local_data_archives_home).AndReturn('')
+        no_data_archives_available = 'No local data archives available for uploading from: %s' % self.data_populator_config.local_data_archives_home
         self.mock_feedback.abort(no_data_archives_available).AndRaise(SystemExit(no_data_archives_available))
 
-    def _populate_rsr_database_with(self, data_extract_file_path, database_name):
+    def _populate_rsr_database(self):
         self._change_remote_dir_to(self.data_populator_config.rsr_deployment_home)
         self.mock_feedback.comment('Loading RSR data')
-        self.mock_data_handler.load_data_from(data_extract_file_path, database_name)
-        self.mock_data_host_file_system.delete_file(data_extract_file_path)
+        self.mock_data_handler.load_data_from(self.expected_remote_data_extract_path, 'some_rsrdb')
+        self.mock_data_host_file_system.delete_file(self.expected_remote_data_extract_path)
 
     def test_can_run_new_rsr_migrations(self):
         """fab.tests.data.rsr_data_populator_test  Can run new RSR migrations"""
