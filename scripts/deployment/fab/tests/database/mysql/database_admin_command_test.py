@@ -101,7 +101,7 @@ class DatabaseAdminCommandTest(mox.MoxTestBase):
     def test_can_create_user_account(self):
         """fab.tests.database.mysql.database_admin_command_test  Can create user account"""
 
-        self.mock_statement_executor.execute_without_output(["CREATE USER joe IDENTIFIED BY 'secret'"])
+        self.mock_statement_executor.execute_without_output(["CREATE USER joe@localhost IDENTIFIED BY 'secret'"])
         self.mox.ReplayAll()
 
         self.database_admin_command.create_user_account("joe", "secret")
