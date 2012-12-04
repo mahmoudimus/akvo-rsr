@@ -21,7 +21,7 @@ class RSRDataPopulatorConfigTest(unittest.TestCase):
         super(RSRDataPopulatorConfigTest, self).setUp()
         self.deployment_host_config = CIDeploymentHostConfig.for_test()
         self.deployment_config = RSRDeploymentConfig.create_with(self.deployment_host_config)
-        self.codebase_config = RSRCodebaseConfig("some_repo_branch")
+        self.codebase_config = RSRCodebaseConfig('some_repo_branch')
 
         self.expected_rsr_deployment_home = self.deployment_config.rsr_deployment_home
 
@@ -34,12 +34,17 @@ class RSRDataPopulatorConfigTest(unittest.TestCase):
 
         self.assertIsInstance(RSRDataPopulatorConfig.create_with(self.deployment_host_config), RSRDataPopulatorConfig)
 
-    def test_has_data_archives_home(self):
-        """fab.tests.config.rsr.data.populator_config_test  Has data archives home"""
+    def test_has_remote_data_archives_home(self):
+        """fab.tests.config.rsr.data.populator_config_test  Has remote data archives home"""
 
         expected_data_archives_home = os.path.join(self.deployment_host_config.host_paths.deployment_processing_home, 'data_archives')
 
-        self.assertEqual(expected_data_archives_home, self.data_populator_config.data_archives_home)
+        self.assertEqual(expected_data_archives_home, self.data_populator_config.remote_data_archives_home)
+
+    def test_has_local_data_archives_home(self):
+        """fab.tests.config.rsr.data.populator_config_test  Has local data archives home"""
+
+        self.assertEqual('/var/tmp/rsr/data_archives', self.data_populator_config.local_data_archives_home)
 
     def test_has_rsr_deployment_home(self):
         """fab.tests.config.rsr.data.populator_config_test  Has RSR deployment home"""
@@ -49,7 +54,7 @@ class RSRDataPopulatorConfigTest(unittest.TestCase):
     def test_has_rsr_virtualenv_path(self):
         """fab.tests.config.rsr.data.populator_config_test  Has RSR virtualenv path"""
 
-        rsr_env_name = "rsr_%s" % self.codebase_config.repo_branch_without_type
+        rsr_env_name = 'rsr_%s' % self.codebase_config.repo_branch_without_type
         expected_rsr_env_path = os.path.join(self.deployment_host_config.host_paths.virtualenvs_home, rsr_env_name)
 
         self.assertEqual(expected_rsr_env_path, self.data_populator_config.rsr_env_path)
@@ -57,7 +62,7 @@ class RSRDataPopulatorConfigTest(unittest.TestCase):
     def test_has_list_of_django_apps_to_migrate(self):
         """fab.tests.config.rsr.data.populator_config_test  Has list of Django apps to migrate"""
 
-        self.assertEqual(["oembed", "ipn"], self.data_populator_config.django_apps_to_migrate)
+        self.assertEqual(['oembed', 'ipn'], self.data_populator_config.django_apps_to_migrate)
 
     def test_has_rsr_app_name(self):
         """fab.tests.config.rsr.data.populator_config_test  Has RSR app name"""
