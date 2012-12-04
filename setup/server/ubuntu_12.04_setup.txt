@@ -48,6 +48,14 @@ cd /usr/local/bin
 sudo ln -s /usr/local/nginx/sbin/nginx
 sudo nginx -t
 
+MySQL admin setup:
+------------------
+mysql -u root -p
+use mysql;
+create user sqladmin@localhost identified by '[some_admin_pw]';
+grant all on *.* to sqladmin@localhost with grant option;
+flush privileges;
+
 RSR server config:
 ------------------
 cd /var
