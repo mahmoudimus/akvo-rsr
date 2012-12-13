@@ -88,4 +88,4 @@ cd config
 - copy the 60-local.conf and database credentials files from another test server and edit them as necessary
 - check that the configured paths use the new /var/akvo base path as necessary
 
-Run the deployment execution steps for RSR
+Run deployment execution steps 2 to 7 for RSR (step 1 is now obsolete and will be replaced later on)
