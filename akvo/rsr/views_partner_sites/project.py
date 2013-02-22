@@ -18,8 +18,8 @@ from django.views.decorators.cache import never_cache
 from django.views.generic.edit import FormView, UpdateView
 
 from akvo.rsr.forms import ProjectUpdateForm
-from akvo.rsr.models import Project, ProjectUpdate
-from akvo.rsr.views_partner_sites.base import BaseProjectView, BaseListView
+from akvo.rsr.models import Invoice, Project, ProjectUpdate
+from akvo.rsr.views_partner_sites.base import BaseProjectView, BaseListView, BaseView
 
 
 __all__ = [
@@ -29,6 +29,7 @@ __all__ = [
     'ProjectUpdateEditView',
     'ProjectUpdateListView',
     'ProjectUpdateView',
+    'ProjectDonationThanksView'
 ]
 
 
@@ -186,3 +187,20 @@ class ProjectUpdateEditView(ProjectUpdateFormView, UpdateView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(ProjectUpdate, id=self.kwargs['update_id'])
+
+
+# class ProjectDonationThanksView(BaseView):
+#     "Render a thankyou page after a successful donation"
+# 
+#     template_name = "partner_sites/project/donate/donate_thanks.html"
+#     
+#     def get_context_data(self, invoice=None, **kwargs):
+#         context = super(ProjectDonationThanksView, self).get_context_data(**kwargs)
+#         invoice_id = self.request.GET.get("invoice", None)
+#         transaction_id = self.request.GET.get("transaction_id", None)
+#         if invoice_id is not None:
+#             invoice = Invoice.objects.get(pk=int(invoice_id))
+#         elif transaction_id is not None:
+#             invoice = Invoice.objects.get(transaction_id=int(transaction_id))
+#         context["invoice"] = invoice
+#         return context
