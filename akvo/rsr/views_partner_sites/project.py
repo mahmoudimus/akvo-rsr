@@ -10,6 +10,7 @@ from __future__ import absolute_import
 #from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -127,7 +128,7 @@ class ProjectUpdateAddView(ProjectUpdateFormView, FormView):
     def render_to_response(self, context):
         # re-direct unauthenticated users to sign-in page
         if not self.request.user.is_authenticated():
-            return redirect_to_login(self.request.path, login_url='/rsr/signin/')
+            return redirect_to_login(self.request.path, login_url=reverse('sign_in'))
         context['form'].initial = dict(language=self.project.language)
         return super(ProjectUpdateAddView, self).render_to_response(context)
 
@@ -189,18 +190,18 @@ class ProjectUpdateEditView(ProjectUpdateFormView, UpdateView):
         return get_object_or_404(ProjectUpdate, id=self.kwargs['update_id'])
 
 
-# class ProjectDonationThanksView(BaseView):
-#     "Render a thankyou page after a successful donation"
-# 
-#     template_name = "partner_sites/project/donate/donate_thanks.html"
-#     
-#     def get_context_data(self, invoice=None, **kwargs):
-#         context = super(ProjectDonationThanksView, self).get_context_data(**kwargs)
-#         invoice_id = self.request.GET.get("invoice", None)
-#         transaction_id = self.request.GET.get("transaction_id", None)
-#         if invoice_id is not None:
-#             invoice = Invoice.objects.get(pk=int(invoice_id))
-#         elif transaction_id is not None:
-#             invoice = Invoice.objects.get(transaction_id=int(transaction_id))
-#         context["invoice"] = invoice
-#         return context
+class ProjectDonationThanksView(BaseView):
+    "Render a thankyou page after a successful donation"
+
+    template_name = "partner_sites/project/donate/donate_thanks.html"
+    
+    def get_context_data(self, invoice=None, **kwargs):
+        context = super(ProjectDonationThanksView, self).get_context_data(**kwargs)
+        paypal_invoice_id = self.request.GET.get("invoice", None)
+        mollie_transaction_id = self.request.GET.get("transaction_id", None)
+        if paypal_invoice_id is not None:
+            invoice = Invoice.objects.get(pk=int(paypal_invoice_id))
+        elif mollie_transaction_id is not None:
+            invoice = Invoice.objects.get(transaction_id=str(mollie_transaction_id))
+        context["invoice"] = invoice
+        return context
