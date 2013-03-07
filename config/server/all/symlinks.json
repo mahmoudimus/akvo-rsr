@@ -2,6 +2,7 @@
     "/var/akvo/repo/current/config/server/all/init":                "/var/akvo/config/init",
     "/var/akvo/repo/current/config/server/all/nginx":               "/var/akvo/config/nginx",
     "/var/akvo/repo/current/config/server/all/uwsgi":               "/var/akvo/config/uwsgi",
+    "/var/akvo/repo/current/scripts/server/restart_web_server.sh":  "/var/akvo/deployment/restart_web_server.sh",
     "/var/akvo/repo/current/akvo/mediaroot":                        "/var/akvo/www/rsr/mediaroot",
     "/var/akvo/config/nginx":                                       "/etc/nginx",
     "/var/akvo/config/uwsgi":                                       "/etc/uwsgi",
