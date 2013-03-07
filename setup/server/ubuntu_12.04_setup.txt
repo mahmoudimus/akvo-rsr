@@ -19,7 +19,7 @@ System packages:
 sudo aptitude install build-essential python python-dev mysql-server gettext openssl
 sudo aptitude install vim curl wget ssh tar zip unzip
 sudo aptitude install libxml2-dev libxslt1-dev libssl-dev libcurl4-openssl-dev libexpat1-dev libmysqlclient-dev
-sudo aptitude install libpng12-dev libjpeg-dev libfreetype6-dev
+sudo aptitude install libpng12-dev libjpeg-dev libfreetype6-dev memcached libmemcached-dev
 
 cd /usr/lib
 sudo ln -s x86_64-linux-gnu/libjpeg.so
