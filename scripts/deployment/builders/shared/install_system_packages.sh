@@ -11,6 +11,8 @@ source "$SHARED_SCRIPTS_HOME/verifiers/exit_if_not_using_sudo.sh"
 
 source "$CONFIG_DIR/load_config.sh" "python_system.config" $EXECUTION_MODE
 
+export CC=/usr/bin/gcc
+
 PIP_REQUIREMENTS_DIR="$(cd "$SHARED_SCRIPTS_HOME/../../pip/requirements" && pwd)"
 
 function exit_if_pip_not_installed

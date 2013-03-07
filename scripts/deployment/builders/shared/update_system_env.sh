@@ -10,6 +10,8 @@ source "$SHARED_SCRIPTS_HOME/verifiers/exit_if_not_using_sudo.sh"
 
 source "$SHARED_SCRIPTS_HOME/ensure_package_tools_are_installed.sh"
 
+export CC=/usr/bin/gcc
+
 # exit if any errors occurred
 if [ $? -ne 0 ]; then
     printf "\n>> Unable to install system Python packages until package tools have been installed correctly\n"
