@@ -8,8 +8,6 @@
     "/var/akvo/config/uwsgi":                                       "/etc/uwsgi",
     "/var/akvo/config/init/nginx.conf":                             "/etc/init/nginx.conf",
     "/var/akvo/config/init/uwsgi.conf":                             "/etc/init/uwsgi.conf",
-    "mime.types.default":                                           "/usr/local/nginx/conf/mime.types",
-    "uwsgi_params.default":                                         "/usr/local/nginx/conf/uwsgi_params",
     "/etc/nginx/nginx.conf":                                        "/usr/local/nginx/conf/nginx.conf",
     "/var/akvo/logs/nginx/access.log":                              "/usr/local/nginx/logs/access.log",
     "/var/akvo/logs/nginx/error.log":                               "/usr/local/nginx/logs/error.log"
