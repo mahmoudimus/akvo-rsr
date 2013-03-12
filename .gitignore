@@ -36,8 +36,8 @@ scripts/deployment/fab/config/rsr/credentials/custom.py
 scripts/deployment/update_ci_server_config.py
 
 ## Tests
-tests/akvo/acceptance/test_settings.py
-tests/pvw/acceptance/test_settings.py
+tests/legacy/acceptance/akvo/test_settings.py
+tests/legacy/acceptance/pvw/test_settings.py
 
 
 # Environment
@@ -50,7 +50,7 @@ tests/pvw/acceptance/test_settings.py
 .TemporaryItems
 
 ## Windows
-Thumbs.db 
+Thumbs.db
 Desktop.ini
 
 ## Python
