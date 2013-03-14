@@ -22,8 +22,6 @@ class FakeRequest(object):
     def get_host(self):
         return self.host
 
-    
-
 
 def pytest_generate_tests(metafunc):
     hosts = (("localhost", "localhost"),
