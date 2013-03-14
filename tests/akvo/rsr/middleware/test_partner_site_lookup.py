@@ -13,7 +13,7 @@ __all__ = ["test_get_domain",
            "test_is_rsr_instance"]
 
 
-class MockRequest(object):
+class FakeRequest(object):
     
     def __init__(self, host="www.akvo.org"):
         self.host = host
@@ -23,12 +23,11 @@ class MockRequest(object):
 
     
 def test_get_domain():
-    ps_host = MockRequest(host="akvo.akvoapp.org")
-    rsr_host = MockRequest(host="www.akvo.org")
-    invalid_host = MockRequest(host="discard-me.subdomain.domain.com")
-    assert get_domain(ps_host) == "akvo.akvoapp.org"
-    assert get_domain(rsr_host) == "www.akvo.org"
-    assert get_domain(invalid_host) == "subdomain.domain.com"
+    hosts = (("akvo.akvoapp.org", "akvo.akvoapp.org"),
+             ("www.akvo.org", "www.akvo.org"),
+             ("subsubdomain.subdomain.domain.com", "subdomain.domain.com"))
+    for host, expected in hosts:
+        assert get_domain(FakeRequest(host=host)) == expected
 
 
 def pytest_generate_tests(metafunc):
