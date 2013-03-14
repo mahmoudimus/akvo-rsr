@@ -23,7 +23,8 @@ class FakeRequest(object):
 
     
 def test_get_domain():
-    hosts = (("akvo.akvoapp.org", "akvo.akvoapp.org"),
+    hosts = (("localhost", "localhost"),
+             ("akvo.akvoapp.org", "akvo.akvoapp.org"),
              ("www.akvo.org", "www.akvo.org"),
              ("subsubdomain.subdomain.domain.com", "subdomain.domain.com"))
     for host, expected in hosts:
