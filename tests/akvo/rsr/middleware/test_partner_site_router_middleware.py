@@ -4,7 +4,7 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module.
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
-import mock
+from mock import Mock
 import pytest
 
 from akvo.rsr.middleware import (get_domain,
@@ -24,8 +24,8 @@ __all__ = ["test_get_domain",
     ("subsubdomain.subdomain.domain.com", "subdomain.domain.com")
 ))
 def test_get_domain(input, expected):
-    request = mock.Mock()
-    request.get_host = mock.Mock(method="get_host", return_value=input)
+    kwargs = {"get_host.return_value": input}
+    request = Mock(**kwargs)
     assert get_domain(request) == expected
 
 
