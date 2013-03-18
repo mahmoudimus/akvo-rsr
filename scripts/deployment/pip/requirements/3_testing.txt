@@ -13,3 +13,4 @@ selenium==2.26.0
 splinter==0.4.8
 lettuce==0.2.10
 pytest-django==2.2.0
+mock==1.0.1
