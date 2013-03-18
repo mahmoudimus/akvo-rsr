@@ -17,16 +17,16 @@ __all__ = ["test_get_domain",
            "test_is_rsr_instance"]
 
 
-@pytest.mark.parametrize(("input", "expected"), (
+@pytest.mark.parametrize(("input_domain", "expected_output_domain"), (
     ("localhost", "localhost"),
     ("www.akvo.org", "www.akvo.org"),
     ("akvo.akvoapp.org", "akvo.akvoapp.org"),
     ("subsubdomain.subdomain.domain.com", "subdomain.domain.com")
 ))
-def test_get_domain(input, expected):
-    kwargs = {"get_host.return_value": input}
-    request = Mock(**kwargs)
-    assert get_domain(request) == expected
+def test_get_domain(input_domain, expected_output_domain):
+    request_attributes = {"get_host.return_value": input_domain}
+    request = Mock(**request_attributes)
+    assert get_domain(request) == expected_output_domain
 
 
 @pytest.mark.parametrize("host", (
