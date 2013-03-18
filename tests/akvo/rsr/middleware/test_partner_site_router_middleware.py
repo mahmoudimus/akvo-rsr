@@ -4,6 +4,7 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module.
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
+import mock
 import pytest
 
 from akvo.rsr.middleware import (get_domain,
@@ -16,22 +17,16 @@ __all__ = ["test_get_domain",
            "test_is_rsr_instance"]
 
 
-class FakeRequest(object):
-
-    def __init__(self, host="www.akvo.org"):
-        self.host = host
-
-    def get_host(self):
-        return self.host
-
-
 @pytest.mark.parametrize(("input", "expected"), (
     ("localhost", "localhost"),
     ("www.akvo.org", "www.akvo.org"),
     ("akvo.akvoapp.org", "akvo.akvoapp.org"),
-    ("subsubdomain.subdomain.domain.com", "subdomain.domain.com")))
+    ("subsubdomain.subdomain.domain.com", "subdomain.domain.com")
+))
 def test_get_domain(input, expected):
-    assert get_domain(FakeRequest(host=input)) == expected
+    request = mock.Mock()
+    request.get_host = mock.Mock(method="get_host", return_value=input)
+    assert get_domain(request) == expected
 
 
 @pytest.mark.parametrize("host", (
@@ -39,7 +34,8 @@ def test_get_domain(input, expected):
     "test.akvo.org",
     "www.akvo.org",
     "akvo.dev",
-    "localhost"))
+    "localhost"
+))
 def test_is_rsr_instance(host):
     assert is_rsr_instance(host)
 
@@ -47,6 +43,7 @@ def test_is_rsr_instance(host):
 @pytest.mark.parametrize("host", (
     "akvo.akvotest3.org",
     "cordaid.akvoapp.org",
-    "simavi.akvotest.org"))
+    "simavi.akvotest.org"
+))
 def test_is_partner_site_instance(host):
     assert is_partner_site_instance(host)
