@@ -4,6 +4,8 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module.
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
+import pytest
+
 from akvo.rsr.models import Partnership
 
 FIELD_PARTNER = u'field'
@@ -34,33 +36,29 @@ ALL_PARTNER_TYPES_ATTR_NAMES = [
     'NETWORK_PARTNER',
 ]
 
-def pytest_generate_tests(metafunc):
-    p = Partnership()
-    if "partner_type_list" in metafunc.funcargnames:
-        metafunc.parametrize(["partner_type_list", 'keys'],
-                             [
-                                 (
-                                     [item[0] for item in p.PARTNER_TYPES],
-                                     ALL_PARTNER_TYPES[:4]
-                                 ),
-                                 (
-                                     [item[0] for item in p.PARTNER_TYPE_EXTRAS],
-                                     ALL_PARTNER_TYPES[4:]
-                                 ),
-                             ]
-        )
-    if "attr_name" in metafunc.funcargnames:
-        metafunc.parametrize(
-            ['attr_name', 'attr_value'],
-            zip(ALL_PARTNER_TYPES_ATTR_NAMES, ALL_PARTNER_TYPES)
-        )
-
 
 # testing the attributes in Partnership that defines the types of partners
+@pytest.mark.parametrize(
+    ('attr_name', 'attr_value'),
+    zip(ALL_PARTNER_TYPES_ATTR_NAMES, ALL_PARTNER_TYPES)
+)
 def test_partnership_partner_types(attr_name, attr_value):
     partnership = Partnership()
     assert getattr(partnership, attr_name) == attr_value
 
+p = Partnership()
+
+@pytest.mark.parametrize(("partner_type_list", 'keys'), [
+    (
+        [item[0] for item in p.PARTNER_TYPES],
+        ALL_PARTNER_TYPES[:4]
+    ),
+    (
+        [item[0] for item in p.PARTNER_TYPE_EXTRAS],
+        ALL_PARTNER_TYPES[4:]
+    ),
+]
+)
 def test_partnership_types_list(partner_type_list, keys):
 
     assert len(keys) == len(partner_type_list)

@@ -603,25 +603,36 @@ class OrganisationsQuerySetManager(QuerySetManager):
         return self.model.OrganisationsQuerySet(self.model)
 
 # helpers to Project methods
-def settings_reader(*settings_names):
+def read_settings(*settings_names):
+    """
+    get the values of some settings
+    :param settings_names: this is either a list of settings names or a list of tuples where each tuple is a settings
+           name and a default value for that setting
+    :return: a dict with the setting name as the key and the setting's value as the value
+    """
     from django.conf import settings as reader_settings
     result = {}
     for name in settings_names:
         result[name] = getattr(reader_settings, name, None)
     return result
 
-def calculate_donation_needed_to_fully_fund(funds_needed, currency, is_paypal, settings_reader):
+def calculate_donation_needed_to_fully_fund_via_paypal(funds_needed, currency, read_settings):
     funds_needed = float(funds_needed)
-    if is_paypal:
-        if currency == 'EUR':
-            fee_settings = settings_reader('PAYPAL_FEE_BASE_EUR', 'PAYPAL_FEE_PCT_EUR',)
-            return calculate_gateway_payment_including_fees(funds_needed, fee_settings['PAYPAL_FEE_BASE_EUR'], fee_settings['PAYPAL_FEE_PCT_EUR'])
-        elif currency == 'USD':
-            fee_settings = settings_reader('PAYPAL_FEE_BASE_USD', 'PAYPAL_FEE_PCT_USD',)
-            return calculate_gateway_payment_including_fees(funds_needed, fee_settings['PAYPAL_FEE_BASE_USD'], fee_settings['PAYPAL_FEE_PCT_USD'])
-    else:
-        fee_settings = settings_reader('MOLLIE_FEE_BASE')
-        return calculate_gateway_payment_including_fees(funds_needed, fee_settings['MOLLIE_FEE_BASE'], 0)
+    if currency == 'EUR':
+        fee_settings = read_settings('PAYPAL_FEE_BASE_EUR', 'PAYPAL_FEE_PCT_EUR',)
+        return calculate_gateway_payment_including_fees(
+            funds_needed, fee_settings['PAYPAL_FEE_BASE_EUR'], fee_settings['PAYPAL_FEE_PCT_EUR']
+        )
+    elif currency == 'USD':
+        fee_settings = read_settings('PAYPAL_FEE_BASE_USD', 'PAYPAL_FEE_PCT_USD',)
+        return calculate_gateway_payment_including_fees(
+            funds_needed, fee_settings['PAYPAL_FEE_BASE_USD'], fee_settings['PAYPAL_FEE_PCT_USD']
+        )
+
+def calculate_donation_needed_to_fully_fund_via_ideal(funds_needed, currency, read_settings):
+    funds_needed = float(funds_needed)
+    fee_settings = read_settings('MOLLIE_FEE_BASE')
+    return calculate_gateway_payment_including_fees(funds_needed, fee_settings['MOLLIE_FEE_BASE'], 0)
 
 def calculate_gateway_payment_including_fees(net_amount, fee_base, fee_percentage):
     """
@@ -708,7 +719,7 @@ class Project(models.Model):
         return Invoice.objects.filter(project__exact=self.id).filter(status__exact=PAYPAL_INVOICE_STATUS_COMPLETE).aggregate(all_donations_sum=Sum('amount_received'))['all_donations_sum']
 
     def amount_needed_to_fully_fund_via_paypal(self):
-        return calculate_donation_needed_to_fully_fund(self.funds_needed, self.currency, True, settings_reader)
+        return calculate_donation_needed_to_fully_fund_via_paypal(self.funds_needed, self.currency, read_settings)
 
         # if self.currency == 'USD':
         #     PAYPAL_FEE_PCT = getattr(settings, 'PAYPAL_FEE_PCT_USD', 3.9)
@@ -719,7 +730,7 @@ class Project(models.Model):
         # return int(math.ceil(float(self.funds_needed) / (1 - PAYPAL_FEE_PCT/100) + PAYPAL_FEE_BASE))
 
     def amount_needed_to_fully_fund_via_ideal(self):
-        return calculate_donation_needed_to_fully_fund(self.funds_needed, self.currency, False, settings_reader)
+        return calculate_donation_needed_to_fully_fund_via_ideal(self.funds_needed, self.currency, read_settings)
         # MOLLIE_FEE_BASE = getattr(settings, 'MOLLIE_FEE_BASE', 1.20)
         # return int(math.ceil(float(self.funds_needed) + MOLLIE_FEE_BASE))
 

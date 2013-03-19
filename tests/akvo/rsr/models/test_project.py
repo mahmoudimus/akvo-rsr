@@ -6,29 +6,39 @@
 
 # from django.conf import settings
 
-from akvo.rsr.models import Project, calculate_donation_needed_to_fully_fund
+import pytest
 
-def settings_reader1(*args):
+from akvo.rsr.models import (
+    calculate_donation_needed_to_fully_fund_via_paypal,
+    calculate_donation_needed_to_fully_fund_via_ideal,
+)
+
+def read_settings1(*args):
     return dict(PAYPAL_FEE_BASE_EUR=0.35, PAYPAL_FEE_PCT_EUR=3.4)
 
-def settings_reader2(*args):
+def read_settings2(*args):
     return dict(PAYPAL_FEE_BASE_USD=0.3, PAYPAL_FEE_PCT_USD=3.9)
 
-def settings_reader3(*args):
+def read_settings3(*args):
     return dict(MOLLIE_FEE_BASE=1.2)
 
-def pytest_generate_tests(metafunc):
-    if "donation_needed" in metafunc.funcargnames:
-        metafunc.parametrize(
-            ['donation_needed', 'funds_needed', 'currency', 'is_paypal', 'settings_reader'],
-            [
-                (104, 100, 'EUR', True, settings_reader1),
-                (261, 250, 'USD', True, settings_reader2),
-                (102, 100, 'EUR', False, settings_reader3),
-            ]
+@pytest.mark.parametrize(
+        ['donation_needed', 'funds_needed', 'currency', 'read_settings'],
+        [
+            (102, 100, 'EUR', read_settings3),
+        ]
+    )
+def test_calculate_donation_needed_to_fully_fund_via_ideal(donation_needed, funds_needed, currency, read_settings):
 
-        )
+    assert donation_needed == calculate_donation_needed_to_fully_fund_via_ideal(funds_needed, currency, read_settings)
 
-def test_calculate_donation_needed_to_fully_fund(donation_needed, funds_needed, currency, is_paypal, settings_reader):
+@pytest.mark.parametrize(
+        ['donation_needed', 'funds_needed', 'currency', 'read_settings'],
+        [
+            (104, 100, 'EUR', read_settings1),
+            (261, 250, 'USD', read_settings2),
+        ]
+    )
+def test_calculate_donation_needed_to_fully_fund_via_paypal(donation_needed, funds_needed, currency, read_settings):
 
-    assert donation_needed == calculate_donation_needed_to_fully_fund(funds_needed, currency, is_paypal, settings_reader)
+    assert donation_needed == calculate_donation_needed_to_fully_fund_via_paypal(funds_needed, currency, read_settings)
