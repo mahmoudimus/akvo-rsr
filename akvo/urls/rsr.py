@@ -254,11 +254,11 @@ urlpatterns += patterns('',
 
 # Widgets
 urlpatterns += patterns('',
-    url(r'^rsr/partners-widget/$',
-        'akvo.rsr.views.partners_widget', name='rsr_partners_widget'),
+    # url(r'^rsr/partners-widget/$',
+    #     'akvo.rsr.views.partners_widget', name='rsr_partners_widget'),
 
-    url(r'^rsr/widget/all-organisations/$',
-        'akvo.rsr.views.partners_widget', name='rsr_partners_widget'),
+    # url(r'^rsr/widget/all-organisations/$',
+    #     'akvo.rsr.views.partners_widget', name='rsr_partners_widget'),
 
     url(r'^rsr/widget/one-from-organisation/(?P<org_id>\d+)/$',
         'akvo.rsr.views.select_project_widget', name='select_project_widget',),
