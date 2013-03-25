@@ -13,11 +13,7 @@ from lettuce import before, step, world
 from splinter.browser import Browser
 
 
-@before.all
-def setUp():
-    world.browser = Browser()
-
-@step(u'Go to Akvo´s partner sites')
+@step(u"Go to Akvo's partner site")
 def go_to_akvo_s_partner_sites(step):
     url = 'http://akvo.akvoapp.org'
     world.browser.visit(url)

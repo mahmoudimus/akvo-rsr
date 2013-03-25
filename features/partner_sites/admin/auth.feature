@@ -3,12 +3,12 @@ Feature: Sign on on partner sites
   As a RSR user
   I want to be able to sign in on partner sites
 
-  Background:
-    Given a RSR editor named "AkvoQAAdmin"
-    And that Akvo have an enabled partner site
+#  Background:
+#    Given a RSR editor named "AkvoQAAdmin"
+#    And that Akvo have an enabled partner site
 
     Scenario: Successfull sign in
-      Go to Akvo´s partner sites
+      Go to Akvo's partner site
       Access the link "Sign in"
       Fill the field "username" with "QAUser"
       Fill the field "password" with "correct"
@@ -16,12 +16,12 @@ Feature: Sign on on partner sites
       Then I want to see the text "Hello Daniel!"
 
     Scenario: Signing out
-      Go to Akvo´s partner sites
+      Go to Akvo's partner site
       Access the link "Sign out"
       Then I want to see the text "Sign in"
 
     Scenario: Unsuccessfull sign in
-      Go to Akvo´s partner sites
+      Go to Akvo's partner site
       Access the link "Sign in"
       Fill the field "username" with "QAUser"
       Fill the field "password" with "wrong"

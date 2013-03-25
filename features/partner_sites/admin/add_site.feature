@@ -3,10 +3,10 @@ Feature: Add new partner site
   As a organisation administrator/editor???
   I want to be able to create a partner sites
 
-  Background:
-    Given the user is signed in
-    And that the users organisation have public projects
-    And the organisation to have a premium account 
+#  Background:
+#    Given the user is signed in
+#    And that the users organisation have public projects
+#    And the organisation to have a premium account
 
     Scenario: Get new partner site form
       Given I Open the Admin partner site page (admin/rsr/partnersite/)
