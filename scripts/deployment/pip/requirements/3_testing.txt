@@ -11,6 +11,6 @@ mox==0.5.3
 py==1.4.12
 selenium==2.26.0
 splinter==0.4.8
-lettuce==0.2.10
+lettuce==0.2.15
 pytest-django==2.2.0
 mock==1.0.1
