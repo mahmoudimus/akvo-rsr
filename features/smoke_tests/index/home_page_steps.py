@@ -29,7 +29,8 @@ def then_i_should_see_text(step, expected_text):
 @step('Then I click on the first project update')
 def then_i_click_on_the_first_project_update(step):
     element = world.browser.find_by_css('#project_update_0').first
-    title = world.project_update_title = element.find_by_tag('h2').first.text
+    # the title may be truncated on the home page and then the tail end of the string is '...'
+    world.project_update_title = element.find_by_tag('h2').first.text[:-3]
     element.find_by_css('div div a').first.click()
 
 @step('Then I expect to see the page for the selected update')
