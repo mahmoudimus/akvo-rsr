@@ -42,13 +42,15 @@ sudo make prefix=/usr/local install
 
 Nginx installation:
 -------------------
+sudo aptitude install build-essential libssl-dev libcurl4-openssl-dev
+
 cd /some/temp/dir
 wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.32.tar.gz
 wget http://zlib.net/zlib-1.2.7.tar.gz
-wget http://nginx.org/download/nginx-1.3.12.tar.gz
+wget http://nginx.org/download/nginx-1.3.14.tar.gz
 tar -xf pcre-8.32.tar.gz
 tar -xf zlib-1.2.7.tar.gz
-tar -xf nginx-1.3.12.tar.gz
+tar -xf nginx-1.3.14.tar.gz
 rm *.gz
 cd nginx-1.3.12
 ./configure --with-http_ssl_module --with-pcre=../pcre-8.32 --with-pcre-jit --with-zlib=../zlib-1.2.7
