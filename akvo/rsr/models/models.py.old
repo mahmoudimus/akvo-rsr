@@ -1130,6 +1130,7 @@ class Benchmark(models.Model):
         verbose_name_plural = _(u'benchmarks')
 
 
+
 class BudgetItemLabel(models.Model):
     label = models.CharField(_(u'label'), max_length=20, unique=True, db_index=True)
 
@@ -1146,14 +1147,14 @@ class BudgetItem(models.Model):
     # DON'T translate. Need model translations for this to work
     OTHER_LABELS = [u'other 1', u'other 2', u'other 3']
 
-    project     = models.ForeignKey(Project, verbose_name=_(u'project'), related_name='budget_items')
-    label       = models.ForeignKey(BudgetItemLabel, verbose_name=_(u'label'),)
+    project = models.ForeignKey(Project, verbose_name=_(u'project'), related_name='budget_items')
+    label = models.ForeignKey(BudgetItemLabel, verbose_name=_(u'label'), )
     other_extra = models.CharField(
         max_length=20, null=True, blank=True, verbose_name=_(u'"Other" labels extra info'),
         help_text=_(u'Extra information about the exact nature of an "other" budget item.'),
     )
     # Translators: This is the amount of an budget item in a currency (€ or $)
-    amount      = models.DecimalField(_(u'amount'), max_digits=10, decimal_places=2,)
+    amount = models.DecimalField(_(u'amount'), max_digits=10, decimal_places=2, )
 
     def __unicode__(self):
         return self.label.__unicode__()

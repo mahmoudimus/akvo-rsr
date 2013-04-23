@@ -79,7 +79,8 @@ class CountryAdmin(admin.ModelAdmin):
             return u'name', u'continent', u'continent_code'
         else:
             return u'name', u'continent', u'continent_code'
-
+import pdb
+pdb.set_trace()
 admin.site.register(get_model('rsr', 'country'), CountryAdmin)
 
 
