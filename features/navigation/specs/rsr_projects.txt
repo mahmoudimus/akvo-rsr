@@ -1,0 +1,6 @@
+Feature: As an RSR user 
+		I would like to view all recent projects
+
+		Scenario: View all projects
+			When I visit rsr.akvo.org
+			Then I see a list of all projects in RSR
