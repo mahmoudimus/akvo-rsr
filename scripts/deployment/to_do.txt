@@ -1,0 +1,20 @@
+Fri:
+----
+- return light bulbs (LEDs & CFLs)
+
+
+Akvo:
+-----
+- [!] script to sync media assets
+- [!] ensure log dir is writable for settings verifier
+- [!] ensure virtualenv hook.log is group writable
+- add restart Apache task
+- fix /var/git/current symlink
+- check deployment sequence for completely fresh installation
+
+- for existing virtualenv: change permissions to g+w and ownership to root
+
+- check file permissions for /var/tmp/rsr dir & add group write
+- download pip requirements files from github for virtualenv installation (since the codebase won't be there yet)
+- add check for git command (before virtualenv setup)
+- for existing virtualenv: change permissions to g+w and ownership to root
