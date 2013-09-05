@@ -40,6 +40,7 @@ features/auth.py
 features/site_under_test.py
 features/admin/auth.py
 features/donations/auth.py
+features/node_modules
 
 ## Tests
 tests/akvo/acceptance/test_settings.py
