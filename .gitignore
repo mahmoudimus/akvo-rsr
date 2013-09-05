@@ -35,6 +35,12 @@ scripts/deployment/fab/config/custom.py
 scripts/deployment/fab/config/rsr/credentials/custom.py
 scripts/deployment/update_ci_server_config.py
 
+## Features
+features/auth.py
+features/site_under_test.py
+features/admin/auth.py
+features/donations/auth.py
+
 ## Tests
 tests/legacy/acceptance/akvo/test_settings.py
 tests/legacy/acceptance/pvw/test_settings.py
@@ -91,5 +97,4 @@ tramp
 .\#*
 
 # Vagrant
-Vagrantfile
 .vagrant
