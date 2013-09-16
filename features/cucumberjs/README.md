@@ -8,7 +8,7 @@ This is the starting point for what will hopefully be an expansive CucumberJS te
 * Navigate to the "akvo-rsr/features" directory and run "npm install" which will install everything contained within the package.json file
 * SpookyJS - there is an issue with the latest release of SpookyJS which prevents it from working with the latest CasperJS. I've raised an issue to fix this, but in the mean time I've forked the repo. Navigate to the "akvo-rsr/features/node_modules" directory and remove the "spooky" folder then run the following commands "git clone https://github.com/rumca/SpookyJS.git" and "mv SpookyJS/ spooky". Finally "cd spooky" and "npm install"
 
-Once all of this set up is out of the way, you can run the current CucumberJS tests by navigating to "akvo-rsr/features/cucumberjs" and executing the "cucumber.js" command. Provided something hasn't horrifically broke in the set up procedure then you should be greeted with some test output.
+Once all of this set up is out of the way, you can run the current CucumberJS tests by navigating to "akvo-rsr/features/cucumberjs" and executing the "cucumber.js -f pretty" command. Provided something hasn't horrifically broke in the set up procedure then you should be greeted with some test output.
 
 ##Urgent areas of focus
 
