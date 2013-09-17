@@ -94,10 +94,20 @@ class ConditionalFullFieldMixin(object):
 class ConditionalFullToOneField(ConditionalFullFieldMixin, fields.ToOneField):
 
     def dehydrate(self, bundle):
-        try:
-            foreign_obj = getattr(bundle.obj, self.attribute)
-        except ObjectDoesNotExist:
-            foreign_obj = None
+        foreign_obj = None
+
+        if isinstance(self.attribute, basestring):
+            attrs = self.attribute.split('__')
+            foreign_obj = bundle.obj
+
+            for attr in attrs:
+                previous_obj = foreign_obj
+                try:
+                    foreign_obj = getattr(foreign_obj, attr, None)
+                except ObjectDoesNotExist:
+                    foreign_obj = None
+        elif callable(self.attribute):
+            foreign_obj = self.attribute(bundle)
 
         if not foreign_obj:
             if not self.null:
