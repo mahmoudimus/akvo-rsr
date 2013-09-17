@@ -7,6 +7,8 @@
 
 from django.forms.models import ModelForm
 
+from tastypie import fields
+
 from tastypie.authorization import Authorization
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 
@@ -28,6 +30,9 @@ class ProjectUpdateResource(ConditionalFullResource):
     photo = Base64FileField("photo", blank=True, null=True)
     project = ConditionalFullToOneField('akvo.api.resources.ProjectResource', 'project')
     user = ConditionalFullToOneField('akvo.api.resources.UserResource', 'user')
+    organisation = ConditionalFullToOneField(
+        'akvo.api.resources.OrganisationResource', attribute='user__userprofile__organisation'
+    )
 
     class Meta:
         allowed_methods         = ['get', 'post']
@@ -49,3 +54,34 @@ class ProjectUpdateResource(ConditionalFullResource):
             project             = ALL_WITH_RELATIONS,
             user                = ALL_WITH_RELATIONS,
         )
+
+    def dehydrate(self, bundle):
+        bundle = super(ProjectUpdateResource, self).dehydrate(bundle)
+        bundle.data['full_name'] = "{} {}".format(
+            bundle.obj.user.first_name,
+            bundle.obj.user.last_name,
+        )
+        bundle.data['organisation_name'] = bundle.obj.user.get_profile().organisation
+        return bundle
+
+    def build_schema(self):
+        data = super(ProjectUpdateResource, self).build_schema()
+        data['fields']['full_name'] = {
+            'default': "No default provided.",
+            'type': "string",
+            'nullable': False,
+            'blank': False,
+            'readonly': True,
+            'help_text': "The full name of the user posting the update",
+            'unique': False,
+        }
+        data['fields']['organisation_name'] = {
+            'default': "No default provided.",
+            'type': "string",
+            'nullable': False,
+            'blank': False,
+            'readonly': True,
+            'help_text': "The name of organisation of the user posting the update",
+            'unique': False,
+        }
+        return data
