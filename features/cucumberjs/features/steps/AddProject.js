@@ -3,7 +3,7 @@ module.exports = function () {
     this.Chai = require('../../../node_modules/chai');
    
     var adminUrl = 'http://rsr.test.akvo-ops.org/admin/';
-    var testProjectName = 'testProject4';
+    var testProjectName = 'testProject9';
 
     this.Given('I am logged in to RSR Admin', function(callback){
         this.spooky.open(adminUrl);
@@ -33,7 +33,7 @@ module.exports = function () {
         this.spooky.then([
             {
                 testProjectName : testProjectName
-            },function(){
+            }, function(){
                 this.fill('form#project_form', 
                     {
                         'title' : testProjectName,
@@ -52,23 +52,6 @@ module.exports = function () {
         this.spooky.then(function(){
             this.click('input[name="_save"]');
         });
-
-        this.spooky.then([
-            {
-                renderName: 'test.png',
-                width: 1280,
-                height: 10024,
-                delay: 100
-            }, function() {
-                this.viewport(width, height);
-                this.capture(renderName, {
-                    top: 0,
-                    left: 0,
-                    width: width,
-                    height: height
-                });
-            }
-        ]);
 
        callback();
     });
@@ -89,7 +72,7 @@ module.exports = function () {
         this.spooky.then([
             {
                 testProjectName : testProjectName
-            },function(){
+            }, function(){
                 this.clickLabel(testProjectName, 'a');
             }
         ]);
@@ -105,19 +88,57 @@ module.exports = function () {
             this.click('input[name="_save"]');
         })
 
-        this.spooky.run();
-        setTimeout(callback, 20000)
+        callback();
     });
 
-    this.Then(/^I can view the project on the main RSR page$/, function(callback) {
-        this.spooky.then([{
-                url: adminUrl + 'rsr/project/'
+    this.Then('I can view the project on the main RSR page', function(callback) {
+        this.spooky.then(function(){
+            this.click('a[href="/admin/rsr/"]');
+        });
+
+        this.spooky.then(function(){
+            this.click('a[href="/admin/rsr/project/"]');
+        });
+
+        this.spooky.then([
+            {
+                testProjectName : testProjectName
             }, function () {
-                this.test.assertEquals(this.getCurrentUrl(),url,"Currently on: "+this.getCurrentUrl()+" Expected: "+ url);
-                this.exit();
-            }]
-        );
+                this.fill('form#changelist-search', 
+                {
+                    'q' : testProjectName
+                }, true);
+            }
+        ]);
+
+        this.spooky.then([
+            {
+                renderName: 'test.png',
+                width: 1280,
+                height: 10024,
+                delay: 100
+            }, function() {
+                this.viewport(width, height);
+                this.capture(renderName, {
+                    top: 0,
+                    left: 0,
+                    width: width,
+                    height: height
+                });
+            }
+        ]);
+
+
+         this.spooky.then([
+            {
+              testProjectName : testProjectName
+            }, function() {
+                this.test.assertSelectorHasText('#result_list', testProjectName);
+                this.test.assertResourceExists('icon-yes.gif');
+            }
+        ]);
+
         this.spooky.run();
-        setTimeout(callback, 10000)
+        setTimeout(callback, 20000)
     });
 };
