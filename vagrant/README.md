@@ -13,7 +13,6 @@ If you have never used Vagrant or the RSR Vagrant development environment, follo
    
 2. Ensure you have Oracle VirtualBox installed. If not, you can get it here: [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)
 
-
 ## First Start Up
 
 The first time you use the RSR environment:
