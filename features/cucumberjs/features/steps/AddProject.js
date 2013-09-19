@@ -4,18 +4,17 @@ module.exports = function () {
    
     var adminUrl = 'http://rsr.test.akvo-ops.org/admin/';
 
-    this.When('I am logged in to RSR Admin', function(callback){
-        console.log('hello from 1');
+    this.Given('I am logged in to RSR Admin', function(callback){
         this.spooky.open(adminUrl);
-        console.log('hello from 2');
+
         this.spooky.then(function(){ 
             this.fill('form#login-form', {'username' : 'AutomatedTestUser','password' : 'testpassword'}, true)
         });
-        console.log('hello from 3');
+
         this.spooky.then(function () {
             this.clickLabel('Projects', 'a');
         });
-        console.log('hello from 4');
+
         this.spooky.then([
             {
                 renderName: 'test.png',
@@ -53,15 +52,14 @@ module.exports = function () {
     });
 
     this.Then(/^I can view the project on the main RSR page$/, function(callback) {
-        console.log('hello from 5');
         this.spooky.then([{
                 url: adminUrl + 'rsr/project/'
             }, function () {
                 this.test.assertEquals(this.getCurrentUrl(),url,"Currently on: "+this.getCurrentUrl()+" Expected: "+ url);
+                this.exit();
             }]
         );
-
         this.spooky.run();
-        //callback();
+        setTimeout(callback, 10000)
     });
 };
