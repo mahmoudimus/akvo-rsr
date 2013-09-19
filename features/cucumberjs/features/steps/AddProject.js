@@ -3,6 +3,7 @@ module.exports = function () {
     this.Chai = require('../../../node_modules/chai');
    
     var adminUrl = 'http://rsr.test.akvo-ops.org/admin/';
+    var testProjectName = 'testProject4';
 
     this.Given('I am logged in to RSR Admin', function(callback){
         this.spooky.open(adminUrl);
@@ -19,10 +20,6 @@ module.exports = function () {
     });
 
     this.When('I click "add a project"', function(callback) {
-       this.spooky.then(function () {
-            this.clickLabel('Projects', 'a');
-        });
-
        // There is presumably a better way of doing this - <a href="/admin/rsr/project/add/" class="addlink">Add</a>
        this.spooky.then(function(){
             this.click('a[href="/admin/rsr/project/add/"]');
@@ -32,26 +29,31 @@ module.exports = function () {
     });
 
     this.When('I fill out new project details', function(callback) {
-        this.spooky.then(function(){
-            this.fill('form#project_form', 
-                {
-                    'title' : 'test',
-                    'subtitle' : 'test',
-                    'project_plan_summary' : 'test',
-                    'background' : 'test',
-                    'current_status' : 'test',
-                    'sustainability' : 'test',
-                    'goals_overview': 'test',
-                    'partnerships-0-partner_type' : 'field',
-                    'categories' : '22'
-                }, false);
-        })
+
+        this.spooky.then([
+            {
+                testProjectName : testProjectName
+            },function(){
+                this.fill('form#project_form', 
+                    {
+                        'title' : testProjectName,
+                        'subtitle' : 'test',
+                        'project_plan_summary' : 'test',
+                        'background' : 'test',
+                        'current_status' : 'test',
+                        'sustainability' : 'test',
+                        'goals_overview': 'test',
+                        'partnerships-0-partner_type' : 'field',
+                        'categories' : '22'
+                    }, false);
+            }
+        ]);
 
         this.spooky.then(function(){
             this.click('input[name="_save"]');
-        })
+        });
 
-       this.spooky.then([
+        this.spooky.then([
             {
                 renderName: 'test.png',
                 width: 1280,
@@ -68,13 +70,43 @@ module.exports = function () {
             }
         ]);
 
-
-        this.spooky.run();
-        setTimeout(callback, 10000)
+       callback();
     });
 
-    this.When(/^I publish the project$/, function(callback) {
-        callback.pending();
+    this.When('I publish the project', function(callback) {
+        //Another way of doing this is by just appending the project ID to the below URLS
+
+        this.spooky.then(function(){
+            this.click('a[href="/admin/rsr/"]');
+        });
+
+        //<a href="/admin/rsr/publishingstatus/">Publishing statuses</a>
+        this.spooky.then(function(){
+            this.click('a[href="/admin/rsr/publishingstatus/"]');
+        });
+
+        //<a href="1102/">test</a>
+        this.spooky.then([
+            {
+                testProjectName : testProjectName
+            },function(){
+                this.clickLabel(testProjectName, 'a');
+            }
+        ]);
+
+        this.spooky.then(function(){
+            this.fill('form#publishingstatus_form', 
+                {
+                    'status' : 'published'
+                }, false);
+        })
+
+        this.spooky.then(function(){
+            this.click('input[name="_save"]');
+        })
+
+        this.spooky.run();
+        setTimeout(callback, 20000)
     });
 
     this.Then(/^I can view the project on the main RSR page$/, function(callback) {
