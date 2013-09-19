@@ -7,11 +7,10 @@ Feature: Adding projects
 
 	Scenario: Add a project as an Administrator
 		Given I am logged in to RSR Admin
-		# When I click "add a project"
-		# 	And I fill out new project details
-		# 	And I click the save button
+		When I click "add a project"
+			And I fill out new project details 
 		# 	And I publish the project
-		Then I can view the project on the main RSR page
+		# Then I can view the project on the main RSR page
 
 	# Scenario: Add a project without a title as an Administrator
 	# 	Given I am logged in to RSR Admin

@@ -8,18 +8,54 @@ module.exports = function () {
         this.spooky.open(adminUrl);
 
         this.spooky.then(function(){ 
-            this.fill('form#login-form', {'username' : 'AutomatedTestUser','password' : 'testpassword'}, true)
+            this.fill('form#login-form', 
+                {
+                    'username' : 'AutomatedTestUser',
+                    'password' : 'testpassword'
+                }, true);
         });
 
-        this.spooky.then(function () {
+        callback();
+    });
+
+    this.When('I click "add a project"', function(callback) {
+       this.spooky.then(function () {
             this.clickLabel('Projects', 'a');
         });
 
-        this.spooky.then([
+       // There is presumably a better way of doing this - <a href="/admin/rsr/project/add/" class="addlink">Add</a>
+       this.spooky.then(function(){
+            this.click('a[href="/admin/rsr/project/add/"]');
+        })
+        
+        callback();
+    });
+
+    this.When('I fill out new project details', function(callback) {
+        this.spooky.then(function(){
+            this.fill('form#project_form', 
+                {
+                    'title' : 'test',
+                    'subtitle' : 'test',
+                    'project_plan_summary' : 'test',
+                    'background' : 'test',
+                    'current_status' : 'test',
+                    'sustainability' : 'test',
+                    'goals_overview': 'test',
+                    'partnerships-0-partner_type' : 'field',
+                    'categories' : '22'
+                }, false);
+        })
+
+        this.spooky.then(function(){
+            this.click('input[name="_save"]');
+        })
+
+       this.spooky.then([
             {
                 renderName: 'test.png',
                 width: 1280,
-                height: 1024,
+                height: 10024,
                 delay: 100
             }, function() {
                 this.viewport(width, height);
@@ -32,19 +68,9 @@ module.exports = function () {
             }
         ]);
 
-        callback();
-    });
 
-    this.When(/^I click "([^"]*)"$/, function(arg1, callback) {
-        callback.pending();
-    });
-
-    this.When(/^I fill out new project details$/, function(callback) {
-        callback.pending();
-    });
-
-    this.When(/^I click the save button$/, function(callback) {
-        callback.pending();
+        this.spooky.run();
+        setTimeout(callback, 10000)
     });
 
     this.When(/^I publish the project$/, function(callback) {

@@ -5,9 +5,6 @@ module.exports = function () {
     });
 
     this.After(function (callback) {
-    	this.spooky.wait(1000, function() {
-    		this.echo("I've waited for a second.");
-		});
         this.spooky.destroy();
         callback();
     });
