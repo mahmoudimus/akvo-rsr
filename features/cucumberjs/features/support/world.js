@@ -10,45 +10,36 @@ var World = function World(callback) {
     var spooky;
     var world = this;
 
-    try {
-        spooky = world.spooky = new Spooky({
-            casper: {
-                verbose: true,
-                logLevel: 'debug'
-            }
-        }, onCreated);
-    } catch (e) {
-        console.dir(e);
-        console.trace('Spooky.listen failed');
-    }
-
-    spooky.debug = true;
-
-    spooky.errors = [];
-    spooky.on('error', function (error) {
-        error = error.data ? error.data : error;
-        spooky.errors.push(error);
-        if (spooky.debug) {
-            console.error('spooky error', util.inspect(error));
+    spooky = world.spooky = new Spooky({
+        child: {
+            "web-security": false,
+            "ignore-ssl-errors": true
+        },
+        casper: {
+            logLevel: 'debug',
+            verbose: true,
+            timeout: 30000,
+            stepTimeout: 15000
         }
-    });
-
-    spooky.console = [];
-    spooky.on('console', function (line) {
-        spooky.console.push(line);
-        if (spooky.debug) {
-            console.log(line);
-        }
-    });
-
-    function onCreated(error, response) {
+    }, function(error) {
         if (error) {
             console.dir(error);
             throw new Error('Failed to initialize context.spooky: ' +
                 error.code + ' - '  + error.message);
+            callback.fail();
         }
+    
+        console.log('spooky initialised');
+
+        spooky.on('error', function(e) {
+            console.error('spooky error', util.inspect(e));
+        });
+
+        spooky.on('console', function (line) {
+            console.log(line);
+        });
 
         callback(world);
-    }
+       }); 
 };
 module.exports.World = World;
