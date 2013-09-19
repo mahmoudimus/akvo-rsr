@@ -89,6 +89,7 @@ Feature: Adding project updates
 			And I click "add update"
 		Then I get an error
 
+	# Perhaps move this in to separate file if other non update related fucntionality for project page comes along
 	Scenario: Add a comment to a project page as an RSR user
 		Given I am viewing a test project page on RSR
 			And I am signed in
