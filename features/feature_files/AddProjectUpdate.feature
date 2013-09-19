@@ -89,6 +89,14 @@ Feature: Adding project updates
 			And I click "add update"
 		Then I get an error
 
+	Scenario: Add a comment to a project page as an RSR user
+		Given I am viewing a test project page on RSR
+			And I am signed in
+		When I click "Add comment" or "Add first comment"
+			And I fill out a comment
+			And I click "Add comment"
+		Then my comment appears on the test project page
+
 	# Project update:
 	# If admin -> Select project MANDATORY: ADMIN
 	# If admin -> Select user MANDATORY: ADMIN
