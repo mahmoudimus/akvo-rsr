@@ -53,7 +53,7 @@ Feature: Adding project updates
 			And I click save
 		Then I get an error
 
-	Scenario: Add an update without an invalid video URL as a project administrator
+	Scenario: Add an update with an invalid video URL as a project administrator
 		Given I am logged in to RSR Admin
 		When I click "add a project"
 			And I choose a project
@@ -63,36 +63,32 @@ Feature: Adding project updates
 			And I click save
 		Then I get an error
 
-	Scenario: Add an update as an RSR user
-		Given I am viewing a test project page on RSR
+	Scenario: Add an update as a RSR user
+		Given I am logged in viewing a test project page on RSR
 		When I click "add update"
-			And I log in
 			And I fill out a project update
 			And I click "add update"
 		Then the update should appear on the project page
 
-	Scenario: Add an update without a title as an RSR User
-		Given I am viewing a test project page on RSR
+	Scenario: Add an update without a title as a RSR User
+		Given I am logged in viewing a test project page on RSR
 		When I click "add update"
-			And I log in
 			And I fill out a project update
 			But I do not enter a title
 			And I click "add update"
 		Then I get an error
 
-	Scenario: Add an update with an invalid video URL as an RSR User
-		Given I am viewing a test project page on RSR
+	Scenario: Add an update with an invalid video URL as a RSR User
+		Given I am logged in viewing a test project page on RSR
 		When I click "add update"
-			And I log in
 			And I fill out a project update
 			But I do not enter a valid video URL
 			And I click "add update"
 		Then I get an error
 
 	# Perhaps move this in to separate file if other non update related fucntionality for project page comes along
-	Scenario: Add a comment to a project page as an RSR user
-		Given I am viewing a test project page on RSR
-			And I am signed in
+	Scenario: Add a comment to a project page as a RSR user
+		Given I am logged in viewing a test project page on RSR
 		When I click "Add comment" or "Add first comment"
 			And I fill out a comment
 			And I click "Add comment"

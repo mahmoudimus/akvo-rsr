@@ -89,11 +89,11 @@ Feature: Adding projects
 		Given I am logged in to RSR Admin
 		When I click "add a project"
 			And I fill out new project details
-			But I do not enter a sponsor of funding partner
+			But I do not enter a sponsor or funding partner
 			And I click the save button
 		Then I get an error
 
-	Scenario: Add a project without a partner type which doesnt match the partner as an Administrator
+	Scenario: Add a project with a partner type which doesnt match the partner as an Administrator
 		Given I am logged in to RSR Admin
 		When I click "add a project"
 			And I fill out new project details

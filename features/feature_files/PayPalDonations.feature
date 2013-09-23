@@ -125,6 +125,17 @@ Feature: Donating to projects via PayPal
 			But the email addresses I enter do not match
 		Then I get an error
 
+	Scenario: Make an anonymous donation to a project
+		Given I am on a project page for a test project
+		When I click on the "Donate" link
+			And I select "Use PayPal"
+			And I fill out my details
+			And I uncheck the "List name next to donation" box
+		Then I receive an invoice number notifying me that the donation is complete
+			And I can return to the project page
+			And the project totals update accordingly
+			And my name is not listed in current funders
+
 	# Scenario assumes that a donation has been made against a specified project
 	Scenario: Review pending invoices as an RSR Admin
 		Given I am logged in to RSR Admin
