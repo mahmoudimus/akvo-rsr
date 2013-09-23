@@ -31,7 +31,7 @@ Feature: Donating to projects via PayPal
 			And I select "Use PayPal"
 			And I fill out my details
 			And I enter the full amount required to complete funding
-			And I log in to a pay pal account to complete my donation
+			And I log in to a PayPal account to complete my donation
 		Then I receive an invoice number notifying me that the donation is complete
 			And I can return to the project page
 			And the project funding shows as complete
@@ -42,7 +42,7 @@ Feature: Donating to projects via PayPal
 			And I select "Use PayPal"
 			And I fill out my details
 			And I enter the remaining amount required to complete funding
-			And I log in to a pay pal account to complete my donation
+			And I log in to a PayPal account to complete my donation
 		Then I receive an invoice number notifying me that the donation is complete
 			And I can return to the project page
 			And the project funding shows as complete
@@ -53,7 +53,7 @@ Feature: Donating to projects via PayPal
 			And I select "Use PayPal"
 			And I fill out my details
 			And I enter the enter an amount 1% greater than the funding total
-			And I log in to a pay pal account to complete my donation
+			And I log in to a PayPal account to complete my donation
 		Then I receive an invoice number notifying me that the donation is complete
 			And I can return to the project page
 			And the project funding shows as complete
