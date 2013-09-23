@@ -22,7 +22,7 @@ Feature: RSR Map Views
 	Scenario: Opening organisation summaries from map
 		Given I am on the all organisations map page (rsr.akvo.org/maps/organisations/all)
 		When I click on an organisation pinpoint
-		Then the organisation summart should open
+		Then the organisation summary should open
 			And the link in the summary should connect to the correct organisation page
 
 	Scenario: View individual project location on map
