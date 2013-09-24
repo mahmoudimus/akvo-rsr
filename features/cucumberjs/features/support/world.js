@@ -10,6 +10,8 @@ var World = function World(callback) {
     var spooky;
     var world = this;
 
+    var fillForm, clickLink, takeScreenShot;
+
     spooky = world.spooky = new Spooky({
         child: {
             "web-security": false,
@@ -42,7 +44,7 @@ var World = function World(callback) {
         callback(world);
        }); 
 
-    function takeScreenShot(screenName){
+    takeScreenShot = world.takeScreenShot = function(screenName, testProjectName){
         spooky.then([
             {
                 renderName: screenName + testProjectName +'.png',
@@ -61,7 +63,7 @@ var World = function World(callback) {
         ]);
     }
 
-    function clickLink(linkSelector){
+    clickLink = world.clickLink = function(linkSelector){
         spooky.then([
             {
                 linkSelector : linkSelector
@@ -71,7 +73,7 @@ var World = function World(callback) {
         ]);
     }
 
-    function fillForm(formName, formData, submit){
+    fillForm = world.fillForm = function(formName, formData, submit){
          spooky.then([
             {
                 formName : formName,

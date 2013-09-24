@@ -74,7 +74,7 @@ module.exports = function () {
                     'q' : testProjectName
                 }, true);
 
-        this.takeScreenShot('projectSearch');
+        this.takeScreenShot('projectSearch', testProjectName);
 
          this.spooky.then([
             {
