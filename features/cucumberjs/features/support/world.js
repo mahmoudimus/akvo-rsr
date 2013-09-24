@@ -10,8 +10,6 @@ var World = function World(callback) {
     var spooky;
     var world = this;
 
-    var fillForm, clickLink, takeScreenShot;
-
     spooky = world.spooky = new Spooky({
         child: {
             "web-security": false,
@@ -31,8 +29,6 @@ var World = function World(callback) {
             callback.fail();
         }
     
-        console.log('spooky initialised');
-
         spooky.on('error', function(e) {
             console.error('spooky error', util.inspect(e));
         });
@@ -43,6 +39,9 @@ var World = function World(callback) {
 
         callback(world);
        }); 
+
+    //Helper functions
+    var fillForm, clickLink, takeScreenShot;
 
     takeScreenShot = world.takeScreenShot = function(screenName, testProjectName){
         spooky.then([
@@ -74,7 +73,7 @@ var World = function World(callback) {
     }
 
     fillForm = world.fillForm = function(formName, formData, submit){
-         spooky.then([
+        spooky.then([
             {
                 formName : formName,
                 formData : formData,

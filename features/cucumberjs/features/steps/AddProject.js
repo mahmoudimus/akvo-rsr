@@ -35,6 +35,10 @@ module.exports = function () {
                     'categories' : '22'
                 }, false);
 
+        callback();
+    });
+
+    this.When('I click the save button', function(callback) {
         this.clickLink('input[name="_save"]');
         callback();
     });
@@ -84,6 +88,28 @@ module.exports = function () {
                 this.test.assertResourceExists('icon-yes.gif');
             }
         ]);
+
+        this.spooky.run();
+        setTimeout(callback, 20000)
+    });
+
+    this.When(/^I do not enter anything for "([^"]*)"$/, function(fieldNameSpaces, callback) {
+        var fieldNameUnderscore = fieldNameSpaces.replace(/ /g,"_");
+        var formData = { };
+        formData[fieldNameUnderscore] = '';
+
+        this.fillForm('form#project_form', formData, false);
+        callback();
+    });
+
+    this.Then('I get an error', function(callback) {  
+        this.spooky.then(function() {
+            this.test.assertTextExists('This field is required.', "RSR has thrown an error, as indicated by 'This field is required.' being present");
+            this.test.assertTextExists('Please correct the error below.', "RSR has thrown an error, as indicated by 'Please correct the error below.' being present");
+            this.test.assertExists('.errornote', 'Found errornote class element');
+        });
+
+        this.takeScreenShot('fieldError', testProjectName);
 
         this.spooky.run();
         setTimeout(callback, 20000)
