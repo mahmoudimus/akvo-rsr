@@ -41,5 +41,46 @@ var World = function World(callback) {
 
         callback(world);
        }); 
+
+    function takeScreenShot(screenName){
+        spooky.then([
+            {
+                renderName: screenName + testProjectName +'.png',
+                width: 1280,
+                height: 10024,
+                delay: 100
+            }, function() {
+                this.viewport(width, height);
+                this.capture(renderName, {
+                    top: 0,
+                    left: 0,
+                    width: width,
+                    height: height
+                });
+            }
+        ]);
+    }
+
+    function clickLink(linkSelector){
+        spooky.then([
+            {
+                linkSelector : linkSelector
+            }, function(){
+                this.click(linkSelector);
+            }
+        ]);
+    }
+
+    function fillForm(formName, formData, submit){
+         spooky.then([
+            {
+                formName : formName,
+                formData : formData,
+                submit : submit
+            }, function(){
+                this.fill(formName, formData, submit);
+            }
+        ]);
+    }
 };
 module.exports.World = World;
