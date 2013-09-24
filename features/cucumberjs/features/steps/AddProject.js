@@ -21,10 +21,7 @@ module.exports = function () {
 
     this.When('I click "add a project"', function(callback) {
        // There is presumably a better way of doing this - <a href="/admin/rsr/project/add/" class="addlink">Add</a>
-       this.spooky.then(function(){
-            this.click('a[href="/admin/rsr/project/add/"]');
-        })
-        
+        clickLink('a[href="/admin/rsr/project/add/"]');   
         callback();
     });
 
@@ -49,24 +46,17 @@ module.exports = function () {
             }
         ]);
 
-        this.spooky.then(function(){
-            this.click('input[name="_save"]');
-        });
+        clickLink('input[name="_save"]');
 
        callback();
     });
 
     this.When('I publish the project', function(callback) {
         //Another way of doing this is by just appending the project ID to the below URLS
-
-        this.spooky.then(function(){
-            this.click('a[href="/admin/rsr/"]');
-        });
+        clickLink('a[href="/admin/rsr/"]');
 
         //<a href="/admin/rsr/publishingstatus/">Publishing statuses</a>
-        this.spooky.then(function(){
-            this.click('a[href="/admin/rsr/publishingstatus/"]');
-        });
+        clickLink('a[href="/admin/rsr/publishingstatus/"]');
 
         //<a href="1102/">test</a>
         this.spooky.then([
@@ -84,21 +74,14 @@ module.exports = function () {
                 }, false);
         })
 
-        this.spooky.then(function(){
-            this.click('input[name="_save"]');
-        })
+        clickLink('input[name="_save"]');
 
         callback();
     });
 
     this.Then('I can view the project on the main RSR page', function(callback) {
-        this.spooky.then(function(){
-            this.click('a[href="/admin/rsr/"]');
-        });
-
-        this.spooky.then(function(){
-            this.click('a[href="/admin/rsr/project/"]');
-        });
+        clickLink('a[href="/admin/rsr/"]');
+        clickLink('a[href="/admin/rsr/project/"]')
 
         this.spooky.then([
             {
@@ -111,23 +94,7 @@ module.exports = function () {
             }
         ]);
 
-        this.spooky.then([
-            {
-                renderName: 'test.png',
-                width: 1280,
-                height: 10024,
-                delay: 100
-            }, function() {
-                this.viewport(width, height);
-                this.capture(renderName, {
-                    top: 0,
-                    left: 0,
-                    width: width,
-                    height: height
-                });
-            }
-        ]);
-
+        takeScreenShot('projectSearch');
 
          this.spooky.then([
             {
@@ -141,4 +108,33 @@ module.exports = function () {
         this.spooky.run();
         setTimeout(callback, 20000)
     });
+
+    function takeScreenShot(screenName){
+        this.spooky.then([
+            {
+                renderName: screenName + testProjectName +'.png',
+                width: 1280,
+                height: 10024,
+                delay: 100
+            }, function() {
+                this.viewport(width, height);
+                this.capture(renderName, {
+                    top: 0,
+                    left: 0,
+                    width: width,
+                    height: height
+                });
+            }
+        ]);
+    }
+
+    function clickLink(linkSelector){
+        this.spooky.then([
+            {
+                linkSelector : linkSelector
+            }, function(){
+                this.click(linkSelector);
+            }
+        ]);
+    }
 };
