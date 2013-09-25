@@ -4,21 +4,17 @@ from django import forms
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import helpers, widgets
-from django.contrib.admin.util import unquote, flatten_fieldsets
+from django.contrib.admin.util import flatten_fieldsets
 from django.contrib.auth.admin import GroupAdmin
 from django.contrib.auth.models import Group
-from django.contrib.contenttypes import generic
 from django.core.exceptions import PermissionDenied
 from django.db import models, transaction
 from django.db.models import get_model
 from django.forms.formsets import all_valid
 from django.forms.util import ErrorList
-from django.http import Http404
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_unicode
-from django.utils.html import escape
-from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
 
 from sorl.thumbnail.fields import ImageWithThumbnailsField
