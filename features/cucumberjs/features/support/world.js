@@ -87,19 +87,21 @@ var World = function World(callback) {
     }
 
     // TestRail helper functions
-    var submitResultsToTestRail, createTestRailTestRun;
+    var submitResultsToTestRail, createTestRailTestRun, testRailResponse;
 
     // /api/v2/add_run/<project_id>
     // args:
-    // suited_id    int     required
+    // suite_id     int     required
     // name         string  
     // description  string
     // milestone_id int
     // case_ids     array
 
     // should return a run id, need to grab this somehow
-    createTestRailTestRun = world.createTestRailTestRun = function(projectId){
-        var command = "curl -H 'Content-Type: application/json' -u 'devops@akvo.org:R4inDr0p!' -d '{'status_id':1}' 'https://akvo.testrail.com/index.php?/api/v2//api/v2/add_run/"+projectId+"'";
+    // Sample return :
+    // {"id":8,"suite_id":7,"name":"Project Administration","description":null,"milestone_id":null,"assignedto_id":null,"include_all":true,"is_completed":false,"completed_on":null,"config":null,"passed_count":0,"blocked_count":0,"untested_count":19,"retest_count":0,"failed_count":0,"custom_status1_count":0,"custom_status2_count":0,"custom_status3_count":0,"custom_status4_count":0,"custom_status5_count":0,"custom_status6_count":0,"custom_status7_count":0,"project_id":2,"plan_id":null,"url":"https:\/\/akvo.testrail.com\/index.php?\/runs\/view\/8"}
+    createTestRailTestRun = world.createTestRailTestRun = function(projectId, suiteId){
+        var command = "curl -H 'Content-Type: application/json' -u 'devops@akvo.org:R4inDr0p!' -d '{'suite_id':"+suiteId+"}' 'https://akvo.testrail.com/index.php?/api/v2/add_run/"+projectId+"'";
         exec(command, puts);
     }
 
@@ -132,6 +134,9 @@ var World = function World(callback) {
         exec(command, puts);
     }
 
-    function puts(error, stdout, stderr) { sys.puts(stdout) }
+    function puts(error, stdout, stderr) { 
+        sys.puts(stdout);
+        testRailResponse = stdout;
+    }
 };
 module.exports.World = World;
