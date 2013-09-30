@@ -1,4 +1,6 @@
 var util = require('util');
+var sys = require('sys')
+var exec = require('child_process').exec;
 
 try {
     var Spooky = require('spooky');
@@ -40,7 +42,7 @@ var World = function World(callback) {
         callback(world);
        }); 
 
-    //Helper functions
+    // Spooky utility functions
     var fillForm, clickLink, takeScreenShot;
 
     takeScreenShot = world.takeScreenShot = function(screenName, testProjectName){
@@ -83,5 +85,53 @@ var World = function World(callback) {
             }
         ]);
     }
+
+    // TestRail helper functions
+    var submitResultsToTestRail, createTestRailTestRun;
+
+    // /api/v2/add_run/<project_id>
+    // args:
+    // suited_id    int     required
+    // name         string  
+    // description  string
+    // milestone_id int
+    // case_ids     array
+
+    // should return a run id, need to grab this somehow
+    createTestRailTestRun = world.createTestRailTestRun = function(projectId){
+        var command = "curl -H 'Content-Type: application/json' -u 'devops@akvo.org:R4inDr0p!' -d '{'status_id':1}' 'https://akvo.testrail.com/index.php?/api/v2//api/v2/add_run/"+projectId+"'";
+        exec(command, puts);
+    }
+
+    // /api/v2/add_result_for_case/<test_run_id>/<test_case_id>
+    // args:
+    // status_id    int     required
+    // comment      string  
+    // version      string
+    // elapsed      timespan e.g. "30s" or "1m 45s"
+    // defects      string (comma seperated list of github issues?)
+    // custom_ste_results     array
+
+    // status ids 1 = passed, 2 = blocked, 4 = retest, 5 = failed
+    // 'custom_steps_separated':[
+    //   {
+    //     "status_id": 1,
+    //     "content": "Step 1", 
+    //     "expected": "Result 1",
+    //     "actual": "Actual Result 1"
+    //   },
+    //   {
+    //     "status_id": 5,
+    //     "content": "Step 2",
+    //     "expected": "Result 2",
+    //     "actual": "Actual Result 2"
+    //   }
+    // ]
+    submitResultsToTestRail = world.submitResultsToTestRail = function(testRunId, testCaseId){
+        var command = "curl -H 'Content-Type: application/json' -u 'devops@akvo.org:R4inDr0p!' -d '{'status_id':1}' 'https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"'";
+        exec(command, puts);
+    }
+
+    function puts(error, stdout, stderr) { sys.puts(stdout) }
 };
 module.exports.World = World;
