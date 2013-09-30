@@ -97,12 +97,10 @@ var World = function World(callback) {
     // milestone_id int
     // case_ids     array
 
-    // should return a run id, need to grab this somehow
-    // Sample return :
-    // {"id":8,"suite_id":7,"name":"Project Administration","description":null,"milestone_id":null,"assignedto_id":null,"include_all":true,"is_completed":false,"completed_on":null,"config":null,"passed_count":0,"blocked_count":0,"untested_count":19,"retest_count":0,"failed_count":0,"custom_status1_count":0,"custom_status2_count":0,"custom_status3_count":0,"custom_status4_count":0,"custom_status5_count":0,"custom_status6_count":0,"custom_status7_count":0,"project_id":2,"plan_id":null,"url":"https:\/\/akvo.testrail.com\/index.php?\/runs\/view\/8"}
     createTestRailTestRun = world.createTestRailTestRun = function(projectId, suiteId){
         var command = "curl -H 'Content-Type: application/json' -u 'devops@akvo.org:R4inDr0p!' -d '{'suite_id':"+suiteId+"}' 'https://akvo.testrail.com/index.php?/api/v2/add_run/"+projectId+"'";
-        exec(command, puts);
+        testRailResponse = exec(command, puts);
+        return getTestRunIdFromResponse(testRailResponse);
     }
 
     // /api/v2/add_result_for_case/<test_run_id>/<test_case_id>
@@ -136,7 +134,21 @@ var World = function World(callback) {
 
     function puts(error, stdout, stderr) { 
         sys.puts(stdout);
-        testRailResponse = stdout;
+        return stdout;
+    }
+
+    // Takes the JSON response from testrail and breaks it down to get the test run ID from the end URL
+
+    // Example response :
+    // {"id":8,"suite_id":7,"name":"Project Administration","description":null,"milestone_id":null,"assignedto_id":null,"include_all":true,"is_completed":false,"completed_on":null,"config":null,"passed_count":0,"blocked_count":0,"untested_count":19,"retest_count":0,"failed_count":0,"custom_status1_count":0,"custom_status2_count":0,"custom_status3_count":0,"custom_status4_count":0,"custom_status5_count":0,"custom_status6_count":0,"custom_status7_count":0,"project_id":2,"plan_id":null,"url":"https:\/\/akvo.testrail.com\/index.php?\/runs\/view\/8"}
+    function getTestRunIdFromResponse(response){
+        response = JSON.stringify(response);
+        var strippedResponse = response.substring(1,response.length-1);
+        var responseBits = strippedResponse.split(",");
+        var testRunURL = responseBits[responseBits.length-1].split(":")[2];
+        var testRunURLBits= testRunURL.split("/");
+        var testRunId = testRunURLBits[testRunURLBits.length-1];
+        return testRunId.replace(/"/g,"");;
     }
 };
 module.exports.World = World;
