@@ -30,7 +30,28 @@ var World = function World(callback) {
                 error.code + ' - '  + error.message);
             callback.fail();
         }
-    
+        
+        spooky.on('fail', function(err) {
+            console.log(fail);
+            takeScreenShot('screenshots/', 'fail');
+            this.spooky.destroy();
+            callback.fail();
+        });
+
+        spooky.on('step.fail', function(err) {
+            console.log(fail);
+            takeScreenShot('screenshots/', 'step.fail');
+            this.spooky.destroy();
+            callback.fail();
+        });
+
+        spooky.on('step.error', function(err) {
+            console.log(fail);
+            takeScreenShot('screenshots/', 'step.error');
+            this.spooky.destroy();
+            callback.fail();
+        });
+
         spooky.on('error', function(e) {
             console.error('spooky error', util.inspect(e));
         });
@@ -89,6 +110,8 @@ var World = function World(callback) {
     // TestRail helper functions
     var submitResultsToTestRail, createTestRailTestRun, testRailResponse;
 
+    var baseCurlCommand = "curl -H \"Content-Type: application/json\" -u 'devops@akvo.org:R4inDr0p!' "
+
     // /api/v2/add_run/<project_id>
     // args:
     // suite_id     int     required
@@ -97,10 +120,11 @@ var World = function World(callback) {
     // milestone_id int
     // case_ids     array
 
-    createTestRailTestRun = world.createTestRailTestRun = function(projectId, suiteId){
-        var command = "curl -H 'Content-Type: application/json' -u 'devops@akvo.org:R4inDr0p!' -d '{'suite_id':"+suiteId+"}' 'https://akvo.testrail.com/index.php?/api/v2/add_run/"+projectId+"'";
-        testRailResponse = exec(command, puts);
-        return getTestRunIdFromResponse(testRailResponse);
+    createTestRailTestRun = world.createTestRailTestRun = function(projectId, suiteId, callback){
+        var command = baseCurlCommand + "-d '{\"suite_id\":"+suiteId+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_run/"+projectId+"\"";
+        exec(command, function (error, stdout, stderr) { 
+            return callback(getTestRunIdFromResponse(stdout));
+        });
     }
 
     // /api/v2/add_result_for_case/<test_run_id>/<test_case_id>
@@ -129,12 +153,9 @@ var World = function World(callback) {
     // ]
     submitResultsToTestRail = world.submitResultsToTestRail = function(testRunId, testCaseId){
         var command = "curl -H 'Content-Type: application/json' -u 'devops@akvo.org:R4inDr0p!' -d '{'status_id':1}' 'https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"'";
-        exec(command, puts);
-    }
-
-    function puts(error, stdout, stderr) { 
-        sys.puts(stdout);
-        return stdout;
+        exec(command, function (error, stdout, stderr) { 
+            console.log(stdout);
+        });
     }
 
     // Takes the JSON response from testrail and breaks it down to get the test run ID from the end URL
@@ -148,7 +169,7 @@ var World = function World(callback) {
         var testRunURL = responseBits[responseBits.length-1].split(":")[2];
         var testRunURLBits= testRunURL.split("/");
         var testRunId = testRunURLBits[testRunURLBits.length-1];
-        return testRunId.replace(/"/g,"");;
+        return testRunId.replace(/"|\\|}+/g,"");
     }
 };
 module.exports.World = World;

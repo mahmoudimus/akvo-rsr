@@ -4,6 +4,8 @@ Feature: Adding projects
 	I want to be able to add my project to Akvo RSR
 
 	# TODO: Need to provide a definition somewhere for re-usable steps such as "I fill out new project details"
+	Scenario: Set up a TestRail run for these tests
+		Given I create a new Add Project TestRail run
 
 	Scenario: Add a project as an Administrator
 		Given I am logged in to RSR Admin

@@ -1,9 +1,17 @@
 module.exports = function () {
     this.World = require('../support/world.js').World;
-    this.Chai = require('../../../node_modules/chai');
    
     var adminUrl = 'http://rsr.test.akvo-ops.org/admin/';
     var testProjectName = 'testProject9';
+    var runID;
+
+    this.Given('I create a new Add Project TestRail run', function(callback){
+        this.createTestRailTestRun(2, 7, function(x){
+            runID = x;
+            console.log("The TestRail Run ID for this test run: "+runID);
+            callback();
+        });
+    });  
 
     this.Given('I am logged in to RSR Admin', function(callback){
         this.spooky.open(adminUrl);
