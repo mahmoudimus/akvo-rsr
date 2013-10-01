@@ -31,26 +31,16 @@ var World = function World(callback) {
             callback.fail();
         }
         
-        spooky.on('fail', function(err) {
-            console.log(fail);
-            takeScreenShot('screenshots/', 'fail');
-            this.spooky.destroy();
-            callback.fail();
+        // Expects errors like below:
+        // {"success":false,"type":"assertTextExists","standard":"Found expected text within the document body","message":"RSR has thrown an error, as indicated by 'This field is required.' being present","file":null,"doThrow":true,"values":{"subject":false,"text":"This field is required."},"suite":"Untitled suite in null","time":5133}
+        spooky.on('test.has.failed', function (error) {
+            console.log("Caught failing test step: "+error);
+            spooky.destroy();
         });
 
-        spooky.on('step.fail', function(err) {
-            console.log(fail);
-            takeScreenShot('screenshots/', 'step.fail');
-            this.spooky.destroy();
-            callback.fail();
-        });
-
-        spooky.on('step.error', function(err) {
-            console.log(fail);
-            takeScreenShot('screenshots/', 'step.error');
-            this.spooky.destroy();
-            callback.fail();
-        });
+        spooky.on('test.has.passed', function(pass){
+            console.log("Caugh passing test step: "+pass);
+        })
 
         spooky.on('error', function(e) {
             console.error('spooky error', util.inspect(e));
@@ -64,7 +54,7 @@ var World = function World(callback) {
        }); 
 
     // Spooky utility functions
-    var fillForm, clickLink, takeScreenShot;
+    var fillForm, clickLink, takeScreenShot, setUpTestingLog;
 
     takeScreenShot = world.takeScreenShot = function(screenName, testProjectName){
         spooky.then([
@@ -84,7 +74,6 @@ var World = function World(callback) {
             }
         ]);
     }
-
     clickLink = world.clickLink = function(linkSelector){
         spooky.then([
             {
@@ -94,7 +83,6 @@ var World = function World(callback) {
             }
         ]);
     }
-
     fillForm = world.fillForm = function(formName, formData, submit){
         spooky.then([
             {
@@ -107,18 +95,32 @@ var World = function World(callback) {
         ]);
     }
 
+    setUpTestingLog = world.setUpTestingLog = function(){
+        spooky.then(function(){
+            var casper = this;
+            this.test.on('fail', function(error){
+                casper.emit('test.has.failed', JSON.stringify(error));
+            });
+            this.test.on('pass', function(pass){
+                casper.emit('test.has.passed', JSON.stringify(error));
+            })
+        });
+    }
     // TestRail helper functions
-    var submitResultsToTestRail, createTestRailTestRun, testRailResponse;
-
     var baseCurlCommand = "curl -H \"Content-Type: application/json\" -u 'devops@akvo.org:R4inDr0p!' "
 
-    // /api/v2/add_run/<project_id>
-    // args:
-    // suite_id     int     required
-    // name         string  
-    // description  string
-    // milestone_id int
-    // case_ids     array
+    var addProjectTestCaseIdMap = {};
+
+    addProjectTestCaseIdMap['project_added'] = 44;
+    addProjectTestCaseIdMap['title'] = 45;
+    addProjectTestCaseIdMap['subtitle'] = 46;
+    addProjectTestCaseIdMap['project_plan_summary'] = 47;
+    addProjectTestCaseIdMap['background'] = 48;
+    addProjectTestCaseIdMap['current_status'] = 92;
+    addProjectTestCaseIdMap['sustainability'] = 49;
+    addProjectTestCaseIdMap['goals_overview'] = 50;
+
+    var submitResultsToTestRail, createTestRailTestRun, testRailResponse;
 
     createTestRailTestRun = world.createTestRailTestRun = function(projectId, suiteId, callback){
         var command = baseCurlCommand + "-d '{\"suite_id\":"+suiteId+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_run/"+projectId+"\"";
@@ -158,9 +160,7 @@ var World = function World(callback) {
         });
     }
 
-    // Takes the JSON response from testrail and breaks it down to get the test run ID from the end URL
-
-    // Example response :
+    // Takes the JSON response from testrail and breaks it down to get the test run ID from the end URL. Example response:
     // {"id":8,"suite_id":7,"name":"Project Administration","description":null,"milestone_id":null,"assignedto_id":null,"include_all":true,"is_completed":false,"completed_on":null,"config":null,"passed_count":0,"blocked_count":0,"untested_count":19,"retest_count":0,"failed_count":0,"custom_status1_count":0,"custom_status2_count":0,"custom_status3_count":0,"custom_status4_count":0,"custom_status5_count":0,"custom_status6_count":0,"custom_status7_count":0,"project_id":2,"plan_id":null,"url":"https:\/\/akvo.testrail.com\/index.php?\/runs\/view\/8"}
     function getTestRunIdFromResponse(response){
         response = JSON.stringify(response);

@@ -1,9 +1,9 @@
 module.exports = function () {
     this.World = require('../support/world.js').World;
    
-    var adminUrl = 'http://rsr.test.akvo-ops.org/admin/';
+    var adminUrl = 'http://rsr.test.akvo.org/admin/';
     var testProjectName = 'testProject9';
-    var runID;
+    var runID, currentField;
 
     this.Given('I create a new Add Project TestRail run', function(callback){
         this.createTestRailTestRun(2, 7, function(x){
@@ -14,17 +14,18 @@ module.exports = function () {
     });  
 
     this.Given('I am logged in to RSR Admin', function(callback){
+        this.setUpTestingLog();
         this.spooky.open(adminUrl);
         this.fillForm('form#login-form', 
                 {
                     'username' : 'AutomatedTestUser',
                     'password' : 'testpassword'
                 }, true);
+
         callback();
     });
 
     this.When('I click "add a project"', function(callback) {
-       // There is presumably a better way of doing this - <a href="/admin/rsr/project/add/" class="addlink">Add</a>
         this.clickLink('a[href="/admin/rsr/project/add/"]');   
         callback();
     });
@@ -52,13 +53,9 @@ module.exports = function () {
     });
 
     this.When('I publish the project', function(callback) {
-        //Another way of doing this is by just appending the project ID to the below URLS
         this.clickLink('a[href="/admin/rsr/"]');
-
-        //<a href="/admin/rsr/publishingstatus/">Publishing statuses</a>
         this.clickLink('a[href="/admin/rsr/publishingstatus/"]');
 
-        //<a href="1102/">test</a>
         this.spooky.then([
             {
                 testProjectName : testProjectName
@@ -92,34 +89,34 @@ module.exports = function () {
             {
               testProjectName : testProjectName
             }, function() {
-                this.test.assertSelectorHasText('#result_list', testProjectName);
+                this.test.assertSelectorHasText('#result_list', testProjectName, "Testing that project has been added to RSR *project_added*");
                 this.test.assertResourceExists('icon-yes.gif');
             }
         ]);
 
         this.spooky.run();
-        setTimeout(callback, 20000)
+        setTimeout(callback, 20000);
     });
 
     this.When(/^I do not enter anything for "([^"]*)"$/, function(fieldNameSpaces, callback) {
         var fieldNameUnderscore = fieldNameSpaces.replace(/ /g,"_");
         var formData = { };
         formData[fieldNameUnderscore] = '';
-
+        currentField = fieldNameUnderscore;
         this.fillForm('form#project_form', formData, false);
         callback();
     });
 
     this.Then('I get an error', function(callback) {  
         this.spooky.then(function() {
-            this.test.assertTextExists('This field is required.', "RSR has thrown an error, as indicated by 'This field is required.' being present");
-            this.test.assertTextExists('Please correct the error below.', "RSR has thrown an error, as indicated by 'Please correct the error below.' being present");
-            this.test.assertExists('.errornote', 'Found errornote class element');
+            this.test.assertTextExists('This field is required.', "Testing field *"+currentField+"* RSR has thrown an error, as indicated by 'This field is required.' being present");
+            this.test.assertTextExists('Please correct the error below.', "Testing field *"+currentField+"* RSR has thrown an error, as indicated by 'Please correct the error below.' being present");
+            this.test.assertExists('.errornote', 'Testing field *'+currentField+'* Found errornote class element');
         });
 
         this.takeScreenShot('fieldError', testProjectName);
-
+        
         this.spooky.run();
-        setTimeout(callback, 20000)
+        setTimeout(callback, 20000);
     });
 };
