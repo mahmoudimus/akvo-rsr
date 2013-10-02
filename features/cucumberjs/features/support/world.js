@@ -35,12 +35,15 @@ var World = function World(callback) {
         // {"success":false,"type":"assertTextExists","standard":"Found expected text within the document body","message":"RSR has thrown an error, as indicated by 'This field is required.' being present","file":null,"doThrow":true,"values":{"subject":false,"text":"This field is required."},"suite":"Untitled suite in null","time":5133}
         spooky.on('test.has.failed', function (error) {
             console.log("Caught failing test step: "+error);
+            globalIsFailedStep = true;
+            processTestResult(error, 5);
             spooky.destroy();
         });
 
-        spooky.on('test.has.passed', function(pass){
-            console.log("Caugh passing test step: "+pass);
-        })
+
+        spooky.on('test.has.passed', function () {
+            processTestResultSimple();
+        });
 
         spooky.on('error', function(e) {
             console.error('spooky error', util.inspect(e));
@@ -52,6 +55,34 @@ var World = function World(callback) {
 
         callback(world);
        }); 
+
+    var globalTestRunID = world.globalTestRunID;
+    var globalCurrentField = world.globalCurrentField;
+    var globalIsFailedStep = world.globalIsFailedStep = false;
+
+    function processTestResultSimple(){
+        if(!this.globalIsFailedStep){
+            submitIfTestCaseExists(globalCurrentField,1, this.globalTestRunID);
+        }
+    }
+
+    function processTestResult(result, passFail){
+        result = JSON.stringify(result);
+        var strippedResponse = result.substring(1,result.length-1);
+        var responseBits = strippedResponse.split(",");
+        var testMessage = responseBits[3].split(":")[1];
+        var resultFor=testMessage.match(/\*([^}]+)\*/g);
+        resultFor = JSON.stringify(resultFor);
+        resultFor = resultFor.substring(3,resultFor.length-3);
+        submitIfTestCaseExists(resultFor, passFail, this.globalTestRunID);
+    }
+
+    var submitIfTestCaseExists;
+    submitIfTestCaseExists = world.submitIfTestCaseExists = function(testCase, statusId, testRunId){
+        if (testCase in addProjectTestCaseIdMap) {
+            submitResultsToTestRail(statusId, testRunId, addProjectTestCaseIdMap[testCase]);
+        }
+    }
 
     // Spooky utility functions
     var fillForm, clickLink, takeScreenShot, setUpTestingLog;
@@ -94,16 +125,15 @@ var World = function World(callback) {
             }
         ]);
     }
-
     setUpTestingLog = world.setUpTestingLog = function(){
         spooky.then(function(){
             var casper = this;
             this.test.on('fail', function(error){
                 casper.emit('test.has.failed', JSON.stringify(error));
             });
-            this.test.on('pass', function(pass){
-                casper.emit('test.has.passed', JSON.stringify(error));
-            })
+            this.test.on('success', function(error){
+                casper.emit('test.has.passed');
+            });
         });
     }
     // TestRail helper functions
@@ -129,34 +159,10 @@ var World = function World(callback) {
         });
     }
 
-    // /api/v2/add_result_for_case/<test_run_id>/<test_case_id>
-    // args:
-    // status_id    int     required
-    // comment      string  
-    // version      string
-    // elapsed      timespan e.g. "30s" or "1m 45s"
-    // defects      string (comma seperated list of github issues?)
-    // custom_ste_results     array
-
-    // status ids 1 = passed, 2 = blocked, 4 = retest, 5 = failed
-    // 'custom_steps_separated':[
-    //   {
-    //     "status_id": 1,
-    //     "content": "Step 1", 
-    //     "expected": "Result 1",
-    //     "actual": "Actual Result 1"
-    //   },
-    //   {
-    //     "status_id": 5,
-    //     "content": "Step 2",
-    //     "expected": "Result 2",
-    //     "actual": "Actual Result 2"
-    //   }
-    // ]
-    submitResultsToTestRail = world.submitResultsToTestRail = function(testRunId, testCaseId){
-        var command = "curl -H 'Content-Type: application/json' -u 'devops@akvo.org:R4inDr0p!' -d '{'status_id':1}' 'https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"'";
+    submitResultsToTestRail = world.submitResultsToTestRail = function(testRunStatus, testRunId, testCaseId){
+        var command = baseCurlCommand + "-d '{\"status_id\":"+testRunStatus+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"\"";
+        console.log(command);
         exec(command, function (error, stdout, stderr) { 
-            console.log(stdout);
         });
     }
 
@@ -169,7 +175,19 @@ var World = function World(callback) {
         var testRunURL = responseBits[responseBits.length-1].split(":")[2];
         var testRunURLBits= testRunURL.split("/");
         var testRunId = testRunURLBits[testRunURLBits.length-1];
-        return testRunId.replace(/"|\\|}+/g,"");
+        this.globalTestRunID = testRunId.replace(/"|\\|}+/g,"");
+        return globalTestRunID;
+    }
+
+    // Setter functions
+
+    var setFieldName;
+    setFieldName = world.setFieldName = function(fieldName){
+        scopedFieldNameSetter(fieldName);
+    }
+
+    function scopedFieldNameSetter(fieldName){
+        globalCurrentField = fieldName;
     }
 };
 module.exports.World = World;

@@ -75,6 +75,10 @@ module.exports = function () {
     });
 
     this.Then('I can view the project on the main RSR page', function(callback) {
+        this.setFieldName("project_added");
+        this.globalIsFailedStep = false;
+        this.globalSubmittedAlready = false;
+
         this.clickLink('a[href="/admin/rsr/"]');
         this.clickLink('a[href="/admin/rsr/project/"]');
 
@@ -103,16 +107,23 @@ module.exports = function () {
         var formData = { };
         formData[fieldNameUnderscore] = '';
         currentField = fieldNameUnderscore;
+        
         this.fillForm('form#project_form', formData, false);
         callback();
     });
 
     this.Then('I get an error', function(callback) {  
-        this.spooky.then(function() {
-            this.test.assertTextExists('This field is required.', "Testing field *"+currentField+"* RSR has thrown an error, as indicated by 'This field is required.' being present");
-            this.test.assertTextExists('Please correct the error below.', "Testing field *"+currentField+"* RSR has thrown an error, as indicated by 'Please correct the error below.' being present");
-            this.test.assertExists('.errornote', 'Testing field *'+currentField+'* Found errornote class element');
-        });
+        this.globalIsFailedStep = false;
+        this.setFieldName(currentField);
+
+        this.spooky.then([{
+                currentField : currentField
+            },function() {
+                this.test.assertTextExists('This field is required.', "Testing field *"+currentField+"* RSR has thrown an error as indicated by 'This field is required.' being present");
+                this.test.assertTextExists('Please correct the error below.', "Testing field *"+currentField+"* RSR has thrown an error as indicated by 'Please correct the error below.' being present");
+                this.test.assertExists('.errornote', 'Testing field *'+currentField+'* Found errornote class element');
+        }
+        ]);
 
         this.takeScreenShot('fieldError', testProjectName);
         
