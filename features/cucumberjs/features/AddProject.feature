@@ -61,3 +61,31 @@ Feature: Adding projects
 			And I fill out new project details
 			But I do not enter anything for "goals overview"
 		Then I get an error
+
+	Scenario: Add a project without entering project partners as an Administrator
+		Given I am logged in to RSR Admin
+		When I click "add a project"
+			And I fill out new project details
+			But I do not select a project partner
+		Then I get an error
+
+	Scenario: Add a project without a field partner as an Administrator
+		Given I am logged in to RSR Admin
+		When I click "add a project"
+			And I fill out new project details
+			But I do not enter a field partner
+		Then I get an error
+
+	Scenario: Add a project without a sponsor or funding partner as an Administrator
+		Given I am logged in to RSR Admin
+		When I click "add a project"
+			And I fill out new project details
+			But I do not enter a sponsor or funding partner
+		Then I get an error
+
+	Scenario: Add a project with a partner type which doesnt match the partner as an Administrator
+		Given I am logged in to RSR Admin
+		When I click "add a project"
+			And I fill out new project details
+			But I do not enter a partner type which matches the partner
+		Then I get an error

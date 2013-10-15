@@ -1,4 +1,4 @@
-module.exports = function () {
+    module.exports = function () {
     this.World = require('../support/world.js').World;
     var assert = require("assert");
 
@@ -102,7 +102,6 @@ module.exports = function () {
         var fieldNameUnderscore = fieldNameSpaces.replace(/ /g,"_");
         var browser = this.browser;
 
-        currentField = fieldNameSpaces;
 
         browser.
         fill(fieldNameUnderscore, '').
@@ -111,11 +110,42 @@ module.exports = function () {
         });
     });
 
+    this.When('I do not select a project partner', function(callback) {
+        var browser = this.browser;
+
+        browser.
+        select('partnerships-0-organisation', '---------').
+        pressButton('Save', function() {
+            callback();
+        });
+    });
+
+    this.When('I do not select a field partner', function(callback) {
+        var browser = this.browser;
+
+        browser.
+        select('partnerships-0-partner_type', 'Funding partner').
+        pressButton('Save', function() {
+            callback();
+        });
+    });
+
+    this.When('I do not enter a partner type which matches the partner', function(callback) {
+        var browser = this.browser;
+
+        browser.
+        select('partnerships-0-organisation', 'Abdo').
+        select('partnerships-0-partner_type', 'Sponsor partner').
+        pressButton('Save', function() {
+            callback();
+        });
+    });
+
     this.Then('I get an error', function(callback) {  
         var browser = this.browser;
 
-        assert((browser.html().indexOf('This field is required.') > -1), true, "Testing field *"+currentField+"* RSR has thrown an error as indicated by 'This field is required.' being present");   
-        assert((browser.html().indexOf('Please correct the error below.') > -1), true, "Testing field *"+currentField+"* RSR has thrown an error as indicated by 'Please correct the error below.' being present"); 
+        assert((browser.html().indexOf('This field is required.') > -1), true, 'Expected message: This field is required : was not found');   
+        assert((browser.html().indexOf('Please correct the error below.') > -1), true, 'Expected message: Please correct the error below. : was not found'); 
         callback();
     });
 };
