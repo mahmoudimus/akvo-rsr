@@ -5,6 +5,22 @@
     var testProjectName = 'testProject9';
     var runID, currentField;
 
+    // TestRail case IDs - temp location
+    var addProjectTestCaseIdMap = {};
+
+    addProjectTestCaseIdMap['project_added'] = 44;
+    addProjectTestCaseIdMap['title'] = 45;
+    addProjectTestCaseIdMap['subtitle'] = 46;
+    addProjectTestCaseIdMap['project_plan_summary'] = 47;
+    addProjectTestCaseIdMap['background'] = 48;
+    addProjectTestCaseIdMap['current_status'] = 92;
+    addProjectTestCaseIdMap['sustainability'] = 49;
+    addProjectTestCaseIdMap['goals_overview'] = 50;
+    addProjectTestCaseIdMap['project_partner'] = 93;
+    addProjectTestCaseIdMap['field_partner'] = 51;
+    addProjectTestCaseIdMap['sponsor_or_funding_partner'] = 52;
+    addProjectTestCaseIdMap['partner_type_mismatch'] = 53;
+
     this.Given('I create a new Add Project TestRail run', function(callback) {
         this.createTestRailTestRun(2, 7, function(x) {
             runID = x;
@@ -148,4 +164,13 @@
         assert((browser.html().indexOf('Please correct the error below.') > -1), true, 'Expected message: Please correct the error below. : was not found'); 
         callback();
     });
+
+    //test case in this instance is a field name (see map above)
+    //status id 1 = pass, 5 = fail
+    //testRunId is grabbed above when the test run is created
+    function submitIfTestCaseExists(testCase, statusId, testRunId){
+        if (testCase in addProjectTestCaseIdMap) {
+            this.submitResultsToTestRail(statusId, testRunId, addProjectTestCaseIdMap[testCase]);
+        }
+    }
 };

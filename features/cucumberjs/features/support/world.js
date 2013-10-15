@@ -8,18 +8,6 @@ var World = function World(callback) {
         console.log(e.stack);
     });
 
-    // TestRail case IDs - temp location
-    var addProjectTestCaseIdMap = {};
-
-    addProjectTestCaseIdMap['project_added'] = 44;
-    addProjectTestCaseIdMap['title'] = 45;
-    addProjectTestCaseIdMap['subtitle'] = 46;
-    addProjectTestCaseIdMap['project_plan_summary'] = 47;
-    addProjectTestCaseIdMap['background'] = 48;
-    addProjectTestCaseIdMap['current_status'] = 92;
-    addProjectTestCaseIdMap['sustainability'] = 49;
-    addProjectTestCaseIdMap['goals_overview'] = 50;
-
     // TestRail helper functions
     var baseCurlCommand = "curl -H \"Content-Type: application/json\" -u 'devops@akvo.org:R4inDr0p!' "
 
@@ -34,7 +22,6 @@ var World = function World(callback) {
 
     submitResultsToTestRail = World.submitResultsToTestRail = function(testRunStatus, testRunId, testCaseId){
         var command = baseCurlCommand + "-d '{\"status_id\":"+testRunStatus+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"\"";
-        console.log(command);
         exec(command, function (error, stdout, stderr) {});
     }
 
