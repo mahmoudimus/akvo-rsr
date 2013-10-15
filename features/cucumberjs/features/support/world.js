@@ -1,144 +1,14 @@
-var util = require('util');
-var sys = require('sys')
-var exec = require('child_process').exec;
-
-try {
-    var Spooky = require('spooky');
-} catch (e) {
-    var Spooky = require(__dirname+'/../../../../lib/spooky');
-}
+var Browser = require("zombie");
 
 var World = function World(callback) {
-    var spooky;
-    var world = this;
+    this.browser = new Browser({ debug: true });
+    this.browser.site = "http://rsr.uat.akvo.org/";
+    this.browser.on('error',function(e){
+        console.log("Error: " +e.message); 
+        console.log(e.stack);
+    });
 
-    spooky = world.spooky = new Spooky({
-        child: {
-            "web-security": false,
-            "ignore-ssl-errors": true
-        },
-        casper: {
-            logLevel: 'debug',
-            verbose: true,
-            timeout: 30000,
-            stepTimeout: 15000
-        }
-    }, function(error) {
-        if (error) {
-            console.dir(error);
-            throw new Error('Failed to initialize context.spooky: ' +
-                error.code + ' - '  + error.message);
-            callback.fail();
-        }
-        
-        // Expects errors like below:
-        // {"success":false,"type":"assertTextExists","standard":"Found expected text within the document body","message":"RSR has thrown an error, as indicated by 'This field is required.' being present","file":null,"doThrow":true,"values":{"subject":false,"text":"This field is required."},"suite":"Untitled suite in null","time":5133}
-        spooky.on('test.has.failed', function (error) {
-            console.log("Caught failing test step: "+error);
-            globalIsFailedStep = true;
-            processTestResult(error, 5);
-            spooky.destroy();
-        });
-
-
-        spooky.on('test.has.passed', function () {
-            processTestResultSimple();
-        });
-
-        spooky.on('error', function(e) {
-            console.error('spooky error', util.inspect(e));
-        });
-
-        spooky.on('console', function (line) {
-            console.log(line);
-        });
-
-        callback(world);
-       }); 
-
-    var globalTestRunID = world.globalTestRunID;
-    var globalCurrentField = world.globalCurrentField;
-    var globalIsFailedStep = world.globalIsFailedStep = false;
-
-    function processTestResultSimple(){
-        if(!this.globalIsFailedStep){
-            submitIfTestCaseExists(globalCurrentField,1, this.globalTestRunID);
-        }
-    }
-
-    function processTestResult(result, passFail){
-        result = JSON.stringify(result);
-        var strippedResponse = result.substring(1,result.length-1);
-        var responseBits = strippedResponse.split(",");
-        var testMessage = responseBits[3].split(":")[1];
-        var resultFor=testMessage.match(/\*([^}]+)\*/g);
-        resultFor = JSON.stringify(resultFor);
-        resultFor = resultFor.substring(3,resultFor.length-3);
-        submitIfTestCaseExists(resultFor, passFail, this.globalTestRunID);
-    }
-
-    var submitIfTestCaseExists;
-    submitIfTestCaseExists = world.submitIfTestCaseExists = function(testCase, statusId, testRunId){
-        if (testCase in addProjectTestCaseIdMap) {
-            submitResultsToTestRail(statusId, testRunId, addProjectTestCaseIdMap[testCase]);
-        }
-    }
-
-    // Spooky utility functions
-    var fillForm, clickLink, takeScreenShot, setUpTestingLog;
-
-    takeScreenShot = world.takeScreenShot = function(screenName, testProjectName){
-        spooky.then([
-            {
-                renderName: screenName + testProjectName +'.png',
-                width: 1280,
-                height: 10024,
-                delay: 100
-            }, function() {
-                this.viewport(width, height);
-                this.capture(renderName, {
-                    top: 0,
-                    left: 0,
-                    width: width,
-                    height: height
-                });
-            }
-        ]);
-    }
-    clickLink = world.clickLink = function(linkSelector){
-        spooky.then([
-            {
-                linkSelector : linkSelector
-            }, function(){
-                this.click(linkSelector);
-            }
-        ]);
-    }
-    fillForm = world.fillForm = function(formName, formData, submit){
-        spooky.then([
-            {
-                formName : formName,
-                formData : formData,
-                submit : submit
-            }, function(){
-                this.fill(formName, formData, submit);
-            }
-        ]);
-    }
-    setUpTestingLog = world.setUpTestingLog = function(){
-        spooky.then(function(){
-            var casper = this;
-            this.test.on('fail', function(error){
-                casper.emit('test.has.failed', JSON.stringify(error));
-            });
-            this.test.on('success', function(error){
-                casper.emit('test.has.passed');
-            });
-        });
-    }
-    // TestRail helper functions
-    var baseCurlCommand = "curl -H \"Content-Type: application/json\" -u 'devops@akvo.org:R4inDr0p!' "
-
+    // TestRail case IDs - temp location
     var addProjectTestCaseIdMap = {};
 
     addProjectTestCaseIdMap['project_added'] = 44;
@@ -150,20 +20,22 @@ var World = function World(callback) {
     addProjectTestCaseIdMap['sustainability'] = 49;
     addProjectTestCaseIdMap['goals_overview'] = 50;
 
+    // TestRail helper functions
+    var baseCurlCommand = "curl -H \"Content-Type: application/json\" -u 'devops@akvo.org:R4inDr0p!' "
+
     var submitResultsToTestRail, createTestRailTestRun, testRailResponse;
 
-    createTestRailTestRun = world.createTestRailTestRun = function(projectId, suiteId, callback){
+    createTestRailTestRun = World.createTestRailTestRun = function(projectId, suiteId, callback){
         var command = baseCurlCommand + "-d '{\"suite_id\":"+suiteId+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_run/"+projectId+"\"";
         exec(command, function (error, stdout, stderr) { 
             return callback(getTestRunIdFromResponse(stdout));
         });
     }
 
-    submitResultsToTestRail = world.submitResultsToTestRail = function(testRunStatus, testRunId, testCaseId){
+    submitResultsToTestRail = World.submitResultsToTestRail = function(testRunStatus, testRunId, testCaseId){
         var command = baseCurlCommand + "-d '{\"status_id\":"+testRunStatus+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"\"";
         console.log(command);
-        exec(command, function (error, stdout, stderr) { 
-        });
+        exec(command, function (error, stdout, stderr) {});
     }
 
     // Takes the JSON response from testrail and breaks it down to get the test run ID from the end URL. Example response:
@@ -179,15 +51,7 @@ var World = function World(callback) {
         return globalTestRunID;
     }
 
-    // Setter functions
-
-    var setFieldName;
-    setFieldName = world.setFieldName = function(fieldName){
-        scopedFieldNameSetter(fieldName);
-    }
-
-    function scopedFieldNameSetter(fieldName){
-        globalCurrentField = fieldName;
-    }
+    callback();
 };
-module.exports.World = World;
+
+exports.World = World;
