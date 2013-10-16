@@ -115,9 +115,9 @@
     });
 
     this.When(/^I do not enter anything for "([^"]*)"$/, function(fieldNameSpaces, callback) {
-        var fieldNameUnderscore = fieldNameSpaces.replace(/ /g,"_");
         var browser = this.browser;
-
+        var fieldNameUnderscore = fieldNameSpaces.replace(/ /g,"_");
+        currentField = fieldNameUnderscore;
 
         browser.
         fill(fieldNameUnderscore, '').
@@ -128,6 +128,7 @@
 
     this.When('I do not select a project partner', function(callback) {
         var browser = this.browser;
+        currentField = 'project_partner';
 
         browser.
         select('partnerships-0-organisation', '---------').
@@ -138,6 +139,7 @@
 
     this.When('I do not select a field partner', function(callback) {
         var browser = this.browser;
+        currentField = 'field_partner';
 
         browser.
         select('partnerships-0-partner_type', 'Funding partner').
@@ -148,6 +150,7 @@
 
     this.When('I do not enter a partner type which matches the partner', function(callback) {
         var browser = this.browser;
+        currentField = 'partner_type_mismatch';
 
         browser.
         select('partnerships-0-organisation', 'Abdo').
@@ -160,8 +163,15 @@
     this.Then('I get an error', function(callback) {  
         var browser = this.browser;
 
-        assert((browser.html().indexOf('This field is required.') > -1), true, 'Expected message: This field is required : was not found');   
-        assert((browser.html().indexOf('Please correct the error below.') > -1), true, 'Expected message: Please correct the error below. : was not found'); 
+        // TODO: Add a try catch block here, the catch block will call TestRail results and post a failing status, then palm off to callback.fail
+        try {
+            assert((browser.html().indexOf('This field is required.') > -1), true, 'Expected message: This field is required : was not found');   
+            assert((browser.html().indexOf('Please correct the error below.') > -1), true, 'Expected message: Please correct the error below. : was not found'); 
+        } catch (err) {
+            submitIfTestCaseExists(currentField, 5, runID);
+            callback.fail(err);
+        }
+        submitIfTestCaseExists(currentField, 1, runID);
         callback();
     });
 
@@ -170,7 +180,7 @@
     //testRunId is grabbed above when the test run is created
     function submitIfTestCaseExists(testCase, statusId, testRunId){
         if (testCase in addProjectTestCaseIdMap) {
-            this.submitResultsToTestRail(statusId, testRunId, addProjectTestCaseIdMap[testCase]);
+            this.submitPassFailToTestRail(statusId, testRunId, addProjectTestCaseIdMap[testCase]);
         }
     }
 };

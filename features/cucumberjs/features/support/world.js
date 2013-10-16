@@ -11,7 +11,7 @@ var World = function World(callback) {
     // TestRail helper functions
     var baseCurlCommand = "curl -H \"Content-Type: application/json\" -u 'devops@akvo.org:R4inDr0p!' "
 
-    var submitResultsToTestRail, createTestRailTestRun, testRailResponse;
+    var submitPassFailToTestRail, submitIndividualTestStep, createTestRailTestRun, testRailResponse;
 
     createTestRailTestRun = World.createTestRailTestRun = function(projectId, suiteId, callback){
         var command = baseCurlCommand + "-d '{\"suite_id\":"+suiteId+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_run/"+projectId+"\"";
@@ -20,8 +20,14 @@ var World = function World(callback) {
         });
     }
 
-    submitResultsToTestRail = World.submitResultsToTestRail = function(testRunStatus, testRunId, testCaseId){
+    submitPassFailToTestRail = World.submitPassFailToTestRail = function(testRunStatus, testRunId, testCaseId){
         var command = baseCurlCommand + "-d '{\"status_id\":"+testRunStatus+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"\"";
+        exec(command, function (error, stdout, stderr) {});
+    }
+
+    // {"custom_step_results": [{"content": "Step 1","expected": "Expected Result 1","actual": "Actual Result 1","status_id": 1}]}
+    submitIndividualTestStep = World.submitIndividualTestStep = function(testStepNumber, testStepStatus, testRunId, testCaseId){
+        var command = baseCurlCommand + "-d '{\"custom_step_results\": [{\"content\":"+testStepNumber+",\"status_id\":"+testStepStatus"}]}' \"https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"\"";
         exec(command, function (error, stdout, stderr) {});
     }
 
