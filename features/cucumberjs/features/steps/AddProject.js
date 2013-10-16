@@ -5,7 +5,7 @@
     var testProjectName = 'testProject9';
     var runID, currentField;
 
-    // TestRail case IDs - temp location
+    // TestRail case IDs - temp location?
     var addProjectTestCaseIdMap = {};
 
     addProjectTestCaseIdMap['project_added'] = 44;
@@ -160,6 +160,7 @@
         });
     });
 
+    // TestRail step 5
     this.Then('I get an error', function(callback) {  
         var browser = this.browser;
 
@@ -168,19 +169,31 @@
             assert((browser.html().indexOf('This field is required.') > -1), true, 'Expected message: This field is required : was not found');   
             assert((browser.html().indexOf('Please correct the error below.') > -1), true, 'Expected message: Please correct the error below. : was not found'); 
         } catch (err) {
-            submitIfTestCaseExists(currentField, 5, runID);
+            submitStepAndRun('Step 5', 1);
             callback.fail(err);
         }
-        submitIfTestCaseExists(currentField, 1, runID);
+        submitStepAndRun('Step 5', 1);
         callback();
     });
+
+    // TestRail helpers
+    function submitStepAndRun(testStep, passFail){
+        submitStepPassFail(testStep, currentField, passFail, runID);
+        submitRunPassFail(currentField, passFail, runID);
+    }
 
     //test case in this instance is a field name (see map above)
     //status id 1 = pass, 5 = fail
     //testRunId is grabbed above when the test run is created
-    function submitIfTestCaseExists(testCase, statusId, testRunId){
+    function submitRunPassFail(testCase, statusId, testRunId){
         if (testCase in addProjectTestCaseIdMap) {
             this.submitPassFailToTestRail(statusId, testRunId, addProjectTestCaseIdMap[testCase]);
+        }
+    }
+
+    function submitStepPassFail(testStep, testCase, statusId, testRunId){
+        if (testCase in addProjectTestCaseIdMap) {
+            this.submitIndividualTestStep(testStep, statusId, testRunId, addProjectTestCaseIdMap[testCase]);
         }
     }
 };

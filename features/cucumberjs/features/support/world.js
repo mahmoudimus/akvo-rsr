@@ -3,10 +3,6 @@ var Browser = require("zombie");
 var World = function World(callback) {
     this.browser = new Browser({ debug: true });
     this.browser.site = "http://rsr.uat.akvo.org/";
-    this.browser.on('error',function(e){
-        console.log("Error: " +e.message); 
-        console.log(e.stack);
-    });
 
     // TestRail helper functions
     var baseCurlCommand = "curl -H \"Content-Type: application/json\" -u 'devops@akvo.org:R4inDr0p!' "
