@@ -4,25 +4,32 @@ var World = function World(callback) {
     this.browser = new Browser({ debug: true });
     this.browser.site = "http://rsr.uat.akvo.org/";
 
+    var resetBrowser;
+    resetBrowser = this.resetBrowser = function(){
+        console.log("RESET BROWSER");
+        this.browser = new Browser({ debug: true });
+        this.browser.site = "http://rsr.uat.akvo.org/";
+    }
+
     // TestRail helper functions
     var baseCurlCommand = "curl -H \"Content-Type: application/json\" -u 'devops@akvo.org:R4inDr0p!' "
 
     var submitPassFailToTestRail, submitIndividualTestStep, createTestRailTestRun, testRailResponse;
 
-    createTestRailTestRun = World.createTestRailTestRun = function(projectId, suiteId, callback){
+    createTestRailTestRun = this.createTestRailTestRun = function(projectId, suiteId, callback){
         var command = baseCurlCommand + "-d '{\"suite_id\":"+suiteId+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_run/"+projectId+"\"";
         exec(command, function (error, stdout, stderr) { 
             return callback(getTestRunIdFromResponse(stdout));
         });
     }
 
-    submitPassFailToTestRail = World.submitPassFailToTestRail = function(testRunStatus, testRunId, testCaseId){
+    submitPassFailToTestRail = this.submitPassFailToTestRail = function(testRunStatus, testRunId, testCaseId){
         var command = baseCurlCommand + "-d '{\"status_id\":"+testRunStatus+"}' \"https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"\"";
         exec(command, function (error, stdout, stderr) {});
     }
 
     // {"custom_step_results": [{"content": "Step 1","expected": "Expected Result 1","actual": "Actual Result 1","status_id": 1}]}
-    submitIndividualTestSteps = World.submitIndividualTestSteps = function(testStepResults, testRunId, testCaseId){
+    submitIndividualTestSteps = this.submitIndividualTestSteps = function(testStepResults, testRunId, testCaseId){
         // make sure there's no unnecessary commas floating around
         if(testStepResults.charAt(testStepResults.length-1) == ','){
             testStepResults = testStepResults.substring(0,testStepResults.length-1);
