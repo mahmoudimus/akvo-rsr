@@ -3,7 +3,7 @@
     var assert = require("assert");
 
     var testProjectName = 'testProject9';
-    var runID, currentField;
+    var runID, currentField, stepsSuccessList, passFail;
 
     // TestRail case IDs - temp location?
     var addProjectTestCaseIdMap = {};
@@ -22,6 +22,8 @@
     addProjectTestCaseIdMap['partner_type_mismatch'] = 53;
 
     this.Given('I create a new Add Project TestRail run', function(callback) {
+        // 2 = RSR tests
+        // 7 = Project Administration tests
         this.createTestRailTestRun(2, 7, function(x) {
             runID = x;
             console.log("The TestRail Run ID for this test run: "+runID);
@@ -29,16 +31,24 @@
         });
     });  
 
+    // Step 1
     this.Given('I am logged in to RSR Admin', function(callback) {
         var browser = this.browser;
+
+        stepsSuccessList = '';
+        setTestIsPassing();
 
         browser.visit("/admin/", function() {
             browser.
             fill('username', 'AutomatedTestUser').
             fill('password', 'testpassword').
             pressButton('Log in', function() {
-                assert.ok(browser.success);
-                assert.equal(browser.text('#site-name'), 'Akvo RSR administration');
+                try {
+                    assert.ok(browser.success);
+                    assert.equal(browser.text('#site-name'), 'Akvo RSR administration');
+                } catch (err) {
+                    callback.fail(err);
+                }
                 callback();
             });  
         });
@@ -90,10 +100,15 @@
 
     this.Then('I can view the project on the main RSR page', function(callback) {
         var browser = this.browser;
+        currentField = 'project_added';
 
         browser.visit('http://rsr.uat.akvo.org/projects/all/', function() {
             //Confirm that the project is present
-            assert((browser.html().indexOf(testProjectName) > -1), true);
+            try {
+                assert((browser.html().indexOf(testProjectName) > -1), true);
+            } catch (err){
+                callback.fail(err);
+            }
             callback();
         });
     });
@@ -130,7 +145,7 @@
         var browser = this.browser;
         currentField = 'project_partner';
 
-        browser.
+        browser.x
         select('partnerships-0-organisation', '---------').
         pressButton('Save', function() {
             callback();
@@ -169,10 +184,8 @@
             assert((browser.html().indexOf('This field is required.') > -1), true, 'Expected message: This field is required : was not found');   
             assert((browser.html().indexOf('Please correct the error below.') > -1), true, 'Expected message: Please correct the error below. : was not found'); 
         } catch (err) {
-            submitStepAndRun('Step 5', 1);
             callback.fail(err);
         }
-        submitStepAndRun('Step 5', 1);
         callback();
     });
 
@@ -193,7 +206,19 @@
 
     function submitStepPassFail(testStep, testCase, statusId, testRunId){
         if (testCase in addProjectTestCaseIdMap) {
-            this.submitIndividualTestStep(testStep, statusId, testRunId, addProjectTestCaseIdMap[testCase]);
+            this.submitIndividualTestSteps(testStep, statusId, testRunId, addProjectTestCaseIdMap[testCase]);
         }
+    }
+
+    function appendTestStepResult(appendTestStepResult) {
+        stepsSuccessList += "{\"content\":"+testStep+",\"status_id\":"+passFail"},";
+    }
+
+    function setTestIsFailing(){
+        passFail = 5;
+    }
+
+    function setTestIsPassing(){
+        passFail = 1;
     }
 };

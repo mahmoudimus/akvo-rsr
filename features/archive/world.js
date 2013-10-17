@@ -178,16 +178,5 @@ var World = function World(callback) {
         this.globalTestRunID = testRunId.replace(/"|\\|}+/g,"");
         return globalTestRunID;
     }
-
-    // Setter functions
-
-    var setFieldName;
-    setFieldName = world.setFieldName = function(fieldName){
-        scopedFieldNameSetter(fieldName);
-    }
-
-    function scopedFieldNameSetter(fieldName){
-        globalCurrentField = fieldName;
-    }
 };
 module.exports.World = World;

@@ -22,8 +22,12 @@ var World = function World(callback) {
     }
 
     // {"custom_step_results": [{"content": "Step 1","expected": "Expected Result 1","actual": "Actual Result 1","status_id": 1}]}
-    submitIndividualTestStep = World.submitIndividualTestStep = function(testStepNumber, testStepStatus, testRunId, testCaseId){
-        var command = baseCurlCommand + "-d '{\"custom_step_results\": [{\"content\":"+testStepNumber+",\"status_id\":"+testStepStatus"}]}' \"https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"\"";
+    submitIndividualTestSteps = World.submitIndividualTestSteps = function(testStepResults, testRunId, testCaseId){
+        // make sure there's no unnecessary commas floating around
+        if(testStepResults.charAt(testStepResults.length-1) == ','){
+            testStepResults = testStepResults.substring(0,testStepResults.length-1);
+        }
+        var command = baseCurlCommand + "-d '{\"custom_step_results\": ["+testStepResults+"]}' \"https://akvo.testrail.com/index.php?/api/v2/add_result_for_case/"+testRunId+"/"+testCaseId+"\"";
         exec(command, function (error, stdout, stderr) {});
     }
 
