@@ -35,8 +35,8 @@
     this.Given('I am logged in to RSR Admin', function(callback) {
         var browser = this.browser;
 
-        stepsSuccessList = '';
-        setTestIsPassing();
+        // stepsSuccessList = '';
+        // setTestIsPassing();
 
         browser.visit("/admin/", function() {
             browser.
@@ -190,10 +190,10 @@
     });
 
     // TestRail helpers
-    function submitStepAndRun(testStep, passFail){
-        submitStepPassFail(testStep, currentField, passFail, runID);
-        submitRunPassFail(currentField, passFail, runID);
-    }
+    // function submitStepAndRun(testStep, passFail){
+    //     submitStepPassFail(testStep, currentField, passFail, runID);
+    //     submitRunPassFail(currentField, passFail, runID);
+    // }
 
     //test case in this instance is a field name (see map above)
     //status id 1 = pass, 5 = fail
