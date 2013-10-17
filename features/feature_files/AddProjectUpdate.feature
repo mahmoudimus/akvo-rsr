@@ -70,6 +70,20 @@ Feature: Adding project updates
 			And I click "add update"
 		Then the update should appear on the project page
 
+	Scenario: Add an update with a photo as a RSR user
+		Given I am logged in viewing a test project page on RSR
+		When I click "add update"
+			And I fill out a project update with a photo
+			And I click "add update"
+		Then the update and image should appear on the project page
+
+	Scenario: Add an update with a YouTube video as a RSR user
+		Given I am logged in viewing a test project page on RSR
+		When I click "add update"
+			And I fill out a project update with a video
+			And I click "add update"
+		Then the update and video should appear on the project page
+
 	Scenario: Add an update without a title as a RSR User
 		Given I am logged in viewing a test project page on RSR
 		When I click "add update"

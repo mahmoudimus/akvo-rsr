@@ -198,27 +198,27 @@
     //test case in this instance is a field name (see map above)
     //status id 1 = pass, 5 = fail
     //testRunId is grabbed above when the test run is created
-    function submitRunPassFail(testCase, statusId, testRunId){
-        if (testCase in addProjectTestCaseIdMap) {
-            this.submitPassFailToTestRail(statusId, testRunId, addProjectTestCaseIdMap[testCase]);
-        }
-    }
+    // function submitRunPassFail(testCase, statusId, testRunId){
+    //     if (testCase in addProjectTestCaseIdMap) {
+    //         this.submitPassFailToTestRail(statusId, testRunId, addProjectTestCaseIdMap[testCase]);
+    //     }
+    // }
 
-    function submitStepPassFail(testStep, testCase, statusId, testRunId){
-        if (testCase in addProjectTestCaseIdMap) {
-            this.submitIndividualTestSteps(testStep, statusId, testRunId, addProjectTestCaseIdMap[testCase]);
-        }
-    }
+    // function submitStepPassFail(testStep, testCase, statusId, testRunId){
+    //     if (testCase in addProjectTestCaseIdMap) {
+    //         this.submitIndividualTestSteps(testStep, statusId, testRunId, addProjectTestCaseIdMap[testCase]);
+    //     }
+    // }
 
-    function appendTestStepResult(appendTestStepResult) {
-        stepsSuccessList += "{\"content\":"+testStep+",\"status_id\":"+passFail"},";
-    }
+    // function appendTestStepResult(appendTestStepResult) {
+    //     stepsSuccessList += "{\"content\":"+testStep+",\"status_id\":"+passFail"},";
+    // }
 
-    function setTestIsFailing(){
-        passFail = 5;
-    }
+    // function setTestIsFailing(){
+    //     passFail = 5;
+    // }
 
-    function setTestIsPassing(){
-        passFail = 1;
-    }
+    // function setTestIsPassing(){
+    //     passFail = 1;
+    // }
 };
