@@ -1,11 +1,10 @@
-    module.exports = function () {
+module.exports = function () {
     this.World = require('../support/world.js').World;
     var assert = require("assert");
 
     var testProjectName = 'testProject9';
     var runID, currentField, stepsSuccessList, passFail;
 
-    // TestRail case IDs - temp location?
     var addProjectTestCaseIdMap = {};
 
     addProjectTestCaseIdMap['project_added'] = 44;
@@ -34,9 +33,6 @@
     // Step 1
     this.Given('I am logged in to RSR Admin', function(callback) {
         var browser = this.browser;
-
-        // stepsSuccessList = '';
-        // setTestIsPassing();
 
         browser.visit("/admin/", function() {
             browser.
@@ -175,11 +171,10 @@
         });
     });
 
-    // TestRail step 5
+    // Step 5
     this.Then('I get an error', function(callback) {  
         var browser = this.browser;
 
-        // TODO: Add a try catch block here, the catch block will call TestRail results and post a failing status, then palm off to callback.fail
         try {
             assert((browser.html().indexOf('This field is required.') > -1), true, 'Expected message: This field is required : was not found');   
             assert((browser.html().indexOf('Please correct the error below.') > -1), true, 'Expected message: Please correct the error below. : was not found'); 
