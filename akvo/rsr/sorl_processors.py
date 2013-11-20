@@ -9,6 +9,16 @@
 from PIL import Image
 
 def scale_and_pad(im, requested_size, opts):
+    """
+    Scale an image so it fits within the requested size, and fill rest with white.
+    Return the new image.
+
+    Keyword arguments:
+    im -- the PIL image
+    requested_size -- width,height
+    opts -- must be 'pad' for operation to be carried out
+    """
+
     if opts.get('pad') or 'pad' in opts:
         x, y = [float(v) for v in im.size]
         xr, yr = [float(v) for v in requested_size]
