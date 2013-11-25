@@ -296,7 +296,10 @@ class Organisation(models.Model):
     )
     logo = ImageWithThumbnailsField(
         _(u'logo'), blank=True, upload_to=image_path, thumbnail={'size': (360, 270)},
-        extra_thumbnails={'map_thumb': {'size': (160, 120), 'options': ('autocrop',)}},
+        extra_thumbnails={
+            'map_thumb': {'size': (160, 120), 'options': ('autocrop',)},
+            'fb_thumb': {'size': (200, 200), 'options': ('pad', )}
+        },
         help_text=_(u'Logos should be approximately 360x270 pixels (approx. 100-200kB in size) on a white background.'),
     )
 
@@ -674,7 +677,10 @@ class Project(models.Model):
                         blank=True,
                         upload_to=image_path,
                         thumbnail={'size': (240, 180), 'options': ('autocrop', 'detail', )},  # detail is a mild sharpen
-                        extra_thumbnails={'map_thumb': {'size': (160, 120), 'options': ('autocrop', 'detail', )}},  # detail is a mild sharpen
+                        extra_thumbnails={
+                            'map_thumb': {'size': (160, 120), 'options': ('autocrop', 'detail', )},  # detail is a mild sharpen
+                            'fb_thumb': {'size': (200, 200), 'options': ('pad', )}
+                        },
                         help_text=_(u'The project image looks best in landscape format (4:3 width:height ratio), and should be less than 3.5 mb in size.'),
                     )
     current_image_caption = models.CharField(_(u'photo caption'), blank=True, max_length=50, help_text=_(u'Enter a caption for your project picture (50 characters).'))
@@ -2126,7 +2132,7 @@ class PartnerSite(models.Model):
     custom_logo = models.FileField(_(u'organisation banner logo'), blank=True, upload_to=custom_logo_path,
         help_text=_(
             u'<p>Upload a logo file for the banner at the top of the partner site page. '
-            u'By default the logo currently used by www.akvo.org will be displayed.</p>'
+            u'By default the logo currently used by akvo.org will be displayed.</p>'
         )
     )
     custom_favicon = models.FileField(_(u'favicon'), blank=True, upload_to=custom_favicon_path,
@@ -2177,6 +2183,13 @@ class PartnerSite(models.Model):
     google_translation = models.BooleanField(_(u'Google translation widget'), default=False)
     facebook_button = models.BooleanField(_(u'Facebook Like button'), default=False)
     twitter_button = models.BooleanField(_(u'Twitter button'), default=False)
+    facebook_app_id = models.CharField(_(u'Facebook App Id'), max_length=40, blank=True, null=True,
+        help_text=_(
+            u'<p>Your FaceBook app id is used when sharing pages from your partner site. '
+            u'It can be obtained by creating a Facebook app.'
+            u'Follow the instructions <A href="http://help.yahoo.com/l/us/yahoo/smallbusiness/store/edit/social/social-06.html">here</A>'
+        )
+    )
 
     def __unicode__(self):
         return u'Partner site for %(organisation_name)s' % {'organisation_name': self.organisation.name}
@@ -2199,7 +2212,7 @@ class PartnerSite(models.Model):
 
     @property
     def full_domain(self):
-        return '%s.%s' % (self.hostname, settings.APP_DOMAIN_NAME)
+        return '%s.%s' % (self.hostname, getattr(settings, 'AKVOAPP_DOMAIN', 'akvoapp.org'))
 
     def get_absolute_url(self):
         url = ''
