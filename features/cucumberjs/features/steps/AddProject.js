@@ -43,6 +43,7 @@ module.exports = function () {
                     assert.ok(browser.success);
                     assert.equal(browser.text('#site-name'), 'Akvo RSR administration');
                 } catch (err) {
+                    this.resetBrowser();
                     callback.fail(err);
                 }
                 callback();
@@ -103,6 +104,7 @@ module.exports = function () {
             try {
                 assert((browser.html().indexOf(testProjectName) > -1), true);
             } catch (err){
+                this.resetBrowser();
                 callback.fail(err);
             }
             callback();
@@ -141,7 +143,7 @@ module.exports = function () {
         var browser = this.browser;
         currentField = 'project_partner';
 
-        browser.x
+        browser.
         select('partnerships-0-organisation', '---------').
         pressButton('Save', function() {
             callback();
@@ -179,6 +181,7 @@ module.exports = function () {
             assert((browser.html().indexOf('This field is required.') > -1), true, 'Expected message: This field is required : was not found');   
             assert((browser.html().indexOf('Please correct the error below.') > -1), true, 'Expected message: Please correct the error below. : was not found'); 
         } catch (err) {
+            this.resetBrowser();
             callback.fail(err);
         }
         callback();
