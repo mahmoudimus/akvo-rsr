@@ -7,8 +7,7 @@
 
 from rest_framework import serializers
 
-from akvo.rsr.models import Organisation, OrganisationLocation, InternalOrganisationID
-
+from akvo.rsr.models import InternalOrganisationID, Organisation, OrganisationLocation
 
 #class CountrySerializer(serializers.HyperlinkedModelSerializer):
 #    class Meta:

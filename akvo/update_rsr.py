@@ -4,16 +4,18 @@
 #to be run in the akvo rsr root folder. setting up all projects as published, if they have no status
 # and setting all orgs to free account if they have none
 
+from os.path import splitext
+
+from django.contrib.contenttypes.models import ContentType
 from django.core.management import setup_environ
+from django.db.models import get_model
+
 import settings
+from rsr.models import *
+
 setup_environ(settings)
 
-from os.path import basename, splitext
 
-from rsr.models import *
-from django.db.models.fields.files import ImageField
-from django.db.models import get_model
-from django.contrib.contenttypes.models import ContentType
 
 def mark_existing_invoices_as_anonymous():
     invoices = get_model('rsr', 'invoice').admin_objects.all()

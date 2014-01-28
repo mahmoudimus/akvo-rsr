@@ -6,19 +6,16 @@
 
 
 from django.core.urlresolvers import reverse
-
 from tastypie import fields
-
 from tastypie.authorization import Authorization
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
 
+from .resources import ConditionalFullResource
+
 from akvo.api.authentication import ConditionalApiKeyAuthentication
 from akvo.api.fields import ConditionalFullToOneField
-
 from akvo.rsr.models import BudgetItem, BudgetItemLabel
-
-from .resources import ConditionalFullResource
 
 
 class IATIBudgetItemResource(ModelResource):

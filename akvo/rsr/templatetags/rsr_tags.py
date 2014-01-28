@@ -10,11 +10,11 @@ from __future__ import absolute_import
 from django import template
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.template.defaulttags import WidthRatioNode
 from django.template.base import TemplateSyntaxError
+from django.template.defaulttags import WidthRatioNode
 from django.utils.translation import ugettext as _
 
-from akvo.scripts.asset_manager import map, asset_bundles
+from akvo.scripts.asset_manager import asset_bundles, map
 
 register = template.Library()
 

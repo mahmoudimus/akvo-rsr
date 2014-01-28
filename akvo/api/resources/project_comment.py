@@ -7,12 +7,10 @@
 
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 
+from .resources import ConditionalFullResource
 
 from akvo.api.fields import ConditionalFullToOneField
-
 from akvo.rsr.models import ProjectComment
-
-from .resources import ConditionalFullResource
 
 
 class ProjectCommentResource(ConditionalFullResource):

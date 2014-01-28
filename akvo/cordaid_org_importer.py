@@ -4,23 +4,22 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module.
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
-from django.core.management import setup_environ
-import settings
-
-setup_environ(settings)
-
 import os
-from os.path import splitext
 import sys
-
-from lxml import etree
+from os.path import splitext
 
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
+from django.core.management import setup_environ
+from lxml import etree
+
+import settings
 
 from akvo.rsr.iati_code_lists import IATI_LIST_ORGANISATION_TYPE
 from akvo.rsr.models import InternalOrganisationID, Organisation, PartnerType
 from akvo.rsr.utils import model_and_instance_based_filename
+
+setup_environ(settings)
 
 
 CORDAID_DIR = "/var/tmp/cordaid"

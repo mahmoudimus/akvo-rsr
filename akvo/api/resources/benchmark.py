@@ -6,19 +6,17 @@
 
 
 from django.core.urlresolvers import reverse
-
 from tastypie import fields
-
 from tastypie.authorization import Authorization
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
-from akvo.api.fields import ConditionalFullToOneField
 from tastypie.resources import ModelResource
 
-from akvo.api.authentication import ConditionalApiKeyAuthentication
+from .resources import ConditionalFullResource
 
+from akvo.api.authentication import ConditionalApiKeyAuthentication
+from akvo.api.fields import ConditionalFullToOneField
 from akvo.rsr.models import Benchmark, Benchmarkname
 
-from .resources import ConditionalFullResource
 
 class IATIBenchmarkResource(ModelResource):
     project = fields.ToOneField('akvo.api.resources.IATIProjectResource', 'project')

@@ -6,17 +6,15 @@
 
 
 from django.forms.models import ModelForm
-
 from tastypie.authorization import Authorization
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
+
+from .resources import ConditionalFullResource
 
 from akvo.api.authentication import ConditionalApiKeyAuthentication
 from akvo.api.fields import Base64FileField, ConditionalFullToOneField
 from akvo.api.validation import ModelFormValidation
-
 from akvo.rsr.models import ProjectUpdate
-
-from .resources import ConditionalFullResource
 
 
 class ProjectUpdateModelForm(ModelForm):

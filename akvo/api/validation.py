@@ -7,8 +7,8 @@
 # original source at https://github.com/toastdriven/django-tastypie/issues/152
 
 from django.forms.models import ModelChoiceField
-
 from tastypie.validation import FormValidation
+
 
 class ModelFormValidation(FormValidation):
     """
@@ -59,4 +59,3 @@ class ModelFormValidation(FormValidation):
                 kwargs['data'][field] = self.uri_to_pk(kwargs['data'][field])
 
         return kwargs
-

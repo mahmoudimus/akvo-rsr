@@ -8,8 +8,8 @@
 import datetime
 import os
 import sys
-import tablib
 
+import tablib
 from django.core.management import setup_environ
 from django.utils.encoding import smart_str, smart_unicode
 

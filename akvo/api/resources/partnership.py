@@ -5,25 +5,23 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 
+import logging
+
 from django.core.urlresolvers import reverse
-
 from tastypie import fields
-
 from tastypie.authorization import Authorization
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
 
-
-import logging
-logger = logging.getLogger('akvo.rsr')
+from .resources import ConditionalFullResource
 
 from akvo.api.authentication import ConditionalApiKeyAuthentication
 from akvo.api.fields import ConditionalFullToOneField
-
 from akvo.rsr.iati_code_lists import IATI_LIST_ORGANISATION_TYPE
-from akvo.rsr.models import Organisation, Partnership, InternalOrganisationID
+from akvo.rsr.models import InternalOrganisationID, Organisation, Partnership
 
-from .resources import ConditionalFullResource
+logger = logging.getLogger('akvo.rsr')
+
 
 # bundle field names, matching field names on Organisation, InternalOrganisationID and Partnership models
 # Organisation

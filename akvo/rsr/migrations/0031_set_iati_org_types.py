@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime
-from south.db import db
 from south.v2 import DataMigration
-from django.db import models
 
 ORG_TYPE_MAPPER = dict(N=22, G=10, C=70, K=80)
 # swap keys and values

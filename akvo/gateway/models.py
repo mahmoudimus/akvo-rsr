@@ -4,21 +4,21 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module. 
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
+import logging
+import urllib
+import urllib2
+from datetime import datetime
+
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
-from django.utils.translation import ugettext, ugettext_lazy as _
-
-from datetime import datetime
-
-import urllib
-import urllib2
 
 from utils import who_am_i
-#from akvo.gateway import logger
+
 from akvo.rsr.signals import handle_incoming_sms
 
-import logging
+#from akvo.gateway import logger
+
 logger = logging.getLogger('akvo.rsr')
 
 class Gateway(models.Model):

@@ -5,29 +5,27 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 
-import datetime
+import os
 from decimal import Decimal
-from lxml import etree
 from os.path import splitext
 
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 from django.core.management import setup_environ
-import sys
+from lxml import etree
+
 import akvo.settings
+from akvo.rsr.models import BudgetItem, BudgetItemLabel, Organisation, Partnership, Project
+from akvo.rsr.utils import model_and_instance_based_filename, who_am_i
+from akvo.scripts.cordaid import (
+    ACTION_BUDGET_SET, ACTION_FUNDING_FOUND, ACTION_FUNDING_SET, ACTION_SET_IMAGE,
+    CORDAID_ACTIVITIES_CSV_FILE, CORDAID_IATI_ACTIVITIES_XML, CORDAID_ORG_ID,
+    CORDAID_PROJECT_IMAGES_DIR, ERROR_IMAGE_UPLOAD, init_log, log, OTHERS_ORG_ID, outsys,
+    print_log
+)
 
 setup_environ(akvo.settings)
 
-import os
-from django.core.files import File
-from django.core.files.temp import NamedTemporaryFile
-
-from akvo.rsr.models import Project, Partnership, Organisation, BudgetItem, BudgetItemLabel
-from akvo.rsr.utils import model_and_instance_based_filename, who_am_i
-
-from akvo.scripts.cordaid import (
-    CORDAID_IATI_ACTIVITIES_XML, CORDAID_PROJECT_IMAGES_DIR, CORDAID_ORG_ID, OTHERS_ORG_ID,
-    print_log, log, ACTION_FUNDING_SET, ACTION_FUNDING_FOUND, ERROR_IMAGE_UPLOAD, ACTION_SET_IMAGE,
-    CORDAID_ACTIVITIES_CSV_FILE, init_log, ACTION_BUDGET_SET, outsys
-)
 
 def import_images(image_dir, photos):
     outsys("\nRunning {}() ".format(who_am_i()))

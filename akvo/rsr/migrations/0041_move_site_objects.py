@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import datetime
+from django.conf import settings
 from south.db import db, engine_modules
 from south.v2 import DataMigration
-from django.db import models
-from django.conf import settings
+
 
 class Migration(DataMigration):
 

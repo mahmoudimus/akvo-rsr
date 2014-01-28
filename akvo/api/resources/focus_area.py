@@ -7,11 +7,10 @@
 
 from tastypie.constants import ALL
 
-from akvo.api.fields import ConditionalFullToManyField
-
-from akvo.rsr.models import FocusArea
-
 from .resources import ConditionalFullResource
+
+from akvo.api.fields import ConditionalFullToManyField
+from akvo.rsr.models import FocusArea
 
 
 class FocusAreaResource(ConditionalFullResource):

@@ -5,17 +5,15 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 from tastypie import fields
-
 from tastypie.authorization import Authorization
 from tastypie.constants import ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
 
+from .resources import ConditionalFullResource
+
 from akvo.api.authentication import ConditionalApiKeyAuthentication
 from akvo.api.fields import ConditionalFullToOneField
-
 from akvo.rsr.models import Goal
-
-from .resources import ConditionalFullResource
 
 
 class IATIGoalResource(ModelResource):

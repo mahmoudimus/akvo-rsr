@@ -9,8 +9,10 @@
     python manage.py harvest rsr/features/partner_site_routing.feature
 """
 from __future__ import absolute_import
-from django.http import HttpRequest, Http404
+
+from django.http import Http404, HttpRequest
 from lettuce import before, step, world
+
 from akvo.rsr.middleware import PartnerSitesRouterMiddleware
 
 

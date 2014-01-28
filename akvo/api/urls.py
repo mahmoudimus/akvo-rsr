@@ -5,8 +5,10 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 # tastypie (api)
-from tastypie.api import Api
 import resources
+
+from tastypie.api import Api
+
 
 def named_api(api_name):
     """ api_name is the version part of the api path

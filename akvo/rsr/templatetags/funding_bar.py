@@ -3,6 +3,7 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 from django import template
+
 register = template.Library()
 
 @register.inclusion_tag('inclusion_tags/funding_bar.html')

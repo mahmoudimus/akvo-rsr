@@ -11,14 +11,13 @@ import json
 import random
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
-from django.core.urlresolvers import reverse
 
-from akvo.rsr.views_partner_sites.base import BaseView
 from akvo.rsr.models import Organisation, Project
-
+from akvo.rsr.views_partner_sites.base import BaseView
 
 __all__ = [
     'GetWidgetView',

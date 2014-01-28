@@ -6,8 +6,6 @@
 #from django.utils.http import urlencode as django_urlencode
 from django.template import Library, Node, resolve_variable, TemplateSyntaxError
 
-import urllib    
-
 register = Library()
 
 class AddParameters(Node):

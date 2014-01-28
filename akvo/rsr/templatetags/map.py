@@ -7,11 +7,11 @@
 """
 
 import os
+
 from django import template
 from django.conf import settings
-from django.http import Http404
 
-from akvo.rsr.models import Project, Organisation
+from akvo.rsr.models import Organisation, Project
 
 register = template.Library()
 

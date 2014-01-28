@@ -8,10 +8,13 @@
 
 """
 
+import re
+
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import (LocaleRegexURLResolver, is_valid_path,
-                                      get_resolver, set_urlconf)
+from django.core.urlresolvers import (
+    get_resolver, is_valid_path, LocaleRegexURLResolver, set_urlconf
+)
 from django.http import HttpResponseRedirect
 from django.middleware.locale import LocaleMiddleware
 from django.shortcuts import redirect
@@ -19,8 +22,6 @@ from django.utils import translation
 from django.utils.cache import patch_vary_headers
 
 from akvo.rsr.models import PartnerSite
-import re
-
 
 __all__ = ["PartnerSitesLocaleMiddleware",
            "PartnerSitesRouterMiddleware",

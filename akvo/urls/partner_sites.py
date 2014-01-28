@@ -14,13 +14,12 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django_counter.urls import urlpatterns as counter_urls
 
 from akvo.rsr import views as rsr_views
-from akvo.rsr.feeds import ProjectUpdates, OrganisationUpdates
-from akvo.rsr.views_partner_sites import project as project_views
-from akvo.rsr.views_partner_sites import partner as partner_views
-from akvo.rsr.views_partner_sites import widgets as widget_views
-from akvo.rsr.views_partner_sites import error as error_views
+from akvo.rsr.feeds import OrganisationUpdates, ProjectUpdates
 from akvo.rsr.views_partner_sites import auth as auth_views
-
+from akvo.rsr.views_partner_sites import error as error_views
+from akvo.rsr.views_partner_sites import partner as partner_views
+from akvo.rsr.views_partner_sites import project as project_views
+from akvo.rsr.views_partner_sites import widgets as widget_views
 
 handler403 = error_views.ForbiddenView.as_view()
 handler404 = error_views.NotFoundView.as_view()

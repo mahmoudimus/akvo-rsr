@@ -6,9 +6,10 @@ Generate a python file, iati_code_lists.py, that contains a python representatio
 See http://iatistandard.org/codelists/ and http://iatistandard.org/codelists/code-list-api/
 """
 
-import requests
 import csv
 import re
+
+import requests
 
 # Modify this list to add new IATI code lists
 iati_lists = ("OrganisationType", )

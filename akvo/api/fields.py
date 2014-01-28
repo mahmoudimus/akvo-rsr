@@ -10,7 +10,6 @@ import os
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
-
 from tastypie import fields
 from tastypie.bundle import Bundle
 from tastypie.exceptions import ApiFieldError

@@ -6,15 +6,13 @@
 
 
 from django.contrib.auth.models import User
-
 from tastypie.authentication import ApiKeyAuthentication
-from tastypie.constants import ALL_WITH_RELATIONS, ALL
-
-from akvo.api.fields import ConditionalFullToOneField
-
-from akvo.rsr.models import UserProfile
+from tastypie.constants import ALL, ALL_WITH_RELATIONS
 
 from .resources import ConditionalFullResource
+
+from akvo.api.fields import ConditionalFullToOneField
+from akvo.rsr.models import UserProfile
 
 
 class UserResource(ConditionalFullResource):

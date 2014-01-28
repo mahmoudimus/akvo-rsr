@@ -5,19 +5,17 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 
+from django.http import HttpResponse
 from tastypie import fields
 from tastypie.cache import SimpleCache
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
 from tastypie.utils.mime import build_content_type
 
-from django.http import HttpResponse
+from .resources import get_extra_thumbnails
 
 from akvo import settings
-
 from akvo.rsr.models import Organisation, Project
-
-from .resources import get_extra_thumbnails
 
 
 class CachedMapResource(ModelResource):

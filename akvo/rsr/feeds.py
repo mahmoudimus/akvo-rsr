@@ -4,17 +4,15 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module. 
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
-import os
 import re
-
 from xml.sax.saxutils import XMLGenerator
 
-from django.contrib.syndication.views import FeedDoesNotExist, Feed
+from django.contrib.syndication.views import Feed, FeedDoesNotExist
 from django.core.urlresolvers import reverse
 from django.utils.feedgenerator import Rss201rev2Feed
 from django.utils.translation import ugettext_lazy as _
 
-from akvo.rsr.models import Project, ProjectUpdate, Organisation
+from akvo.rsr.models import Organisation, Project, ProjectUpdate
 
 
 def __dict_replace(s, d):

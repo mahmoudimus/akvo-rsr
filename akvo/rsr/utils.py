@@ -4,41 +4,39 @@
 # utility functions for RSR
 
 import inspect
-from os.path import splitext
-import random
 import logging
-from urlparse import urljoin
+import random
 from datetime import datetime
+from os.path import splitext
+from urlparse import urljoin
 
-logger = logging.getLogger('akvo.rsr')
-
-import sys
-
-# embedly imports json directly
-import json
 import pytz
-
-from workflows.models import State
-from workflows.utils import get_state
-
+from BeautifulSoup import BeautifulSoup
 from django.conf import settings
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMessage, send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import HttpResponse
-from django.template import loader, Context
+from django.template import Context, loader
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext, get_language, activate
-
-from BeautifulSoup import BeautifulSoup
+from django.utils.translation import activate, get_language, ugettext
+from workflows.models import State
+from workflows.utils import get_state
 
 from notification.models import (
-    Notice, NoticeType, get_notification_language, should_send,
-    LanguageStoreNotAvailable, get_formatted_messages
+    get_formatted_messages, get_notification_language, LanguageStoreNotAvailable, Notice,
+    NoticeType, should_send
 )
 
-from akvo.rsr.iso3166 import COUNTRY_CONTINENTS, ISO_3166_COUNTRIES, CONTINENTS
+from akvo.rsr.iso3166 import CONTINENTS, COUNTRY_CONTINENTS, ISO_3166_COUNTRIES
+
+logger = logging.getLogger('akvo.rsr')
+
+# embedly imports json directly
+
+
+
 #from akvo.rsr.models import Country
 
 RSR_LIMITED_CHANGE          = u'rsr_limited_change'
@@ -468,4 +466,3 @@ def right_now_in_akvo():
         'people_served': people_served,
         'projects_budget_millions': round(projects.budget_sum() / 100000) / 10.0,
     }
-

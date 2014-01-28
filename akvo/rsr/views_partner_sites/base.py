@@ -7,20 +7,16 @@
 """
 from __future__ import absolute_import
 
-from urlparse import urljoin
-
 from django.conf import settings
-from django.http import Http404
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import TemplateView, ListView
-from django.core.urlresolvers import reverse, set_urlconf
-from django.utils import translation
+from django.views.generic import ListView, TemplateView
 
-from akvo.rsr.filters import remove_empty_querydict_items, ProjectFilterSet
-from akvo.rsr.iso3166 import COUNTRY_CONTINENTS, CONTINENTS
-from akvo.rsr.models import Organisation, Country, Project
-
+from akvo.rsr.filters import ProjectFilterSet, remove_empty_querydict_items
+from akvo.rsr.iso3166 import CONTINENTS, COUNTRY_CONTINENTS
+from akvo.rsr.models import Country, Organisation, Project
 
 __all__ = [
     'BaseProjectListView',

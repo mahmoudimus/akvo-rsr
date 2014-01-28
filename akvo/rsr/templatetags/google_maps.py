@@ -8,8 +8,7 @@ from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
-from akvo.rsr.models import Project, Organisation
-
+from akvo.rsr.models import Organisation, Project
 
 register = template.Library()
 

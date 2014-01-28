@@ -4,12 +4,13 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module. 
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
-from django.http import HttpResponse#, HttpResponseRedirect, HttpResponsePermanentRedirect
+import logging
+
+from django.http import HttpResponse
 
 from models import Gateway, MoSms
 from utils import who_am_i
 
-import logging
 logger = logging.getLogger('django.request')
 
 def receive_sms(request, gw_name):

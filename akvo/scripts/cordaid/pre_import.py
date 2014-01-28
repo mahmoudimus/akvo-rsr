@@ -7,32 +7,31 @@
 
 import csv
 import glob
-from lxml import etree
 import os
-from os.path import splitext, basename
-import sys
+from os.path import basename, splitext
 
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.core.management import setup_environ
+from lxml import etree
 
 from akvo import settings
+from akvo.rsr.iati_code_lists import IATI_LIST_ORGANISATION_TYPE
+from akvo.rsr.models import (
+    Benchmarkname, Category, FocusArea, InternalOrganisationID, Organisation, OrganisationLocation
+)
+from akvo.rsr.utils import (
+    custom_get_or_create_country, model_and_instance_based_filename, who_am_i
+)
+from akvo.scripts.cordaid import (
+    ACTION_CREATE_ORG, ACTION_FOUND, ACTION_LOCATION_FOUND, ACTION_LOCATION_SET, ACTION_SET_IMAGE,
+    CORDAID_IATI_ID, CORDAID_INDICATORS_CSV, CORDAID_LOGOS_DIR, CORDAID_ORG_CSV_FILE,
+    CORDAID_ORG_ID, CORDAID_ORGANISATIONS_XML, DGIS_IATI_ID, DGIS_ORG_ID, ERROR_COUNTRY_CODE,
+    ERROR_EXCEPTION, ERROR_MULTIPLE_OBJECTS, init_log, log, LOG_ORGANISATIONS, outsys, print_log
+)
 
 setup_environ(settings)
 
-from akvo.rsr.iati_code_lists import IATI_LIST_ORGANISATION_TYPE
-from akvo.rsr.models import (
-    Category, Benchmarkname, FocusArea, Organisation, InternalOrganisationID, OrganisationLocation
-)
-from akvo.rsr.utils import model_and_instance_based_filename, custom_get_or_create_country, who_am_i
-from akvo.scripts.cordaid import (
-    CORDAID_ORG_ID, CORDAID_IATI_ID, DGIS_ORG_ID, DGIS_IATI_ID, CORDAID_INDICATORS_CSV,
-    CORDAID_LOGOS_DIR, CORDAID_ORGANISATIONS_XML,
-    print_log, log, LOG_ORGANISATIONS, ACTION_FOUND, ERROR_MULTIPLE_OBJECTS, ACTION_LOCATION_SET,
-    ERROR_COUNTRY_CODE, ACTION_CREATE_ORG, ERROR_EXCEPTION, ACTION_LOCATION_FOUND, ACTION_SET_IMAGE,
-    CORDAID_ORG_CSV_FILE,
-    init_log,
-    outsys)
 
 
 def create_cordaid_business_units(business_units):

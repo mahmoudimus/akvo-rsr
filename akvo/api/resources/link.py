@@ -7,11 +7,10 @@
 
 from tastypie.constants import ALL_WITH_RELATIONS
 
-from akvo.api.fields import ConditionalFullToOneField
-
-from akvo.rsr.models import Link
-
 from .resources import ConditionalFullResource
+
+from akvo.api.fields import ConditionalFullToOneField
+from akvo.rsr.models import Link
 
 
 class LinkResource(ConditionalFullResource):

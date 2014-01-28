@@ -1,11 +1,12 @@
 # This is a modified version of the Django simple.py test runner, altered to emit TeamCity messages.
 
 import unittest
+
 from django.conf import settings
 from django.db.models import get_app, get_apps
 from django.test import _doctest as doctest
+from django.test.testcases import DocTestRunner, OutputChecker, TestCase
 from django.test.utils import setup_test_environment, teardown_test_environment
-from django.test.testcases import OutputChecker, DocTestRunner, TestCase
 
 from teamcity.unittestpy import TeamcityTestRunner
 

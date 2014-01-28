@@ -8,11 +8,10 @@
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.constants import ALL_WITH_RELATIONS
 
-from akvo.api.fields import ConditionalFullToOneField
-
-from akvo.rsr.models import UserProfile
-
 from .resources import ConditionalFullResource
+
+from akvo.api.fields import ConditionalFullToOneField
+from akvo.rsr.models import UserProfile
 
 
 class UserProfileResource(ConditionalFullResource):

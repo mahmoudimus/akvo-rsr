@@ -5,10 +5,9 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 from django.http import HttpResponseServerError
-
 from lxml import etree
+
 from cordaid_utils import Requester
-from StringIO import StringIO
 
 DOMAIN = 'test.akvo.org'
 API_VERSION = 'v1'

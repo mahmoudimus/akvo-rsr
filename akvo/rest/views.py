@@ -6,18 +6,19 @@
 
 
 from django.conf import settings
-
 from rest_framework import viewsets
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.compat import etree, six
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import XMLParser
 from rest_framework.permissions import IsAuthenticated
+
+from .serializers import (
+    InternalOrganisationIDSerializer, OrganisationLocationSerializer, OrganisationSerializer
+)
+
 from akvo.rest.models import TastyTokenAuthentication
-
-from .serializers import OrganisationSerializer, OrganisationLocationSerializer, InternalOrganisationIDSerializer
-
-from akvo.rsr.models import Organisation, OrganisationLocation, Country, InternalOrganisationID
+from akvo.rsr.models import Country, InternalOrganisationID, Organisation, OrganisationLocation
 
 
 class AkvoOrganisationParser(XMLParser):

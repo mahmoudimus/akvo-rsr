@@ -10,27 +10,30 @@ Forms and validation code for user registration and updating.
 from urlparse import urlsplit, urlunsplit
 
 from django import forms
-#TODO fix for django 1.0
-#from django import oldforms
-#from django.core import validators
-#from django.core.validators import alnum_re
-#from django.conf import settings
-#from django.contrib.auth.models import User
-from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm, PasswordResetForm, SetPasswordForm
+from django.contrib.auth.forms import (
+    AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
+)
 from django.contrib.sites.models import get_current_site
 from django.db.models import get_model
 from django.template.defaultfilters import slugify
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-
 from registration.forms import RegistrationFormUniqueEmail
 from registration.models import RegistrationProfile
 
 from mollie.ideal.utils import get_mollie_banklist
-from akvo import settings
 
-from akvo.rsr.models import UserProfile, Organisation, ProjectUpdate
+from akvo import settings
+from akvo.rsr.models import Organisation, ProjectUpdate, UserProfile
+
+#TODO fix for django 1.0
+#from django import oldforms
+#from django.core import validators
+#from django.core.validators import alnum_re
+#from django.conf import settings
+#from django.contrib.auth.models import User
+
 
 # I put this on all required fields, because it's easier to pick up
 # on them with CSS or JavaScript if they have a class of "required"

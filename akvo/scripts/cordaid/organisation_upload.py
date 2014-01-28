@@ -4,21 +4,24 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module.
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
-from akvo import settings
-from django.core.management import setup_environ
-from akvo.scripts.cordaid import ERROR_EXCEPTION, ERROR_CREATE_ORG, ERROR_UPLOAD_ORG, ACTION_CREATE_ORG, log, init_log, print_log, ACTION_CREATE_IOI, ACTION_UPDATE_ORG
-
-setup_environ(settings)
-
 import getopt
 import json
 import os
 import sys
+
+from django.core.management import setup_environ
 from lxml import etree
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED  
-
+from akvo import settings
+from akvo.scripts.cordaid import (
+    ACTION_CREATE_IOI, ACTION_CREATE_ORG, ACTION_UPDATE_ORG, ERROR_CREATE_ORG, ERROR_EXCEPTION,
+    ERROR_UPLOAD_ORG, init_log, log, print_log
+)
 from akvo.scripts.cordaid.requester import Requester
+
+setup_environ(settings)
+
 
 API_VERSION = 'v1'
 

@@ -5,72 +5,53 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 
-from datetime import date, datetime, timedelta
-from decimal import Decimal
-from textwrap import dedent
-from urlparse import urljoin
-
 import logging
 import math
-
-logger = logging.getLogger('akvo.rsr')
+from datetime import date, datetime, timedelta
+from textwrap import dedent
 
 import oembed
-import re
-
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.contrib.admin.models import LogEntry
+from django.contrib.auth.models import Group, User
+from django.contrib.sites.models import Site
 from django.db import models
 from django.db.models import Max, Sum
 from django.db.models.query import QuerySet
-from django.db.models.signals import pre_save, post_save, post_delete
-from django.contrib.admin.models import LogEntry
-from django.contrib.auth.models import Group, User
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
-from django.contrib.sites.models import Site
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
-from django.utils.translation import ugettext, ugettext_lazy as _
-
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from django_counter.models import ViewCounter
-from mollie.ideal.utils import get_mollie_banklist
 from paypal.standard.ipn.signals import payment_was_flagged
-from registration.signals import user_activated
-from sorl.thumbnail.fields import ImageWithThumbnailsField
-
-from workflows import WorkflowBase
 from permissions import PermissionBase
 from permissions.models import Role
+from registration.signals import user_activated
+from sorl.thumbnail.fields import ImageWithThumbnailsField
+from tastypie.models import ApiKey
+from workflows import WorkflowBase
+
+from iso3166 import CONTINENTS, COUNTRY_CONTINENTS, ISO_3166_COUNTRIES
+from mollie.ideal.utils import get_mollie_banklist
 
 from akvo.api.models import create_api_key
-from akvo.gateway.models import GatewayNumber, Gateway
-
+from akvo.gateway.models import Gateway, GatewayNumber
 from akvo.rsr.fields import LatitudeField, LongitudeField, NullCharField, ProjectLimitedTextField
 from akvo.rsr.iati_code_lists import IATI_LIST_ORGANISATION_TYPE
-from akvo.rsr.utils import (
-    GROUP_RSR_EDITORS, RSR_LIMITED_CHANGE, GROUP_RSR_PARTNER_ADMINS,
-    GROUP_RSR_PARTNER_EDITORS
-)
-from akvo.rsr.utils import (
-    PAYPAL_INVOICE_STATUS_PENDING, PAYPAL_INVOICE_STATUS_VOID,
-    PAYPAL_INVOICE_STATUS_COMPLETE, PAYPAL_INVOICE_STATUS_STALE
-)
-from akvo.rsr.utils import (
-    groups_from_user, rsr_image_path,
-    who_am_i, send_now, state_equals, to_gmt
-)
 from akvo.rsr.signals import (
-    change_name_of_file_on_change, change_name_of_file_on_create,
-    create_publishing_status, create_organisation_account,
-    create_payment_gateway_selector, donation_completed,
-    act_on_log_entry, user_activated_callback, update_project_budget,
-    update_project_funding
+    act_on_log_entry, change_name_of_file_on_change, change_name_of_file_on_create,
+    create_organisation_account, create_payment_gateway_selector, create_publishing_status,
+    donation_completed, update_project_budget, update_project_funding, user_activated_callback
+)
+from akvo.rsr.utils import (
+    GROUP_RSR_EDITORS, GROUP_RSR_PARTNER_ADMINS, GROUP_RSR_PARTNER_EDITORS, groups_from_user,
+    PAYPAL_INVOICE_STATUS_COMPLETE, PAYPAL_INVOICE_STATUS_PENDING, PAYPAL_INVOICE_STATUS_STALE,
+    PAYPAL_INVOICE_STATUS_VOID, rsr_image_path, RSR_LIMITED_CHANGE, send_now, state_equals, to_gmt,
+    who_am_i
 )
 
-from iso3166 import ISO_3166_COUNTRIES, CONTINENTS, COUNTRY_CONTINENTS
-
-from tastypie.models import ApiKey
+logger = logging.getLogger('akvo.rsr')
 
 
 #Custom manager

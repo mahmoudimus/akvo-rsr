@@ -6,6 +6,7 @@
 
 from tastypie.models import ApiKey
 
+
 def create_api_key(sender, **kwargs):
     """
     A signal for hooking up automatic ApiKey creation.

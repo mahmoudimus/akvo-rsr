@@ -1,6 +1,7 @@
 import django
-from django.contrib.sites.models import get_current_site
 from django.conf import settings
+from django.contrib.sites.models import get_current_site
+
 
 def extra_context(request, protocol="http"):
     current_site = get_current_site(request)
@@ -24,4 +25,3 @@ def get_current_path_without_lang(request):
     path_bits = path.split('/')
     path = '/'.join(path_bits[2:])
     return {'current_path_without_lang': path}
-

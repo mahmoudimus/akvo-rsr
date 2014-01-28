@@ -6,25 +6,24 @@
     see < http://www.gnu.org/licenses/agpl.html >.
 """
 
+import oembed
 from django.conf import settings
-from django.conf.urls import (include, patterns, url)
+from django.conf.urls import include, patterns, url
+from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.simple import direct_to_template
 from paypal.standard.ipn.views import ipn as paypal_ipn
 
-from akvo.rsr.feeds import (ProjectUpdates, OrganisationUpdates,
-                            AllProjectUpdates)
-from akvo.rsr.forms import RSR_PasswordResetForm, RSR_SetPasswordForm
 from akvo.api.urls import named_api
+from akvo.rsr.feeds import AllProjectUpdates, OrganisationUpdates, ProjectUpdates
+from akvo.rsr.forms import RSR_PasswordResetForm, RSR_SetPasswordForm
 
 # The next two lines enable the admin and load each admin.py file:
-from django.contrib import admin
 admin.autodiscover()
 
 # The next two lines enable djangoembed in the admin
-import oembed
 oembed.autodiscover()
 
 # Multi-lingual urls

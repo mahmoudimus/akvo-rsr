@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from django.db.models.aggregates import Sum
 from south.v2 import DataMigration
 
-from django.db.models.aggregates import Sum
-
-from akvo.rsr.utils import PAYPAL_INVOICE_STATUS_COMPLETE, PAYPAL_INVOICE_STATUS_PENDING
 from akvo.rsr.models import Partnership
+from akvo.rsr.utils import PAYPAL_INVOICE_STATUS_COMPLETE, PAYPAL_INVOICE_STATUS_PENDING
+
 
 class Migration(DataMigration):
 

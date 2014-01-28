@@ -9,14 +9,15 @@
 #The project Category objects will be linked to the Water and sanitation FocusArea
 ################################################################################
 
-import sys, types
-
 from django.core.management import setup_environ
+
 import settings
+
+from akvo.rsr.models import Benchmark, Benchmarkname, Category, FocusArea, Project
+from akvo.rsr.signals import create_benchmark_objects
+
 setup_environ(settings)
 
-from akvo.rsr.models import Project, Category, FocusArea, Benchmarkname, Benchmark
-from akvo.rsr.signals import create_benchmark_objects
 
 focus_areas = [
     {'name': 'All', 'slug': 'all'},
@@ -170,4 +171,3 @@ for project in projects:
 #        benchmark = Benchmark.objects.get(project=project, category=water_cat, name='water systems')
 #        benchmark.value = project.water_systems
 #        benchmark.save()
-

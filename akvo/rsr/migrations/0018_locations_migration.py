@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-from south.db import db
+from django.contrib.contenttypes.models import ContentType
 from south.v2 import DataMigration
 
-from django.contrib.contenttypes.models import ContentType
-from django.db import models
 
 class Migration(DataMigration):
 

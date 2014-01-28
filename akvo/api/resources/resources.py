@@ -5,13 +5,12 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from tastypie import http
-
 from tastypie.resources import ModelResource
 
 from akvo.api.fields import bundle_related_data_info_factory
+
 
 def get_extra_thumbnails(image_field):
     try:
@@ -142,4 +141,3 @@ class ConditionalFullResource(ModelResource):
         bundle = self.full_dehydrate(bundle)
         bundle = self.alter_detail_data_to_serialize(request, bundle)
         return self.create_response(request, bundle)
-

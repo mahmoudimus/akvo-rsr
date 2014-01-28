@@ -6,13 +6,6 @@
     see < http://www.gnu.org/licenses/agpl.html >.
 """
 from __future__ import absolute_import
-from django.contrib.sites.models import Site
-from django.contrib.sites import models
-from django.db import IntegrityError
-from django.http import HttpRequest, Http404
-from django.utils import unittest
-from django.test.client import Client
-from ..middleware import PartnerSitesRouterMiddleware
 
 '''
 __all__ = [

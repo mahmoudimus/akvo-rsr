@@ -6,30 +6,25 @@
 from decimal import Decimal
 
 from django.core.exceptions import ObjectDoesNotExist
-
 from django.forms.models import ModelForm
-
 from tastypie import fields
-
 from tastypie.authentication import ApiKeyAuthentication, Authentication, MultiAuthentication
 from tastypie.authorization import Authorization
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.exceptions import NotFound
 from tastypie.resources import ModelResource
 
-from akvo import settings
+from .partnership import FIELD_LONG_NAME, FIELD_NAME
+from .resources import ConditionalFullResource, get_extra_thumbnails
 
+from akvo import settings
 from akvo.api.authentication import ConditionalApiKeyAuthentication
 from akvo.api.fields import ConditionalFullToManyField
 from akvo.api.serializers import IATISerializer
-
 from akvo.rsr.models import (
-    Project, Benchmarkname, Category, Goal, Partnership, BudgetItem, ProjectLocation, Benchmark
+    Benchmark, Benchmarkname, BudgetItem, Category, Goal, Partnership, Project, ProjectLocation
 )
 from akvo.rsr.utils import get_rsr_limited_change_permission
-
-from .resources import ConditionalFullResource, get_extra_thumbnails
-from .partnership import FIELD_NAME, FIELD_LONG_NAME
 
 
 class IATIProjectModelForm(ModelForm):

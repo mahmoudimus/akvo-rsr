@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import datetime
-from south.db import db
 from south.v2 import DataMigration
-from django.db import models
-from akvo.rsr.models import PartnerType, Partnership
+
+from akvo.rsr.models import Partnership, PartnerType
+
 
 class Migration(DataMigration):
 

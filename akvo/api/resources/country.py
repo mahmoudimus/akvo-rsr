@@ -7,9 +7,9 @@
 
 from tastypie.constants import ALL
 
-from akvo.rsr.models import Country
-
 from .resources import ConditionalFullResource
+
+from akvo.rsr.models import Country
 
 
 class CountryResource(ConditionalFullResource):

@@ -28,13 +28,14 @@
 #import settings
 #setup_environ(settings)
 
-from optparse import OptionParser
 import os
 import pprint
 import sys
+from optparse import OptionParser
+
+import permissions_data
 
 # this is the local data file
-import permissions_data
 
 def pretty():
     pp = pprint.PrettyPrinter()

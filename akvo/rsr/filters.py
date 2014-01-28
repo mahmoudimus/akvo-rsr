@@ -4,19 +4,17 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module.
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
-import django_filters
 import sys
 
+import django_filters
 from django.db.models.query_utils import Q
-from django.forms import widgets, BooleanField
+from django.forms import BooleanField, widgets
 from django.forms.fields import MultipleChoiceField
 from django.utils.translation import ugettext_lazy as _
 
 from akvo.rsr.iso3166 import CONTINENTS
+from akvo.rsr.models import CURRENCY_CHOICES, Organisation, Project, STATUSES
 
-from akvo.rsr.models import (
-    Organisation, Project, STATUSES, CURRENCY_CHOICES,
-)
 
 class CheckboxMultipleChoiceField(MultipleChoiceField):
     widget = widgets.CheckboxSelectMultiple

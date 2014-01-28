@@ -7,11 +7,11 @@
 """
 from __future__ import absolute_import
 
-from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 
-from akvo.rsr.views_partner_sites.base import BaseView, BaseListView
 from akvo.rsr.models import Organisation
+from akvo.rsr.views_partner_sites.base import BaseListView, BaseView
 
 __all__ = [
     'PartnerListView',

@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import sys, os, hashlib, subprocess
+import hashlib
+import os
+import subprocess
+import sys
 
 '''
 Removes old files.

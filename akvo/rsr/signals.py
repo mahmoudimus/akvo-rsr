@@ -5,25 +5,26 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 import logging
-logger = logging.getLogger('akvo.rsr')
-
 import os
 from datetime import datetime
 
+from django.conf import settings
+from django.contrib.admin.models import ADDITION, CHANGE
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models import get_model, ImageField
-from django.conf import settings
-
 from sorl.thumbnail.fields import ImageWithThumbnailsField
 
-from akvo.rsr.utils import send_donation_confirmation_emails, who_am_i, rsr_send_mail_to_users
+import akvo.rsr.models
 from akvo.rsr.utils import (
-    GROUP_RSR_EDITORS, GROUP_RSR_PARTNER_ADMINS
+    GROUP_RSR_EDITORS, GROUP_RSR_PARTNER_ADMINS, rsr_send_mail_to_users,
+    send_donation_confirmation_emails, who_am_i
 )
 
-import akvo.rsr.models
+logger = logging.getLogger('akvo.rsr')
+
 
 def create_publishing_status(sender, **kwargs):
     """
@@ -156,8 +157,6 @@ def create_benchmark_objects(project):
     #        except Relevancy.DoesNotExist:
     #            Relevancy.objects.create(technology=technology, criterion=criterion,)
 
-from django.contrib.admin.models import ADDITION, CHANGE
-from django.contrib.contenttypes.models import ContentType
 def act_on_log_entry(sender, **kwargs):
     """
     catch the LogEntry post_save to grab newly added Technology instances and create

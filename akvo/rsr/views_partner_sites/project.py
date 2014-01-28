@@ -11,17 +11,17 @@ from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db.models import Sum
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.generic.edit import FormView, UpdateView
-from django.http import Http404
 
 from akvo.rsr.forms import ProjectUpdateForm
 from akvo.rsr.models import Invoice, Project, ProjectUpdate
 from akvo.rsr.views_partner_sites.base import (
-    BaseProjectListView, BaseProjectView, BaseListView, BaseView)
-
+    BaseListView, BaseProjectListView, BaseProjectView, BaseView
+)
 
 __all__ = [
     'HomeView',

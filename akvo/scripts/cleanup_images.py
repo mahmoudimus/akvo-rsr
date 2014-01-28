@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-import os, sys
-from syslog import syslog
+import os
 
 from django.core.management import setup_environ
 
 import settings
-setup_environ(settings)
 
-from os.path import basename, splitext
 from akvo.rsr.models import *
 from akvo.rsr.utils import model_and_instance_based_filename
+
+setup_environ(settings)
+
 
 
 def temp_image(obj, file_name):
@@ -84,4 +84,3 @@ def cleanup():
         
 if __name__ == '__main__':
     cleanup()
-

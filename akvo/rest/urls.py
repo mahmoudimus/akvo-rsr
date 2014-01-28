@@ -5,8 +5,9 @@
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
 
-from django.conf.urls import patterns, url, include
+from django.conf.urls import include, patterns, url
 from rest_framework import routers
+
 import views
 
 router = routers.DefaultRouter()

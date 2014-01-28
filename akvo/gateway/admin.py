@@ -7,8 +7,6 @@
 from textwrap import dedent
 
 from django.contrib import admin
-from django.db.models import get_model
-from django.utils.translation import ugettext, ugettext_lazy as _
 
 from models import Gateway, GatewayNumber, MoSms
 
@@ -52,6 +50,3 @@ class MoSmsAdmin(admin.ModelAdmin):
     list_display = ('pk', 'sender', 'receiver', 'message', )    
 
 admin.site.register(MoSms, MoSmsAdmin)
-
-
-

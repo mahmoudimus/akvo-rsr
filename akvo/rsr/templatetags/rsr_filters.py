@@ -2,13 +2,16 @@
 # See more details in the license.txt file located at the root folder of the Akvo RSR module. 
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
 
-from django import template
-register = template.Library()
+import datetime
+import time
+from decimal import Decimal, ROUND_HALF_UP
 
+from django import template
 from django.conf import settings
 
-import time, datetime
-from decimal import Decimal, ROUND_HALF_UP
+register = template.Library()
+
+
 
 DECIMAL_PLACES = getattr(settings, 'DECIMALS_DECIMAL_PLACES', 2)
 
@@ -64,4 +67,3 @@ def rsr_sorted_set(iterable):
     set_list = list(frozenset(iterable))
     set_list.sort()
     return set_list
-

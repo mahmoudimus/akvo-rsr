@@ -6,14 +6,12 @@
 
 
 from tastypie import fields
-
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 
-from akvo.api.fields import ConditionalFullToManyField
-
-from akvo.rsr.models import Organisation
-
 from .resources import ConditionalFullResource, get_extra_thumbnails
+
+from akvo.api.fields import ConditionalFullToManyField
+from akvo.rsr.models import Organisation
 
 
 class OrganisationResource(ConditionalFullResource):

@@ -6,7 +6,6 @@
 
 
 from django.conf.urls import url
-
 from tastypie import fields
 from tastypie.resources import Resource
 

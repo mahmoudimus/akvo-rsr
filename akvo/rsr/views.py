@@ -3,31 +3,19 @@
 # Akvo RSR is covered by the GNU Affero General Public License.
 # See more details in the license.txt file located at the root folder of the Akvo RSR module.
 # For additional details on the GNU license please see < http://www.gnu.org/licenses/agpl.html >.
+import json
+import random
+import re
+from datetime import datetime
 from itertools import groupby
 from urlparse import urljoin
 
-from lxml import etree
-
-from akvo.rsr.filters import ProjectFilterSet, remove_empty_querydict_items
-from akvo.rsr.models import (MiniCMS, FocusArea, Organisation,
-                             Project, ProjectUpdate, ProjectComment, Country,
-                             UserProfile, Invoice, SmsReporter, PartnerSite)
-from akvo.rsr.forms import (InvoiceForm, RegistrationForm1, RSR_RegistrationFormUniqueEmail,
-                            RSR_ProfileUpdateForm, ProjectUpdateForm)
-
-from akvo.rsr.decorators import fetch_project, project_viewing_permissions
-from akvo.rsr.iso3166 import COUNTRY_CONTINENTS
-
-from akvo.rsr.utils import (wordpress_get_lastest_posts, get_rsr_limited_change_permission,
-                            get_random_from_qs, state_equals, right_now_in_akvo)
-
-from django import forms
-from django import http
+from django import forms, http
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout, REDIRECT_FIELD_NAME
-from django.contrib.auth.views import redirect_to_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.views import redirect_to_login
 from django.contrib.sites.models import RequestSite
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
@@ -35,26 +23,35 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q, Sum
 from django.forms import ModelForm
 from django.http import (
-        HttpResponse, HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotAllowed,
-        HttpResponsePermanentRedirect, Http404
+    Http404, HttpResponse, HttpResponseForbidden, HttpResponsePermanentRedirect,
+    HttpResponseRedirect
 )
-from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.template import Context, RequestContext, loader
-from django.utils.translation import ugettext_lazy as _, get_language
-from django.views.decorators.cache import never_cache, cache_page
+from django.shortcuts import get_object_or_404, redirect, render_to_response
+from django.template import Context, loader, RequestContext
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import get_language
+from django.views.decorators.cache import cache_page, never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-
-from datetime import datetime
-from registration.models import RegistrationProfile
-import random
-import re
-import json
-
-from mollie.ideal.utils import query_mollie, get_mollie_fee
+from lxml import etree
 from paypal.standard.forms import PayPalPaymentsForm
+from registration.models import RegistrationProfile
+
+from mollie.ideal.utils import get_mollie_fee, query_mollie
 from notification.models import Notice
 
+from akvo.rsr.decorators import fetch_project, project_viewing_permissions
+from akvo.rsr.filters import ProjectFilterSet, remove_empty_querydict_items
+from akvo.rsr.forms import (
+    InvoiceForm, ProjectUpdateForm, RegistrationForm1, RSR_ProfileUpdateForm,
+    RSR_RegistrationFormUniqueEmail
+)
+from akvo.rsr.iso3166 import COUNTRY_CONTINENTS
+from akvo.rsr.models import (
+    Country, FocusArea, Invoice, Organisation, PartnerSite, Project, ProjectComment, ProjectUpdate,
+    SmsReporter, UserProfile
+)
+from akvo.rsr.utils import get_rsr_limited_change_permission, state_equals
 
 REGISTRATION_RECEIVERS = ['gabriel@akvo.org', 'thomas@akvo.org', 'beth@akvo.org']
 
