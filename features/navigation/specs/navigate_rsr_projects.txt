@@ -1,4 +1,0 @@
-
-Scenario: View all projects
-    When I visit rsr.akvo.org
-    Then I see a list of all projects in RSR
