@@ -19,6 +19,7 @@
       
       <xsl:apply-templates select="description[@type='1']" /><!-- General -->
       <xsl:apply-templates select="description[@type='2']"/><!-- Objectives -->
+      <xsl:apply-templates select="description[@type='3' and @akvo:type='3']"/><!-- Traget groups -->
       <xsl:apply-templates select="description[@type='1' and @akvo:type='4']"/><!-- Subtitle -->
       <xsl:apply-templates select="description[@type='1' and @akvo:type='5']"/><!-- Summary -->
       <xsl:apply-templates select="description[@type='1' and @akvo:type='6']"/><!-- Background -->
@@ -58,8 +59,6 @@
     </object>
   </xsl:template>
 
-  <xsl:template match="description[@type='3' and @akvo:type='11']"/><!-- Target groups FIX FOR NEXT VERIOSN OF CORDAID XML -->
-  
   <!-- title -->
   <xsl:template match="title">
     <title>
@@ -165,6 +164,13 @@
       <xsl:value-of select="." />
     </background>
   </xsl:template>
+  
+  <xsl:template match="description[@type='3' and @akvo:type='3']">
+    <target_group>
+      <xsl:value-of select="." />
+    </target_group>
+  </xsl:template>
+  
   
   <!-- project_rating Currently not used-->
 
@@ -352,8 +358,8 @@
       <!-- ignore Cordaid's budgets, they are handled by post-processing -->
       <xsl:when test="../budget[@akvo:budget-from]">
       </xsl:when>
-      <!-- if there's a type="2" budget we use that instead, see below -->
-      <xsl:when test="../budget[@type='2']">
+      <!-- if there's a type="2" budget and it has value tags we use that instead, see below -->
+      <xsl:when test="../budget[@type='2'] and ../budget[@type='2']/value">
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="value"/>
