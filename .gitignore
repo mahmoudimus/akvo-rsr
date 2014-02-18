@@ -45,7 +45,8 @@ features/node_modules
 ## Tests
 tests/akvo/acceptance/test_settings.py
 tests/pvw/acceptance/test_settings.py
-
+tests/selenium/target/
+tests/selenium/selenium.iml
 
 # Environment
 
